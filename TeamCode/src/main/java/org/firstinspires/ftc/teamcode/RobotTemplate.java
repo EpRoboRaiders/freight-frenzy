@@ -29,12 +29,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 /**
  * This is NOT an opmode.
@@ -52,45 +50,26 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-
-
-public class RobotTemplate {
-
-    // Creates a motor based on the RobotTemplate class.
-    RobotTemplate robot = new RobotTemplate();
-
-    // The array Side stores all 2 sides of the robot.
-    enum Side {
-        LEFT("Left Side of the Robot"),
-        RIGHT("Right Side of the Robot");
-
-        private String description;
-
-        // Code taken from (with modifications)
-        // https://stackoverflow.com/questions/15989316/
-        // how-to-add-a-description-for-each-entry-of-enum/15989359#15989359
-        private Side(String description) {
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
-
+public class RobotTemplate
+{
     /* Public OpMode members. */
     public DcMotor  leftFrontDrive   = null;
     public DcMotor  leftBackDrive   = null;
     public DcMotor  rightFrontDrive   = null;
     public DcMotor  rightBackDrive   = null;
 
-    // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-    // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-    // and named "imu".
-    public BNO055IMU imu;
+    /*
+    public DcMotor  leftArm     = null;
+    public Servo    leftClaw    = null;
+    public Servo    rightClaw   = null;
+
+    public static final double MID_SERVO       =  0.5 ;
+    public static final double ARM_UP_POWER    =  0.45 ;
+    public static final double ARM_DOWN_POWER  = -0.45 ;
+     */
 
     /* local OpMode members. */
-    HardwareMap hwMap           = null;
+    HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
@@ -108,14 +87,15 @@ public class RobotTemplate {
         leftBackDrive  = hwMap.get(DcMotor.class, "left_back");
         rightFrontDrive = hwMap.get(DcMotor.class, "right_front");
         rightBackDrive  = hwMap.get(DcMotor.class, "right_back");
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-
+        // leftArm    = hwMap.get(DcMotor.class, "left_arm");
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
+        // leftArm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -123,46 +103,16 @@ public class RobotTemplate {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Define and initialize ALL installed servos.\
+        /*
+        leftClaw  = hwMap.get(Servo.class, "left_hand");
+        rightClaw = hwMap.get(Servo.class, "right_hand");
+        leftClaw.setPosition(MID_SERVO);
+        rightClaw.setPosition(MID_SERVO);
 
-        // Initialize the IMU and its parameters.
-        imu = hwMap.get(BNO055IMU.class, "imu");
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
-    }
-    // setChassisPower sets the power of either 1 side of the chassis, or the whole chassis
-    // at once.
-    // Defaults to the whole chassis if no side is input, or an invalid "side" is input.
-    public void setChassisPower (double power) {
-        leftFrontDrive.setPower(power);
-        leftBackDrive.setPower(power);
-        rightFrontDrive.setPower(power);
-        rightBackDrive.setPower(power);
-    }
-    public void setChassisPower (Side side, double power) {
-
-        if (side == Side.LEFT) {
-            leftFrontDrive.setPower(power);
-            leftBackDrive.setPower(power);
-        }
-        else if(side == Side.RIGHT) {
-            rightFrontDrive.setPower(power);
-            rightBackDrive.setPower(power);
-        }
-        else {
-            leftFrontDrive.setPower(power);
-            leftBackDrive.setPower(power);
-            rightFrontDrive.setPower(power);
-            rightBackDrive.setPower(power);
-        }
+         */
     }
  }
 
