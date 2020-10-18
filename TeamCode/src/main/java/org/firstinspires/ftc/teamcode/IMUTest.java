@@ -71,7 +71,6 @@ public class IMUTest extends LinearOpMode {
             }
         }
 
-
         // turn the motors off.
         robot.setChassisPower(0);
     }

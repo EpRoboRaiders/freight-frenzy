@@ -45,7 +45,6 @@ public class Controller extends OpMode {
 
     Mode mode = Mode.OMNI;
 
-    public void init() {}
 
     @Override
     public void loop() {
