@@ -55,11 +55,10 @@ public class RobotTemplate
     /* Public OpMode members. */
     public DcMotor  leftFrontDrive   = null;
     public DcMotor  leftBackDrive   = null;
-    public DcMotor  rightFrontDrive   = null;
-    public DcMotor  rightBackDrive   = null;
-
+    public DcMotor  rightFrontDrive  = null;
+    public DcMotor  rightBackDrive  = null;
+    // public DcMotor  leftArm     = null;
     /*
-    public DcMotor  leftArm     = null;
     public Servo    leftClaw    = null;
     public Servo    rightClaw   = null;
 
@@ -85,17 +84,22 @@ public class RobotTemplate
         // Define and Initialize Motors
         leftFrontDrive  = hwMap.get(DcMotor.class, "left_front");
         leftBackDrive  = hwMap.get(DcMotor.class, "left_back");
-        rightFrontDrive = hwMap.get(DcMotor.class, "right_front");
-        rightBackDrive  = hwMap.get(DcMotor.class, "right_back");
-        // leftArm    = hwMap.get(DcMotor.class, "left_arm");
+        rightFrontDrive  = hwMap.get(DcMotor.class, "right_front");
+        rightBackDrive = hwMap.get(DcMotor.class, "right_back");
+        /*
+        leftArm    = hwMap.get(DcMotor.class, "left_arm");
+         */
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
-        // leftArm.setPower(0);
+        //leftArm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -103,9 +107,11 @@ public class RobotTemplate
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        /*
+        leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         */
 
-        // Define and initialize ALL installed servos.\
+        // Define and initialize ALL installed servos.
         /*
         leftClaw  = hwMap.get(Servo.class, "left_hand");
         rightClaw = hwMap.get(Servo.class, "right_hand");
