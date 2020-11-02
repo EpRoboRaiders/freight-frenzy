@@ -15,7 +15,7 @@ public class Controller extends OpMode {
     RobotTemplate robot = new RobotTemplate();
     Boolean bPressed = true;
     // hello
-    static final double SPEED = .75;
+    static final double SPEED = .5;
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
     // the program, the mode is set to 0, or "tank."
