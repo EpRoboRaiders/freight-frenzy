@@ -73,10 +73,10 @@ public class Controller extends OpMode {
                 // In "tank" drive mode,
                 // the left joystick controls the speed of the left set of motors,
                 // and the right joystick controls the right set.
-                robot.leftFrontDrive.setPower(gamepad1.left_stick_y * SPEED);
-                robot.leftBackDrive.setPower(gamepad1.left_stick_y * SPEED);
-                robot.rightFrontDrive.setPower(gamepad1.right_stick_y * SPEED);
-                robot.rightBackDrive.setPower(gamepad1.right_stick_y * SPEED);
+                robot.leftFrontDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                robot.leftBackDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                robot.rightFrontDrive.setPower(-gamepad1.right_stick_y * SPEED);
+                robot.rightBackDrive.setPower(-gamepad1.right_stick_y * SPEED);
                 break;
 
             }
@@ -88,16 +88,16 @@ public class Controller extends OpMode {
                 // This code was developed as a simple test by request of a coach, but the driver
                 // responsible for moving the chassis actually liked the way that it worked!
                 if (Math.abs(gamepad1.left_stick_x) > Math.abs(gamepad1.left_stick_y)) {
-                    robot.leftFrontDrive.setPower(-gamepad1.left_stick_x * SPEED);
-                    robot.rightFrontDrive.setPower(gamepad1.left_stick_x * SPEED);
-                    robot.leftBackDrive.setPower(gamepad1.left_stick_x * SPEED);
-                    robot.rightBackDrive.setPower(-gamepad1.left_stick_x * SPEED);
+                    robot.leftFrontDrive.setPower(gamepad1.left_stick_x * SPEED);
+                    robot.rightFrontDrive.setPower(-gamepad1.left_stick_x * SPEED);
+                    robot.leftBackDrive.setPower(-gamepad1.left_stick_x * SPEED);
+                    robot.rightBackDrive.setPower(gamepad1.left_stick_x * SPEED);
                 }
                 else {
-                    robot.leftFrontDrive.setPower(gamepad1.left_stick_y * SPEED);
-                    robot.leftBackDrive.setPower(gamepad1.left_stick_y * SPEED);
-                    robot.rightFrontDrive.setPower(gamepad1.right_stick_y * SPEED);
-                    robot.rightBackDrive.setPower(gamepad1.right_stick_y * SPEED);
+                    robot.leftFrontDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                    robot.leftBackDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                    robot.rightFrontDrive.setPower(-gamepad1.right_stick_y * SPEED);
+                    robot.rightBackDrive.setPower(-gamepad1.right_stick_y * SPEED);
                 }
                 break;
 
@@ -106,24 +106,24 @@ public class Controller extends OpMode {
 
                 // Code taken from http://ftckey.com/programming/advanced-programming/. Also
                 // funky; turns with the right joystick and moves/strafes with the left one.
-                robot.leftFrontDrive.setPower(clip((gamepad1.left_stick_y - gamepad1.left_stick_x
-                        + gamepad1.right_stick_x), -1., 1) * SPEED);
-                robot.leftBackDrive.setPower(clip((gamepad1.left_stick_y + gamepad1.left_stick_x
+                robot.leftFrontDrive.setPower(clip((-gamepad1.left_stick_y + gamepad1.left_stick_x
                         - gamepad1.right_stick_x), -1., 1) * SPEED);
-                robot.rightFrontDrive.setPower(clip((gamepad1.left_stick_y + gamepad1.left_stick_x
+                robot.leftBackDrive.setPower(clip((-gamepad1.left_stick_y - gamepad1.left_stick_x
                         + gamepad1.right_stick_x), -1., 1) * SPEED);
-                robot.rightBackDrive.setPower(clip((gamepad1.left_stick_y - gamepad1.left_stick_x
+                robot.rightFrontDrive.setPower(clip((-gamepad1.left_stick_y - gamepad1.left_stick_x
                         - gamepad1.right_stick_x), -1., 1) * SPEED);
+                robot.rightBackDrive.setPower(clip((-gamepad1.left_stick_y + gamepad1.left_stick_x
+                        + gamepad1.right_stick_x), -1., 1) * SPEED);
                 break;
             }
             default: {
 
                 mode = Mode.TANK;
 
-                robot.leftFrontDrive.setPower(gamepad1.left_stick_y * SPEED);
-                robot.leftBackDrive.setPower(gamepad1.left_stick_y * SPEED);
-                robot.rightFrontDrive.setPower(gamepad1.right_stick_y * SPEED);
-                robot.rightBackDrive.setPower(gamepad1.right_stick_y * SPEED);
+                robot.leftFrontDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                robot.leftBackDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                robot.rightFrontDrive.setPower(-gamepad1.right_stick_y * SPEED);
+                robot.rightBackDrive.setPower(-gamepad1.right_stick_y * SPEED);
             }
         }
 
