@@ -1,10 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name="AutonomousBase", group="Autonomous")
 @Disabled
@@ -20,6 +26,11 @@ public abstract class AutonomousBase extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+
+    BNO055IMU imu;
+    double globalAngle;
+    Orientation lastAngles = new Orientation();
+
 
     public void runOpMode() {}
 
@@ -95,5 +106,170 @@ public abstract class AutonomousBase extends LinearOpMode {
 
             sleep(250);   // optional pause after each move
         }
+    }
+
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right.
+     */
+    private double getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     * @param degrees Degrees to turn, + is left - is right
+     */
+    public void rotate(double power, int degrees)
+    {
+        double  leftPower, rightPower, differenceAngle;
+
+        // restart imu movement tracking.
+        resetAngle();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        if (degrees < 0)
+        {   // turn right.
+            leftPower = power;
+            rightPower = -power;
+        }
+        else if (degrees > 0)
+        {   // turn left.
+            leftPower = -power;
+            rightPower = power;
+        }
+        else return;
+
+        // set power to rotate.
+        robot.leftFrontDrive.setPower(leftPower);
+        robot.leftBackDrive.setPower(leftPower);
+        robot.rightFrontDrive.setPower(rightPower);
+        robot.rightBackDrive.setPower(rightPower);
+
+        // rotate until turn is completed.
+        if (degrees < 0)
+        {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0) {
+                telemetry.addData("Current angle", getAngle());
+                telemetry.update();
+            }
+
+            while (opModeIsActive() && getAngle() > degrees) {
+                telemetry.addData("Current angle", getAngle());
+                telemetry.update();
+            }
+        }
+        else    // left turn.
+            while (opModeIsActive() && getAngle() < degrees) {
+                telemetry.addData("Current angle", getAngle());
+                telemetry.update();
+            }
+
+        // turn the motors off.
+        robot.leftFrontDrive.setPower(0);
+        robot.leftBackDrive.setPower(0);
+        robot.rightFrontDrive.setPower(0);
+        robot.rightBackDrive.setPower(0);
+
+        sleep(250);
+        differenceAngle = degrees - getAngle();
+
+        telemetry.addData("Waiting for the correction", "");
+        telemetry.addData("Current angle", getAngle());
+        telemetry.addData("Difference", differenceAngle);
+        telemetry.update();
+
+        // wait for rotation to stop.
+        sleep(1000);
+
+        // reset angle tracking on new heading.
+        resetAngle();
+
+        if (differenceAngle < 0)
+        {   // turn right.
+            leftPower = power;
+            rightPower = -power;
+        }
+        else if (differenceAngle > 0)
+        {   // turn left.
+            leftPower = -power;
+            rightPower = power;
+        }
+        else return;
+
+        // set power to rotate.
+        robot.leftFrontDrive.setPower(leftPower);
+        robot.leftBackDrive.setPower(leftPower);
+        robot.rightFrontDrive.setPower(rightPower);
+        robot.rightBackDrive.setPower(rightPower);
+
+        // rotate until turn is completed.
+        if (differenceAngle < 0)
+        {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0) {
+                telemetry.addData("Current angle", getAngle());
+                telemetry.update();
+            }
+
+            while (opModeIsActive() && getAngle() > differenceAngle) {
+                telemetry.addData("Current angle", getAngle());
+                telemetry.update();
+            }
+        }
+        else    // left turn.
+            while (opModeIsActive() && getAngle() < differenceAngle) {
+                telemetry.addData("Current angle", getAngle());
+                telemetry.update();
+            }
+
+        // turn the motors off.
+        robot.leftFrontDrive.setPower(0);
+        robot.leftBackDrive.setPower(0);
+        robot.rightFrontDrive.setPower(0);
+        robot.rightBackDrive.setPower(0);
+
+        // wait for rotation to stop.
+        sleep(250);
+        telemetry.addData("Waiting for the end", "");
+        telemetry.addData("Current angle", getAngle());
+        telemetry.update();
+        sleep(1000);
+
+        // reset angle tracking on new heading.
+        resetAngle();
+
     }
 }

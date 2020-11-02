@@ -29,7 +29,7 @@ public class IMUTest extends LinearOpMode
     TouchSensor             touch;
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
-    double                  globalAngle, power = .1, correction;
+    double                  globalAngle, power = .2, correction;
     boolean                 aButton, bButton;
     RobotTemplate robot = new RobotTemplate();
 
@@ -54,6 +54,7 @@ public class IMUTest extends LinearOpMode
 
         imu.initialize(parameters);
 
+        /*
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
@@ -64,8 +65,10 @@ public class IMUTest extends LinearOpMode
             idle();
         }
 
+         */
+
         telemetry.addData("Mode", "waiting for start");
-        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+        // telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
 
         // wait for start button.
