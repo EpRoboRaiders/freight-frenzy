@@ -33,7 +33,7 @@ public class WhiteLineParkingAutonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
+        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way.
 
         // Drive forward for 3 seconds
         robot.leftFrontDrive.setPower(FORWARD_SPEED);
