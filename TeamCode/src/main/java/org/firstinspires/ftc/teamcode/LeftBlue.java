@@ -10,19 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 public class LeftBlue extends AutonomousBase {
     public void runOpMode() {
 
-        robot.init(hardwareMap);
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
-        telemetry.update();
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        initialize();
 
         encoderDrive(.1, 12, 12, 12, 12, 3);
 

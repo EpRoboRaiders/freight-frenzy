@@ -111,6 +111,11 @@ public class RobotTemplate
         leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
          */
 
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Define and initialize ALL installed servos.
         /*
         leftClaw  = hwMap.get(Servo.class, "left_hand");

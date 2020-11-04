@@ -7,10 +7,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name="AutonomousBase", group="Autonomous")
 @Disabled
@@ -31,6 +43,8 @@ public abstract class AutonomousBase extends LinearOpMode {
     double globalAngle;
     Orientation lastAngles = new Orientation();
 
+    OpenCvWebcam webcam;
+    RingStackMeasurerPipeline pipeline;
 
     public void runOpMode() {}
 
@@ -149,9 +163,8 @@ public abstract class AutonomousBase extends LinearOpMode {
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
      */
-    public void rotate(double power, int degrees)
-    {
-        double  leftPower, rightPower, differenceAngle;
+    public void rotate(double power, double degrees) {
+        double leftPower, rightPower, differenceAngle;
 
         // restart imu movement tracking.
         resetAngle();
@@ -159,17 +172,13 @@ public abstract class AutonomousBase extends LinearOpMode {
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating
         // clockwise (right).
 
-        if (degrees < 0)
-        {   // turn right.
+        if (degrees < 0) {   // turn right.
             leftPower = power;
             rightPower = -power;
-        }
-        else if (degrees > 0)
-        {   // turn left.
+        } else if (degrees > 0) {   // turn left.
             leftPower = -power;
             rightPower = power;
-        }
-        else return;
+        } else return;
 
         // set power to rotate.
         robot.leftFrontDrive.setPower(leftPower);
@@ -178,8 +187,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         robot.rightBackDrive.setPower(rightPower);
 
         // rotate until turn is completed.
-        if (degrees < 0)
-        {
+        if (degrees < 0) {
             // On right turn we have to get off zero first.
             while (opModeIsActive() && getAngle() == 0) {
                 telemetry.addData("Current angle", getAngle());
@@ -190,8 +198,7 @@ public abstract class AutonomousBase extends LinearOpMode {
                 telemetry.addData("Current angle", getAngle());
                 telemetry.update();
             }
-        }
-        else    // left turn.
+        } else    // left turn.
             while (opModeIsActive() && getAngle() < degrees) {
                 telemetry.addData("Current angle", getAngle());
                 telemetry.update();
@@ -203,73 +210,164 @@ public abstract class AutonomousBase extends LinearOpMode {
         robot.rightFrontDrive.setPower(0);
         robot.rightBackDrive.setPower(0);
 
-        sleep(250);
+        sleep(100);
         differenceAngle = degrees - getAngle();
 
         telemetry.addData("Waiting for the correction", "");
         telemetry.addData("Current angle", getAngle());
+        telemetry.addData("Target", degrees);
         telemetry.addData("Difference", differenceAngle);
         telemetry.update();
 
         // wait for rotation to stop.
-        sleep(1000);
 
         // reset angle tracking on new heading.
         resetAngle();
 
-        if (differenceAngle < 0)
-        {   // turn right.
-            leftPower = power;
-            rightPower = -power;
+        if (differenceAngle < 3 && differenceAngle > -3) {
+            return;
         }
-        else if (differenceAngle > 0)
-        {   // turn left.
-            leftPower = -power;
-            rightPower = power;
+        else {
+            rotate(power*.75, differenceAngle);
         }
-        else return;
-
-        // set power to rotate.
-        robot.leftFrontDrive.setPower(leftPower);
-        robot.leftBackDrive.setPower(leftPower);
-        robot.rightFrontDrive.setPower(rightPower);
-        robot.rightBackDrive.setPower(rightPower);
-
-        // rotate until turn is completed.
-        if (differenceAngle < 0)
+    }
+    
+    public static class RingStackMeasurerPipeline extends OpenCvPipeline
+    {
+        /*
+         * An enum to define the skystone position
+         */
+        public enum RingPosition
         {
-            // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAngle() == 0) {
-                telemetry.addData("Current angle", getAngle());
-                telemetry.update();
-            }
-
-            while (opModeIsActive() && getAngle() > differenceAngle) {
-                telemetry.addData("Current angle", getAngle());
-                telemetry.update();
-            }
+            FOUR,
+            ONE,
+            NONE
         }
-        else    // left turn.
-            while (opModeIsActive() && getAngle() < differenceAngle) {
-                telemetry.addData("Current angle", getAngle());
-                telemetry.update();
+
+        /*
+         * Some color constants
+         */
+        static final Scalar BLUE = new Scalar(0, 0, 255);
+        static final Scalar GREEN = new Scalar(0, 255, 0);
+
+        /*
+         * The core values which define the location and size of the sample regions
+         */
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
+
+        static final int REGION_WIDTH = 70; // 35
+        static final int REGION_HEIGHT = 50; // 25
+
+        final int FOUR_RING_THRESHOLD = 150;
+        final int ONE_RING_THRESHOLD = 135;
+
+        Point region1_pointA = new Point(
+                REGION1_TOPLEFT_ANCHOR_POINT.x,
+                REGION1_TOPLEFT_ANCHOR_POINT.y);
+        Point region1_pointB = new Point(
+                REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+                REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+
+        /*
+         * Working variables
+         */
+        Mat region1_Cb;
+        Mat YCrCb = new Mat();
+        Mat Cb = new Mat();
+        int avg1;
+
+        // Volatile since accessed by OpMode thread w/o synchronization
+        public volatile RingStackMeasurerPipeline.RingPosition position = RingStackMeasurerPipeline.RingPosition.FOUR;
+
+        /*
+         * This function takes the RGB frame, converts to YCrCb,
+         * and extracts the Cb channel to the 'Cb' variable
+         */
+        void inputToCb(Mat input)
+        {
+            Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
+            Core.extractChannel(YCrCb, Cb, 1);
+        }
+
+        @Override
+        public void init(Mat firstFrame)
+        {
+            inputToCb(firstFrame);
+
+            region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
+        }
+
+        @Override
+        public Mat processFrame(Mat input)
+        {
+            inputToCb(input);
+
+            avg1 = (int) Core.mean(region1_Cb).val[0];
+
+            Imgproc.rectangle(
+                    input, // Buffer to draw on
+                    region1_pointA, // First point which defines the rectangle
+                    region1_pointB, // Second point which defines the rectangle
+                    BLUE, // The color the rectangle is drawn in
+                    2); // Thickness of the rectangle lines
+
+            position = RingStackMeasurerPipeline.RingPosition.FOUR; // Record our analysis
+            if(avg1 > FOUR_RING_THRESHOLD){
+                position = RingStackMeasurerPipeline.RingPosition.FOUR;
+            }else if (avg1 > ONE_RING_THRESHOLD){
+                position = RingStackMeasurerPipeline.RingPosition.ONE;
+            }else{
+                position = RingStackMeasurerPipeline.RingPosition.NONE;
             }
 
-        // turn the motors off.
-        robot.leftFrontDrive.setPower(0);
-        robot.leftBackDrive.setPower(0);
-        robot.rightFrontDrive.setPower(0);
-        robot.rightBackDrive.setPower(0);
+            Imgproc.rectangle(
+                    input, // Buffer to draw on
+                    region1_pointA, // First point which defines the rectangle
+                    region1_pointB, // Second point which defines the rectangle
+                    GREEN, // The color the rectangle is drawn in
+                    -1); // Negative thickness means solid fill
 
-        // wait for rotation to stop.
-        sleep(250);
-        telemetry.addData("Waiting for the end", "");
-        telemetry.addData("Current angle", getAngle());
+            return input;
+        }
+
+        public int getAnalysis()
+        {
+            return avg1;
+        }
+    }
+
+    public void initialize() {
+
+        robot.init(hardwareMap);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        pipeline = new RingStackMeasurerPipeline();
+        webcam.setPipeline(pipeline);
+
+        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
+        // out when the RC activity is in portrait. We do our actual image processing assuming
+        // landscape orientation, though.
+        //webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+            }
+        });
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
-        sleep(1000);
 
-        // reset angle tracking on new heading.
-        resetAngle();
-
+        waitForStart();
     }
 }
