@@ -99,12 +99,12 @@ public class RingTest extends LinearOpMode
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
         /*
-         * The core values which define the location and size of the sample regions
+         * The core values which define the location and size of the sample regions0
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(191,108);
 
-        static final int REGION_WIDTH = 70; // 35
-        static final int REGION_HEIGHT = 50; // 25
+        static final int REGION_WIDTH = 46; // 35
+        static final int REGION_HEIGHT = 38; // 25
 
         final int FOUR_RING_THRESHOLD = 150;
         final int ONE_RING_THRESHOLD = 135;

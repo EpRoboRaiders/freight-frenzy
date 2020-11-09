@@ -39,6 +39,8 @@ public abstract class AutonomousBase extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
+    int countdown = 10;
+
     BNO055IMU imu;
     double globalAngle;
     Orientation lastAngles = new Orientation();
@@ -250,13 +252,14 @@ public abstract class AutonomousBase extends LinearOpMode {
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
-        /*
-         * The core values which define the location and size of the sample regions
-         */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
 
-        static final int REGION_WIDTH = 70; // 35
-        static final int REGION_HEIGHT = 50; // 25
+        // The core values which define the location and size of the sample regions. EDIT THESE
+        // IF THE CAMERA CHANGES.
+
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(191,108);
+
+        static final int REGION_WIDTH = 46; // 35
+        static final int REGION_HEIGHT = 38; // 25
 
         final int FOUR_RING_THRESHOLD = 150;
         final int ONE_RING_THRESHOLD = 135;
@@ -336,15 +339,20 @@ public abstract class AutonomousBase extends LinearOpMode {
         }
     }
 
+    // Initialzes the various mechanisms and attachments on the robot.
     public void initialize() {
 
+        // Initialize the robot.
         robot.init(hardwareMap);
 
+        // Initialize the IMU; this could likely be done in the template, but it works fine for
+        // the present.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
+        // Initialize the webcam on the robot.
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         pipeline = new RingStackMeasurerPipeline();
@@ -363,6 +371,17 @@ public abstract class AutonomousBase extends LinearOpMode {
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
             }
         });
+
+        // This was written just because I thought it was fun, and because the camera genuinely
+        // needs a good few seconds to start up. In theory this serves no purpose, but in practice
+        // the camera defaults to there being 4 rings which can be frustrating.
+
+        while (countdown != 0) {
+            telemetry.addData("Initializing camera, please wait", countdown);    //
+            telemetry.update();
+            sleep(1000);
+            countdown -= 1;
+        }
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
