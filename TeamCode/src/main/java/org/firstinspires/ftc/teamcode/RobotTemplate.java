@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -58,10 +59,12 @@ public class RobotTemplate
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  rightBackDrive  = null;
     // public DcMotor  leftArm     = null;
-    /*
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
 
+    public CRServo  wobbleGrabber = null;
+
+    public CRServo  grabberArm = null;
+
+/*
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
@@ -86,6 +89,10 @@ public class RobotTemplate
         leftBackDrive  = hwMap.get(DcMotor.class, "left_back");
         rightFrontDrive  = hwMap.get(DcMotor.class, "right_front");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back");
+
+        wobbleGrabber = hwMap.get(CRServo.class, "wobble_grabber");
+        grabberArm = hwMap.get(CRServo.class, "grabber_arm");
+
         /*
         leftArm    = hwMap.get(DcMotor.class, "left_arm");
          */
@@ -107,23 +114,13 @@ public class RobotTemplate
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        /*
-        leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-         */
 
+        // Set motors to brake.
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // Define and initialize ALL installed servos.
-        /*
-        leftClaw  = hwMap.get(Servo.class, "left_hand");
-        rightClaw = hwMap.get(Servo.class, "right_hand");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
-
-         */
     }
  }
 

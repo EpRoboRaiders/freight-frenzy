@@ -127,6 +127,10 @@ public class Controller extends OpMode {
             }
         }
 
+        robot.wobbleGrabber.setPower(gamepad2.right_stick_y);
+        robot.grabberArm.setPower(gamepad2.left_stick_y);
+
+
         // Display the current mode of the robot in Telemetry for reasons deemed obvious.
         for (int i=0; i<(Mode.values().length); i++){
             telemetry.addData("Mode ", Mode.values()[i].ordinal());
@@ -137,10 +141,14 @@ public class Controller extends OpMode {
         telemetry.addData("Robot Mode:", mode.getDescription());
         telemetry.addData("Motor Position:", robot.leftFrontDrive.getCurrentPosition());
 
-        telemetry.addData("left front motor: ", robot.leftFrontDrive.getPower());
-        telemetry.addData("right front motor: ", robot.rightFrontDrive.getPower());
-        telemetry.addData("left back motor: ", robot.leftBackDrive.getPower());
-        telemetry.addData("right back motor: ", robot.rightBackDrive.getPower());
+        telemetry.addData("Left Front Motor: ", robot.leftFrontDrive.getPower());
+        telemetry.addData("Right Front Motor: ", robot.rightFrontDrive.getPower());
+        telemetry.addData("Left Back Motor: ", robot.leftBackDrive.getPower());
+        telemetry.addData("Fight Back Motor: ", robot.rightBackDrive.getPower());
+
+        telemetry.addData("Wobble Grabber Servo: ", robot.wobbleGrabber.getPower());
+        telemetry.addData("Grabber Arm Servo: ", robot.grabberArm.getPower());
+
         telemetry.update();
 
 

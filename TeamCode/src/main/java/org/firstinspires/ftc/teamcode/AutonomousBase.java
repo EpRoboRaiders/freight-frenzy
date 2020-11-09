@@ -38,9 +38,8 @@ public abstract class AutonomousBase extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-
-    int countdown = 10;
-
+    double rotation;
+    PIDController pidRotate;
     BNO055IMU imu;
     double globalAngle;
     Orientation lastAngles = new Orientation();
@@ -161,7 +160,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         return globalAngle;
     }
 
-    /**
+    /*
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
      */
@@ -233,7 +232,85 @@ public abstract class AutonomousBase extends LinearOpMode {
             rotate(power*.75, differenceAngle);
         }
     }
-    
+
+
+    /*public void rotate(double power, int degrees)
+    {
+        // restart imu angle tracking.
+        resetAngle();
+
+        // if degrees > 359 we cap at 359 with same sign as original degrees.
+        if (Math.abs(degrees) > 359) degrees = (int) Math.copySign(359, degrees);
+
+        // start pid controller. PID controller will monitor the turn angle with respect to the
+        // target angle and reduce power as we approach the target angle. This is to prevent the
+        // robots momentum from overshooting the turn after we turn off the power. The PID controller
+        // reports onTarget() = true when the difference between turn angle and target angle is within
+        // 1% of target (tolerance) which is about 1 degree. This helps prevent overshoot. Overshoot is
+        // dependant on the motor and gearing configuration, starting power, weight of the robot and the
+        // on target tolerance. If the controller overshoots, it will reverse the sign of the output
+        // turning the robot back toward the setpoint value.
+
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, degrees);
+        pidRotate.setOutputRange(0, power);
+        pidRotate.setTolerance(1);
+        pidRotate.enable();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        // rotate until turn is completed.
+
+        if (degrees < 0)
+        {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0)
+            {
+
+                robot.leftFrontDrive.setPower(power);
+                robot.leftBackDrive.setPower(power);
+                robot.rightFrontDrive.setPower(-power);
+                robot.rightBackDrive.setPower(-power);
+                sleep(100);
+            }
+
+            do
+            {
+                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
+                robot.leftFrontDrive.setPower(-power);
+                robot.leftBackDrive.setPower(-power);
+                robot.rightFrontDrive.setPower(power);
+                robot.rightBackDrive.setPower(power);
+            } while (opModeIsActive() && !pidRotate.onTarget());
+        }
+        else    // left turn.
+            do
+            {
+                power = pidRotate.performPID(getAngle()); // power will be + on left turn.
+                robot.leftFrontDrive.setPower(-power);
+                robot.leftBackDrive.setPower(-power);
+                robot.rightFrontDrive.setPower(power);
+                robot.rightBackDrive.setPower(power);
+            } while (opModeIsActive() && !pidRotate.onTarget());
+
+        // turn the motors off.
+        robot.leftFrontDrive.setPower(0);
+        robot.leftBackDrive.setPower(0);
+        robot.rightFrontDrive.setPower(0);
+        robot.rightBackDrive.setPower(0);
+
+        rotation = getAngle();
+
+        // wait for rotation to stop.
+        sleep(500);
+
+        // reset angle tracking on new heading.
+        resetAngle();
+    }
+     */
+
     public static class RingStackMeasurerPipeline extends OpenCvPipeline
     {
         /*
@@ -252,14 +329,13 @@ public abstract class AutonomousBase extends LinearOpMode {
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
+        /*
+         * The core values which define the location and size of the sample regions
+         */
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
 
-        // The core values which define the location and size of the sample regions. EDIT THESE
-        // IF THE CAMERA CHANGES.
-
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(191,108);
-
-        static final int REGION_WIDTH = 46; // 35
-        static final int REGION_HEIGHT = 38; // 25
+        static final int REGION_WIDTH = 70; // 35
+        static final int REGION_HEIGHT = 50; // 25
 
         final int FOUR_RING_THRESHOLD = 150;
         final int ONE_RING_THRESHOLD = 135;
@@ -339,20 +415,20 @@ public abstract class AutonomousBase extends LinearOpMode {
         }
     }
 
-    // Initialzes the various mechanisms and attachments on the robot.
     public void initialize() {
 
-        // Initialize the robot.
         robot.init(hardwareMap);
 
-        // Initialize the IMU; this could likely be done in the template, but it works fine for
-        // the present.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        // Initialize the webcam on the robot.
+        // Set PID proportional value to start reducing power at about 50 degrees of rotation.
+        // P by itself may stall before turn completed so we add a bit of I (integral) which
+        // causes the PID controller to gently increase power if the turn is not completed.
+        pidRotate = new PIDController(.09, .0009, 0);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         pipeline = new RingStackMeasurerPipeline();
@@ -371,17 +447,6 @@ public abstract class AutonomousBase extends LinearOpMode {
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
             }
         });
-
-        // This was written just because I thought it was fun, and because the camera genuinely
-        // needs a good few seconds to start up. In theory this serves no purpose, but in practice
-        // the camera defaults to there being 4 rings which can be frustrating.
-
-        while (countdown != 0) {
-            telemetry.addData("Initializing camera, please wait", countdown);    //
-            telemetry.update();
-            sleep(1000);
-            countdown -= 1;
-        }
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
