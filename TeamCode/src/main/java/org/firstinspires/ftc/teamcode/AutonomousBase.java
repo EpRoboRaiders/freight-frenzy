@@ -42,6 +42,17 @@ public abstract class AutonomousBase extends LinearOpMode {
     PIDController pidRotate;
     BNO055IMU imu;
     double globalAngle;
+
+    double currentDegrees;
+    double previousDegrees;
+    double degreeChange;
+
+    double previousSpeed;
+    double currentSpeed;
+    double speedChange;
+    double currentAcceleration;
+    double currentTime;
+
     Orientation lastAngles = new Orientation();
 
     OpenCvWebcam webcam;
@@ -146,14 +157,7 @@ public abstract class AutonomousBase extends LinearOpMode {
 
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
-
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
-
-        globalAngle += deltaAngle;
+        globalAngle += degreeDifference(angles.firstAngle, lastAngles.firstAngle);
 
         lastAngles = angles;
 
@@ -165,6 +169,7 @@ public abstract class AutonomousBase extends LinearOpMode {
      * @param degrees Degrees to turn, + is left - is right
      */
     public void rotate(double power, double degrees) {
+
         double leftPower, rightPower, differenceAngle;
 
         // restart imu movement tracking.
@@ -191,21 +196,69 @@ public abstract class AutonomousBase extends LinearOpMode {
         if (degrees < 0) {
             // On right turn we have to get off zero first.
             while (opModeIsActive() && getAngle() == 0) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
                 telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
                 telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
             }
 
             while (opModeIsActive() && getAngle() > degrees) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
                 telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
                 telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
             }
-        } else    // left turn.
+        }
+        else    // left turn.
             while (opModeIsActive() && getAngle() < degrees) {
+
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
                 telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
                 telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+
             }
 
-        // turn the motors off.
+            // turn the motors off.
         robot.leftFrontDrive.setPower(0);
         robot.leftBackDrive.setPower(0);
         robot.rightFrontDrive.setPower(0);
@@ -221,16 +274,17 @@ public abstract class AutonomousBase extends LinearOpMode {
         telemetry.update();
 
         // wait for rotation to stop.
-
+        sleep(1000);
         // reset angle tracking on new heading.
         resetAngle();
 
+        /*
         if (differenceAngle < 3 && differenceAngle > -3) {
             return;
         }
         else {
             rotate(power*.75, differenceAngle);
-        }
+         */
     }
 
 
@@ -454,4 +508,17 @@ public abstract class AutonomousBase extends LinearOpMode {
 
         waitForStart();
     }
+    private double degreeDifference(double currentAngle, double previousAngle) {
+
+        double deltaAngle = currentAngle - previousAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        return deltaAngle;
+    }
+
+
 }
