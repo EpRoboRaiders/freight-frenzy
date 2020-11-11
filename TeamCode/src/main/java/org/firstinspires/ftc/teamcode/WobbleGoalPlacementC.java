@@ -11,20 +11,20 @@ public class WobbleGoalPlacementC extends AutonomousBase {
 
     @Override
     public void runOpMode(){
-
+        
         initialize();
 
-        encoderDrive(.1, 109, 109, 109, 109, 10);
+        encoderDrive(DRIVE_SPEED, 109, 109, 109, 109, 10);
 
-        rotate(.1, 45);
+        rotate(DRIVE_SPEED, 45);
 
-        encoderDrive(.1, 8, 8, 8, 8, 5);
+        encoderDrive(DRIVE_SPEED, 8, 8, 8, 8, 5);
 
-        encoderDrive(.1, -18, -18, -18, -18, 5);
+        encoderDrive(DRIVE_SPEED, -18, -18, -18, -18, 5);
 
-        rotate(.1, -45);
+        rotate(DRIVE_SPEED, -45);
 
-        encoderDrive(.1, -30, -30, -30, -30, 5);
+        encoderDrive(DRIVE_SPEED, -30, -30, -30, -30, 5);
 
     }
 }

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Autonomous(name="LeftBlue", group="AutonomousBase")
-// @Disabled 
+// @Disabled
 
 public class LeftBlue extends AutonomousBase {
 
@@ -34,43 +34,43 @@ public class LeftBlue extends AutonomousBase {
 
     public void positionA() {
         // Wobble Goal Placement A
-        encoderDrive(.1, 60, 60, 60, 60, 5);
+        encoderDrive(DRIVE_SPEED, 60, 60, 60, 60, 5);
 
-        rotate(.1, 45);
+        rotate(DRIVE_SPEED, 45);
 
-        encoderDrive(.1, 8, 8, 8, 8, 5);
+        encoderDrive(DRIVE_SPEED, 8, 8, 8, 8, 5);
 
-        encoderDrive(.1, -19, -19, -19, -19, 5);
+        encoderDrive(DRIVE_SPEED, -19, -19, -19, -19, 5);
 
-        rotate(.1, -45);
+        rotate(DRIVE_SPEED, -45);
 
-        encoderDrive(.1, 20, 20, 20, 20, 5);
+        encoderDrive(DRIVE_SPEED, 20, 20, 20, 20, 5);
     }
 
     public void positionB() {
         // Wobble Goal Placement B
-        encoderDrive(.1, 88, 88, 88, 88, 5);
+        encoderDrive(DRIVE_SPEED, 88, 88, 88, 88, 5);
 
         rotate(.2, -45);
 
-        encoderDrive(.1, 10,10,10,10,5);
+        encoderDrive(DRIVE_SPEED, 10,10,10,10,5);
 
-        encoderDrive(.1, -16, -16, -16, -16, 5);
+        encoderDrive(DRIVE_SPEED, -16, -16, -16, -16, 5);
     }
 
     public void positionC() {
         // Wobble Goal Placement C
-        encoderDrive(.1, 109, 109, 109, 109, 10);
+        encoderDrive(DRIVE_SPEED, 109, 109, 109, 109, 10);
 
-        rotate(.1, 45);
+        rotate(DRIVE_SPEED, 45);
 
-        encoderDrive(.1, 8, 8, 8, 8, 5);
+        encoderDrive(DRIVE_SPEED, 8, 8, 8, 8, 5);
 
-        encoderDrive(.1, -18, -18, -18, -18, 5);
+        encoderDrive(DRIVE_SPEED, -18, -18, -18, -18, 5);
 
-        rotate(.1, -45);
+        rotate(DRIVE_SPEED, -45);
 
-        encoderDrive(.1, -30, -30, -30, -30, 5);
+        encoderDrive(DRIVE_SPEED, -30, -30, -30, -30, 5);
     }
 }
 
