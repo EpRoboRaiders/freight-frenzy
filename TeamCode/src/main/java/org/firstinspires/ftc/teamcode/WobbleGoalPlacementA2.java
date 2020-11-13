@@ -41,6 +41,7 @@ public class WobbleGoalPlacementA2 extends AutonomousBase {
         //repeat first 5 steps
         encoderDrive(.1, 48, 48, 48, 48, 5);
 /*
+// run fast
         rotate(.1, 45);
 
         encoderDrive(.1, 8, 8, 8, 8, 5);
