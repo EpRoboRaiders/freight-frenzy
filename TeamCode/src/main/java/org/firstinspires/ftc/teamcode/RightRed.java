@@ -11,7 +11,6 @@ public class RightRed extends AutonomousBase {
 
         initialize();
 
-
         rotate(.1, 45);
 
         sleep(3000);

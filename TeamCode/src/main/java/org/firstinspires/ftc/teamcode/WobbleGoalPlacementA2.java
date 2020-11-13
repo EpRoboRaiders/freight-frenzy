@@ -14,23 +14,23 @@ public class WobbleGoalPlacementA2 extends AutonomousBase {
 
         initialize();
 
-        encoderDrive(.1, 60, 60, 60, 60, 5);
+        encoderDrive(DRIVE_SPEED, 60, 60, 60, 60, 5);
 
-        rotate(.1, 45);
+        rotate(DRIVE_SPEED, 45);
 
-        encoderDrive(.1, 10, 10, 10, 10, 5);
+        encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 5);
 
-        encoderDrive(.1, -21, -21, -21, -21, 5);
+        encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 5);
 
-        rotate(.1,-45);
+        rotate(DRIVE_SPEED,-43);
 
         encoderDrive(.1,-65,-65,-65,-65,5);
 
         //strafe left to the corner
-        encoderDrive(.1,-30,30,30,-30,5);
+        encoderDrive(.1,-19,19,19,-19,5);
 
         //strafe right
-        encoderDrive(.1,45.2,-45.2,-45.2,45.2,7);
+        encoderDrive(.1,44,-44,-44,44,7);
 
         //move forward to grab wobble
         encoderDrive(.1, 10,10,10,10,5);
@@ -39,8 +39,8 @@ public class WobbleGoalPlacementA2 extends AutonomousBase {
         encoderDrive(.1,-45.2,45.2,45.2,-45.2,7);
 
         //repeat first 5 steps
-        encoderDrive(.1, 60, 60, 60, 60, 5);
-
+        encoderDrive(.1, 48, 48, 48, 48, 5);
+/*
         rotate(.1, 45);
 
         encoderDrive(.1, 8, 8, 8, 8, 5);
@@ -51,5 +51,6 @@ public class WobbleGoalPlacementA2 extends AutonomousBase {
 
         //park on white line
         encoderDrive(.1,10,10,10,10,5);
+         */
     }
 }
