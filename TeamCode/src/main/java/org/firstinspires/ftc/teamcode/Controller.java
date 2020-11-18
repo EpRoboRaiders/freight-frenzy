@@ -16,12 +16,15 @@ public class Controller extends OpMode {
     Boolean bPressed = true;
     // hello
     static final double SPEED = .5;
+    double grabberPower = 0;
+    boolean upPressed = false;
+    boolean downPressed = false;
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
     // the program, the mode is set to 0, or "tank."
     enum Mode {
-        
-        
+
+        SIDESTRAFE("Strafe with Side buttons"),
         TANK("Pure Tank Drive"),
         OMNI("Hybrid Tank/Mecanum Drive"),
         MECANUM("Pure Mecanum Drive");
@@ -48,7 +51,7 @@ public class Controller extends OpMode {
         }
     }
 
-    Mode mode = Mode.OMNI;
+    Mode mode = Mode.SIDESTRAFE;
 
     public void init() {
         robot.init(hardwareMap);
@@ -116,6 +119,30 @@ public class Controller extends OpMode {
                         + gamepad1.right_stick_x), -1., 1) * SPEED);
                 break;
             }
+            case SIDESTRAFE: {
+                // Strafes with the side triggers; tank drives otherwise.
+
+                if (gamepad1.left_trigger > 0) {
+                    robot.leftFrontDrive.setPower(-gamepad1.left_trigger * SPEED);
+                    robot.rightFrontDrive.setPower(gamepad1.left_trigger * SPEED);
+                    robot.leftBackDrive.setPower(gamepad1.left_trigger * SPEED);
+                    robot.rightBackDrive.setPower(-gamepad1.left_trigger * SPEED);
+                }
+                else if (gamepad1.right_trigger > 0){
+                    robot.leftFrontDrive.setPower(gamepad1.right_trigger * SPEED);
+                    robot.rightFrontDrive.setPower(-gamepad1.right_trigger * SPEED);
+                    robot.leftBackDrive.setPower(-gamepad1.right_trigger * SPEED);
+                    robot.rightBackDrive.setPower(gamepad1.right_trigger * SPEED);
+                }
+                else {
+                    robot.leftFrontDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                    robot.leftBackDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                    robot.rightFrontDrive.setPower(-gamepad1.right_stick_y * SPEED);
+                    robot.rightBackDrive.setPower(-gamepad1.right_stick_y * SPEED);
+                }
+
+                break;
+            }
             default: {
 
                 mode = Mode.TANK;
@@ -127,8 +154,14 @@ public class Controller extends OpMode {
             }
         }
 
-        robot.wobbleGrabber.setPower(gamepad2.right_stick_y);
-        robot.grabberArm.setPower(gamepad2.left_stick_y);
+        robot.wobbleGrabber.setPower(gamepad2.right_stick_x);
+
+        if (gamepad2.left_trigger > 0) {
+            robot.grabberArm.setPower(0.06);
+        }
+        else {
+            robot.grabberArm.setPower(-gamepad2.left_stick_y);
+        }
 
 
         // Display the current mode of the robot in Telemetry for reasons deemed obvious.

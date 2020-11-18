@@ -28,6 +28,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Disabled
 public abstract class AutonomousBase extends LinearOpMode {
 
+    //test push from home.ee
     RobotTemplate robot = new RobotTemplate();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -37,7 +38,7 @@ public abstract class AutonomousBase extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.2;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     TURN_SPEED              = 0.1;
     double rotation;
     PIDController pidRotate;
     BNO055IMU imu;
@@ -59,8 +60,6 @@ public abstract class AutonomousBase extends LinearOpMode {
     RingStackMeasurerPipeline pipeline;
 
     public void runOpMode() {}
-
-
 
     public void encoderDrive(double speed, double leftFrontInches, double leftBackInches,
                              double rightFrontInches, double rightBackInches, double timeoutS) {
@@ -130,7 +129,7 @@ public abstract class AutonomousBase extends LinearOpMode {
             robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            sleep(250);   // optional pause after each move
+            sleep(100);   // optional pause after each move
         }
     }
 
@@ -246,10 +245,10 @@ public abstract class AutonomousBase extends LinearOpMode {
                 currentAcceleration = speedChange / currentTime;
 
                 telemetry.addData("Current angle", getAngle());
-                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Loop time", currentTime);
                 telemetry.addData("Change in Position (deg)", degreeChange);
-                telemetry.addData("Velocity (deg/s)", currentSpeed);
-                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.addData("Velocity (deg/ms)", currentSpeed);
+                telemetry.addData("Acceleration (deg/ms^2)", currentAcceleration);
                 telemetry.update();
 
                 runtime.reset();
@@ -258,7 +257,7 @@ public abstract class AutonomousBase extends LinearOpMode {
 
             }
 
-            // turn the motors off.
+        // turn the motors off.
         robot.leftFrontDrive.setPower(0);
         robot.leftBackDrive.setPower(0);
         robot.rightFrontDrive.setPower(0);
@@ -277,77 +276,154 @@ public abstract class AutonomousBase extends LinearOpMode {
         sleep(1000);
         // reset angle tracking on new heading.
         resetAngle();
-
-        /*
-        if (differenceAngle < 3 && differenceAngle > -3) {
-            return;
-        }
-        else {
-            rotate(power*.75, differenceAngle);
-         */
     }
+    public void rotate(double power, double degrees, double slowDegrees) {
 
+        double leftPower, rightPower, differenceAngle, fastDegrees;
 
-    /*public void rotate(double power, int degrees)
-    {
-        // restart imu angle tracking.
+        // restart imu movement tracking.
         resetAngle();
-
-        // if degrees > 359 we cap at 359 with same sign as original degrees.
-        if (Math.abs(degrees) > 359) degrees = (int) Math.copySign(359, degrees);
-
-        // start pid controller. PID controller will monitor the turn angle with respect to the
-        // target angle and reduce power as we approach the target angle. This is to prevent the
-        // robots momentum from overshooting the turn after we turn off the power. The PID controller
-        // reports onTarget() = true when the difference between turn angle and target angle is within
-        // 1% of target (tolerance) which is about 1 degree. This helps prevent overshoot. Overshoot is
-        // dependant on the motor and gearing configuration, starting power, weight of the robot and the
-        // on target tolerance. If the controller overshoots, it will reverse the sign of the output
-        // turning the robot back toward the setpoint value.
-
-        pidRotate.reset();
-        pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, degrees);
-        pidRotate.setOutputRange(0, power);
-        pidRotate.setTolerance(1);
-        pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating
         // clockwise (right).
 
+        fastDegrees = degrees - slowDegrees;
+
+        if (degrees < 0) {   // turn right.
+            leftPower = power;
+            rightPower = -power;
+        } else if (degrees > 0) {   // turn left.
+            leftPower = -power;
+            rightPower = power;
+        } else return;
+
+        // set power to rotate.
+        robot.leftFrontDrive.setPower(leftPower);
+        robot.leftBackDrive.setPower(leftPower);
+        robot.rightFrontDrive.setPower(rightPower);
+        robot.rightBackDrive.setPower(rightPower);
+
         // rotate until turn is completed.
-
-        if (degrees < 0)
-        {
+        if (degrees < 0) {
             // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAngle() == 0)
-            {
+            while (opModeIsActive() && getAngle() == 0) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
 
-                robot.leftFrontDrive.setPower(power);
-                robot.leftBackDrive.setPower(power);
-                robot.rightFrontDrive.setPower(-power);
-                robot.rightBackDrive.setPower(-power);
-                sleep(100);
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
             }
 
-            do
-            {
-                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                robot.leftFrontDrive.setPower(-power);
-                robot.leftBackDrive.setPower(-power);
-                robot.rightFrontDrive.setPower(power);
-                robot.rightBackDrive.setPower(power);
-            } while (opModeIsActive() && !pidRotate.onTarget());
+            while (opModeIsActive() && getAngle() > fastDegrees) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
+
+            // Set the power super low, and continue.
+            leftPower = 0.01;
+            rightPower = -0.01;
+            robot.leftFrontDrive.setPower(leftPower);
+            robot.leftBackDrive.setPower(leftPower);
+            robot.rightFrontDrive.setPower(rightPower);
+            robot.rightBackDrive.setPower(rightPower);
+
+            while (opModeIsActive() && getAngle() > degrees) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
         }
         else    // left turn.
-            do
-            {
-                power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-                robot.leftFrontDrive.setPower(-power);
-                robot.leftBackDrive.setPower(-power);
-                robot.rightFrontDrive.setPower(power);
-                robot.rightBackDrive.setPower(power);
-            } while (opModeIsActive() && !pidRotate.onTarget());
+            while (opModeIsActive() && getAngle() < fastDegrees) {
+
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", currentTime);
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/ms)", currentSpeed);
+                telemetry.addData("Acceleration (deg/ms^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
+
+        // Set the power super low, and continue.
+        leftPower = -0.01;
+        rightPower = 0.01;
+        robot.leftFrontDrive.setPower(leftPower);
+        robot.leftBackDrive.setPower(leftPower);
+        robot.rightFrontDrive.setPower(rightPower);
+        robot.rightBackDrive.setPower(rightPower);
+
+        while (opModeIsActive() && getAngle() < degrees) {
+
+            currentTime = runtime.seconds();
+            currentDegrees = getAngle();
+            degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+            currentSpeed = degreeChange / currentTime;
+            speedChange = (currentSpeed - previousSpeed);
+            currentAcceleration = speedChange / currentTime;
+
+            telemetry.addData("Current angle", getAngle());
+            telemetry.addData("Loop time", currentTime);
+            telemetry.addData("Change in Position (deg)", degreeChange);
+            telemetry.addData("Velocity (deg/ms)", currentSpeed);
+            telemetry.addData("Acceleration (deg/ms^2)", currentAcceleration);
+            telemetry.update();
+
+            runtime.reset();
+            previousDegrees = currentDegrees;
+            previousSpeed = currentSpeed;
+        }
 
         // turn the motors off.
         robot.leftFrontDrive.setPower(0);
@@ -355,15 +431,23 @@ public abstract class AutonomousBase extends LinearOpMode {
         robot.rightFrontDrive.setPower(0);
         robot.rightBackDrive.setPower(0);
 
-        rotation = getAngle();
+        sleep(100);
+        differenceAngle = degrees - getAngle();
+
+        telemetry.addData("Waiting for the correction", "");
+        telemetry.addData("Current angle", getAngle());
+        telemetry.addData("Target", degrees);
+        telemetry.addData("Difference", differenceAngle);
+        telemetry.update();
 
         // wait for rotation to stop.
-        sleep(500);
-
+        sleep(100);
         // reset angle tracking on new heading.
         resetAngle();
     }
-     */
+
+
+
 
     public static class RingStackMeasurerPipeline extends OpenCvPipeline
     {
@@ -501,6 +585,9 @@ public abstract class AutonomousBase extends LinearOpMode {
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
             }
         });
+        telemetry.addData("Status", "Camera initializing; please wait (~10 seconds)");
+        telemetry.update();
+        sleep(10000);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -519,6 +606,4 @@ public abstract class AutonomousBase extends LinearOpMode {
 
         return deltaAngle;
     }
-
-
 }
