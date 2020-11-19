@@ -475,8 +475,8 @@ public abstract class AutonomousBase extends LinearOpMode {
         static final int REGION_WIDTH = 70; // 35
         static final int REGION_HEIGHT = 50; // 25
 
-        final int FOUR_RING_THRESHOLD = 150;
-        final int ONE_RING_THRESHOLD = 135;
+        final int FOUR_RING_THRESHOLD = 140;
+        final int ONE_RING_THRESHOLD = 130;
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,
@@ -542,7 +542,7 @@ public abstract class AutonomousBase extends LinearOpMode {
                     region1_pointA, // First point which defines the rectangle
                     region1_pointB, // Second point which defines the rectangle
                     GREEN, // The color the rectangle is drawn in
-                    -1); // Negative thickness means solid fill
+                    1); // Negative thickness means solid fill
 
             return input;
         }
@@ -594,6 +594,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+        robot.wobbleGrabber.setPower(.05);
     }
     private double degreeDifference(double currentAngle, double previousAngle) {
 
