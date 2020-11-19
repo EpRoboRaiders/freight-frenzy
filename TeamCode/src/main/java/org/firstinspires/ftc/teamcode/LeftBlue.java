@@ -84,20 +84,51 @@ public class LeftBlue extends AutonomousBase {
         // Wobble Goal Placement B
         encoderDrive(DRIVE_SPEED, 80, 80, 80, 80, 5);
 
-        rotate(DRIVE_SPEED, -45);
+        encoderDrive(DRIVE_SPEED, 16, -16, -16, 16, 5);
 
-        encoderDrive(DRIVE_SPEED, 12,12, 12,12, 5);
+        encoderDrive(DRIVE_SPEED, 8, 8, 8, 8, 5);
 
-        encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 5);
+        encoderDrive(DRIVE_SPEED, -48, -48, -48, -48, 5);
+
+        encoderDrive(DRIVE_SPEED, -18, 18, 18, -18, 5);
+
+        encoderDrive(.1, -40, -40, -40, -40, 5);
+
+        encoderDrive(.1, -28, 28, 28, -28, 5);
+
+        encoderDrive(.1, -4, 4, -4, -4, 5);
+
+        encoderDrive(.1, 42.5, -42.5, -42.5, 42.5, 5);
+
+        encoderDrive(DRIVE_SPEED, 85, 85, 85, 85, 5);
+
+        encoderDrive(DRIVE_SPEED, -15,-15, -15,-15, 5);
     }
 
     public void positionC() {
         // Wobble Goal Placement C
-        encoderDrive(DRIVE_SPEED, 115, 115, 115, 115, 10);
+        encoderDrive(DRIVE_SPEED, 104, 104, 104, 104, 5);
 
-        encoderDrive(DRIVE_SPEED, -6,6,6,-6,5);
+        encoderDrive(DRIVE_SPEED, -8, 8, 8, -8, 5);
+
+        encoderDrive(DRIVE_SPEED, 8, 8, 8, 8, 5);
+
+        encoderDrive(DRIVE_SPEED, -104, -104, -104, -104, 5);
+
+        // Ram into the wall.
+        encoderDrive(.1, -12, 12, 12, -12, 5);
+
+        encoderDrive(.1, -8, -8, -8, -8, 5);
+
+        encoderDrive(.1, 42.5, -42.5, -42.5, 42.5, 5);
+        // End ram
+
+        encoderDrive(DRIVE_SPEED, 100, 100, 100, 100, 5);
+
+        encoderDrive(DRIVE_SPEED, -35, 35, 35, -35, 5);
+
+        encoderDrive(DRIVE_SPEED, 8, 8, 8, 8, 5);
 
         encoderDrive(DRIVE_SPEED, -30, -30, -30, -30, 5);
     }
 }
-

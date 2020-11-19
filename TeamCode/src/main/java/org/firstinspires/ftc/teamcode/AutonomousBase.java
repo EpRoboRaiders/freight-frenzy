@@ -556,7 +556,6 @@ public abstract class AutonomousBase extends LinearOpMode {
     public void initialize() {
 
         robot.init(hardwareMap);
-
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
