@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "leftBackDrive", group = "Autonomous")
-@Disabled
+//@Disabled
 public class leftBackDrive extends AutonomousBase {
 
     @Override

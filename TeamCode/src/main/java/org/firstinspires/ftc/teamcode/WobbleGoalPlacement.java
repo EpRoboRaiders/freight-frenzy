@@ -22,11 +22,11 @@ public class WobbleGoalPlacement extends AutonomousBase {
 
         encoderDrive(DRIVE_SPEED, 8, 8, 8, 8, 5);
 
-        encoderDrive(DRIVE_SPEED, -48, -48, -48, -48, 5);
+        encoderDrive(DRIVE_SPEED, -8, -8, -8, -8, 5);
 
         encoderDrive(DRIVE_SPEED, -18, 18, 18, -18, 5);
 
-        encoderDrive(.1, -40, -40, -40, -40, 5);
+        encoderDrive(.1, -80, -80, -80, -80, 5);
 
         encoderDrive(.1, -28, 28, 28, -28, 5);
 
@@ -35,6 +35,8 @@ public class WobbleGoalPlacement extends AutonomousBase {
         encoderDrive(.1, 42.5, -42.5, -42.5, 42.5, 5);
 
         encoderDrive(DRIVE_SPEED, 85, 85, 85, 85, 5);
+
+        encoderDrive(.1, -3, 3, 3, -3, 5);
 
         encoderDrive(DRIVE_SPEED, -15,-15, -15,-15, 5);
 

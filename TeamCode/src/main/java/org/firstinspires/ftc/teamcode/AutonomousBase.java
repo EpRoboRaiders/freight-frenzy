@@ -85,14 +85,25 @@ public abstract class AutonomousBase extends LinearOpMode {
             // Turn On RUN_TO_POSITION
             robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // reset the timeout time and start motion.
             runtime.reset();
             robot.leftFrontDrive.setPower(Math.abs(speed));
             robot.leftBackDrive.setPower(Math.abs(speed));
-            robot.rightFrontDrive.setPower(Math.abs(speed));
+
+            // If rightFrontInches is positive, run the motor forward; if it is negative, run
+            // backwards.9
+
+            if (rightFrontInches > 0) {
+                robot.rightFrontDrive.setPower(Math.abs(speed));
+            }
+            else if(rightFrontInches < 0){
+                robot.rightFrontDrive.setPower(Math.abs(speed) * -1);
+            }
+
             robot.rightBackDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
@@ -104,7 +115,7 @@ public abstract class AutonomousBase extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (robot.leftFrontDrive.isBusy() && robot.leftBackDrive.isBusy()
-                            && robot.rightFrontDrive.isBusy() && robot.rightBackDrive.isBusy())) {
+                            /*&& robot.rightFrontDrive.isBusy()*/ && robot.rightBackDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d %7d %7d", newLeftFrontTarget, newLeftBackTarget, newRightFrontTarget, newRightBackTarget);
@@ -593,7 +604,6 @@ public abstract class AutonomousBase extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        robot.wobbleGrabber.setPower(.05);
     }
     private double degreeDifference(double currentAngle, double previousAngle) {
 
