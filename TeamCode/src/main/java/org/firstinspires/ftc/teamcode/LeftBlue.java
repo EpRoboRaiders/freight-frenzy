@@ -87,22 +87,25 @@ public class LeftBlue extends AutonomousBase {
         encoderDrive(DRIVE_SPEED, 80, 80, 80, 80, 5);
 
         //strafes to put wobble goal in box
-        encoderDrive(DRIVE_SPEED, 20, -20, -20, 20, 5);
+        //changed the distance so the robot does not move as far into the box
+        encoderDrive(DRIVE_SPEED, 10, -10, -10, 10, 5);
 
         //moves forward into box
-        encoderDrive(DRIVE_SPEED, 13, 13, 13, 13, 5);
+        //does not move as far into the box
+        encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 5);
 
         //pulls out of box
-        encoderDrive(DRIVE_SPEED, -11, -11, -11, -11, 5);
+        encoderDrive(DRIVE_SPEED, -8, -8, -8, -8, 5);
 
         //strafes toward wall
-        encoderDrive(DRIVE_SPEED, -24, 24, 24, -24, 5);
+        encoderDrive(DRIVE_SPEED, -20, 20, 20, -20, 5);
 
         //moves back to the starting wall
         encoderDrive(.1, -82, -82, -82, -82, 5);
 
         //strafes over into the corner
-        encoderDrive(.1, -28, 28, 28, -28, 5);
+        //was 28 is now 2, so it moves 26 less than before
+        encoderDrive(.1, -2, 2, 2, -2, 5);
 
         //moves back into corner to straighten out
         encoderDrive(.1, -4, -4, -4, -4, 5);
@@ -117,9 +120,10 @@ public class LeftBlue extends AutonomousBase {
         encoderDrive(DRIVE_SPEED, 15, -15,-15,15,5);
 
         //moves to the box
-        encoderDrive(DRIVE_SPEED, 70, 70, 70, 70, 5);
+        //not far enough so it is now 8 inches farther into the box
+        encoderDrive(DRIVE_SPEED, 78, 78, 78, 78, 5);
 
-        //moves into box
+        //strafes into the box
         encoderDrive(DRIVE_SPEED, -10, 10, 10, -10, 5);
 
         //pulls out of box and parks on the white line
