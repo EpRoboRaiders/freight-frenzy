@@ -28,7 +28,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Disabled
 public abstract class AutonomousBase extends LinearOpMode {
 
-    //test push from home.eeeeee
+    //test push from home.eeeeeee
     RobotTemplate robot = new RobotTemplate();
     private ElapsedTime runtime = new ElapsedTime();
 
