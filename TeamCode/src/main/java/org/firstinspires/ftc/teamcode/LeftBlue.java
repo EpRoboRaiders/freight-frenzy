@@ -57,8 +57,8 @@ public class LeftBlue extends AutonomousBase {
         encoderDrive(.1,-1,-1,-1, -1, 5);
 
         //strafe right
-        //was 44.5, now it is 44
-        encoderDrive(.1,44,-44,-44,44,7);
+        //was 44, now it is 43
+        encoderDrive(.1,43,-43,-43,43,7);
 
         //move forward to grab wobble
         encoderDrive(.1, 10,10,10,10,5);
@@ -103,20 +103,21 @@ public class LeftBlue extends AutonomousBase {
         encoderDrive(DRIVE_SPEED, -8, -8, -8, -8, 5);
 
         //strafes toward wall
-        encoderDrive(DRIVE_SPEED, -24, 24, 24, -24, 5);
+        encoderDrive(DRIVE_SPEED, -22.5, 22.5, 22.5, -22.5
+                , 5);
 
         //moves back to the starting wall
         encoderDrive(.1, -82, -82, -82, -82, 5);
 
         //strafes over into the corner
         //was 28 is now 10, so it moves 18 less than before
-        encoderDrive(.1, -10, 10, 10, -10, 5);
+        encoderDrive(.1, -10, 10, 10, -10, 2.5);
 
         //moves back into corner to straighten out
-        encoderDrive(.1, -4, -4, -4, -4, 5);
+        encoderDrive(.1, -4, -4, -4, -4, 2.5);
 
         //strafes over to grab wobble gaol
-        encoderDrive(.1, 43, -43, -43, 43, 5);
+        encoderDrive(.1, 42, -42, -42, 42, 5);
 
         //moves forward to grab wobble goal
         encoderDrive(DRIVE_SPEED, 7, 7, 7, 7, 5);

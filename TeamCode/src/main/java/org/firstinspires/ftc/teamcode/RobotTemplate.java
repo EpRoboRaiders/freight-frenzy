@@ -60,7 +60,7 @@ public class RobotTemplate
     public DcMotor  rightBackDrive  = null;
     // public DcMotor  leftArm     = null;
 
-    public CRServo  wobbleGrabber = null;
+    public Servo  wobbleGrabber = null;
 
     public CRServo  grabberArm = null;
 
@@ -90,7 +90,7 @@ public class RobotTemplate
         rightFrontDrive  = hwMap.get(DcMotor.class, "right_front");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back");
 
-        wobbleGrabber = hwMap.get(CRServo.class, "wobble_grabber");
+        wobbleGrabber = hwMap.get(Servo.class, "wobble_grabber");
         grabberArm = hwMap.get(CRServo.class, "grabber_arm");
 
         /*

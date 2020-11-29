@@ -154,7 +154,7 @@ public class Controller extends OpMode {
             }
         }
 
-        robot.wobbleGrabber.setPower(gamepad2.right_stick_x);
+        robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
 
         if (gamepad2.left_trigger > 0) {
             robot.grabberArm.setPower(0.06);
@@ -179,7 +179,7 @@ public class Controller extends OpMode {
         telemetry.addData("Left Back Motor: ", robot.leftBackDrive.getPower());
         telemetry.addData("Fight Back Motor: ", robot.rightBackDrive.getPower());
 
-        telemetry.addData("Wobble Grabber Servo: ", robot.wobbleGrabber.getPower());
+        telemetry.addData("Wobble Grabber Servo: ", robot.wobbleGrabber.getPosition());
         telemetry.addData("Grabber Arm Servo: ", robot.grabberArm.getPower());
 
         telemetry.update();
