@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.constructors.PIDController;
+import org.firstinspires.ftc.teamcode.constructors.RobotTemplate;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -29,7 +31,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public abstract class AutonomousBase extends LinearOpMode {
 
     //test push from home.eeeeeeeeee
-    RobotTemplate robot = new RobotTemplate();
+    public RobotTemplate robot = new RobotTemplate();
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 28 ;    // eg: TETRIX Motor Encoder
@@ -37,8 +39,8 @@ public abstract class AutonomousBase extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 3.77 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.2;
-    static final double     TURN_SPEED              = 0.1;
+    public static final double     DRIVE_SPEED             = 0.2;
+    public static final double     TURN_SPEED              = 0.1;
     double rotation;
     PIDController pidRotate;
     BNO055IMU imu;
@@ -57,7 +59,7 @@ public abstract class AutonomousBase extends LinearOpMode {
     Orientation lastAngles = new Orientation();
 
     OpenCvWebcam webcam;
-    RingStackMeasurerPipeline pipeline;
+    public RingStackMeasurerPipeline pipeline;
 
     public void runOpMode() {}
 
