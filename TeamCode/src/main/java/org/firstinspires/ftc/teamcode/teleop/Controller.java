@@ -12,12 +12,16 @@ import static com.qualcomm.robotcore.util.Range.clip;
 public class Controller extends OpMode {
 
     RobotTemplate robot = new RobotTemplate();
-    Boolean bPressed = true;
+    Boolean yPressed = false;
     // hello
     static final double SPEED = -.35;
     double grabberPower = 0;
     boolean upPressed = false;
     boolean downPressed = false;
+    boolean aPressed = false;
+    Boolean bPressed = false;
+    boolean wobbleClamped = false;
+    boolean armRaised = false;
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
     // the program, the mode is set to 0, or "tank."
@@ -59,12 +63,12 @@ public class Controller extends OpMode {
     @Override
     public void loop() {// Cycle through the driving modes when the "b" button on the first controller is pressed.
 
-        if (gamepad1.b != bPressed) {
+        if (gamepad1.b != yPressed) {
 
-            if(!bPressed) {
+            if(!yPressed) {
                 mode = mode.getNext();
             }
-            bPressed = !bPressed;
+            yPressed = !yPressed;
         }
 
         // Run code depending on which drive mode is currently active (at 75% speed, because
@@ -153,14 +157,58 @@ public class Controller extends OpMode {
             }
         }
 
-        robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
 
+        if (gamepad2.b && !bPressed) {
+            bPressed = !bPressed;
+            wobbleClamped = !wobbleClamped;
+        }
+        if (!gamepad2.b && bPressed) {
+            bPressed = !bPressed;
+        }
+
+        if (gamepad2.a && !aPressed) {
+            aPressed = !aPressed;
+            armRaised = !armRaised;
+        }
+        if (!gamepad2.a && aPressed) {
+            aPressed = !aPressed;
+        }
+
+        if (wobbleClamped) {
+            robot.wobbleGrabber.setPosition(1);
+        }
+        else {
+            robot.wobbleGrabber.setPosition(0);
+        }
+
+        if (armRaised) {
+            robot.grabberArm.setPosition(1);
+        }
+        else {
+            robot.grabberArm.setPosition(0);
+        }
+
+
+
+        if(gamepad2.x) {
+            robot.leftShooter.setPower(1);
+            robot.rightShooter.setPower(1);
+        }
+        else {
+            robot.leftShooter.setPower(0);
+            robot.rightShooter.setPower(0);
+        }
+
+        //robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
+        /*
         if (gamepad2.left_trigger > 0) {
             robot.grabberArm.setPower(0.06);
         }
         else {
             robot.grabberArm.setPower(-gamepad2.left_stick_y);
         }
+
+         */
 
 
         // Display the current mode of the robot in Telemetry for reasons deemed obvious.
@@ -179,7 +227,7 @@ public class Controller extends OpMode {
         telemetry.addData("Fight Back Motor: ", robot.rightBackDrive.getPower());
 
         telemetry.addData("Wobble Grabber Servo: ", robot.wobbleGrabber.getPosition());
-        telemetry.addData("Grabber Arm Servo: ", robot.grabberArm.getPower());
+        telemetry.addData("Grabber Arm Servo: ", robot.grabberArm.getPosition());
 
         telemetry.update();
 

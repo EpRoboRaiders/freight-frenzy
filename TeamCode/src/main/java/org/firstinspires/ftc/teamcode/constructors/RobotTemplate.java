@@ -60,9 +60,14 @@ public class RobotTemplate
     public DcMotor  rightBackDrive  = null;
     // public DcMotor  leftArm     = null;
 
+    public DcMotor  leftShooter   = null;
+    public DcMotor  rightShooter   = null;
+
+    public DcMotor  intakeArm  = null;
+
     public Servo  wobbleGrabber = null;
 
-    public CRServo  grabberArm = null;
+    public Servo  grabberArm = null;
 
 /*
     public static final double MID_SERVO       =  0.5 ;
@@ -90,8 +95,13 @@ public class RobotTemplate
         rightFrontDrive  = hwMap.get(DcMotor.class, "right_front");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back");
 
+        leftShooter = hwMap.get(DcMotor.class, "left_shooter");
+        rightShooter = hwMap.get(DcMotor.class, "right_shooter");
+
+        intakeArm = hwMap.get(DcMotor.class, "intake_arm");
+
         wobbleGrabber = hwMap.get(Servo.class, "wobble_grabber");
-        grabberArm = hwMap.get(CRServo.class, "grabber_arm");
+        grabberArm = hwMap.get(Servo.class, "grabber_arm");
 
         /*
         leftArm    = hwMap.get(DcMotor.class, "left_arm");
@@ -101,12 +111,18 @@ public class RobotTemplate
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
+        leftShooter.setDirection(DcMotor.Direction.REVERSE);
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
         //leftArm.setPower(0);
+
+        leftShooter.setPower(0);
+        rightShooter.setPower(0);
+
+        intakeArm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -115,11 +131,22 @@ public class RobotTemplate
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        leftShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         // Set motors to brake.
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 }
 
