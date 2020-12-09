@@ -12,16 +12,18 @@ import static com.qualcomm.robotcore.util.Range.clip;
 public class Controller extends OpMode {
 
     RobotTemplate robot = new RobotTemplate();
-    Boolean yPressed = false;
+    boolean y1Pressed = false;
     // hello
-    static final double SPEED = -.35;
+    static final double SPEED = -.5;
     double grabberPower = 0;
     boolean upPressed = false;
     boolean downPressed = false;
     boolean aPressed = false;
-    Boolean bPressed = false;
-    boolean wobbleClamped = false;
-    boolean armRaised = false;
+    boolean bPressed = false;
+    boolean wobbleClamped = true;
+    boolean armRaised = true;
+    double hopperDepth = 0; //int hopperDepth = 0;
+    boolean y2Pressed = false;
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
     // the program, the mode is set to 0, or "tank."
@@ -63,12 +65,12 @@ public class Controller extends OpMode {
     @Override
     public void loop() {// Cycle through the driving modes when the "b" button on the first controller is pressed.
 
-        if (gamepad1.b != yPressed) {
+        if (gamepad1.b != y1Pressed) {
 
-            if(!yPressed) {
+            if(!y1Pressed) {
                 mode = mode.getNext();
             }
-            yPressed = !yPressed;
+            y1Pressed = !y2Pressed;
         }
 
         // Run code depending on which drive mode is currently active (at 75% speed, because
@@ -157,7 +159,7 @@ public class Controller extends OpMode {
             }
         }
 
-
+        // Toggle the grabberArm being raised.
         if (gamepad2.b && !bPressed) {
             bPressed = !bPressed;
             wobbleClamped = !wobbleClamped;
@@ -166,6 +168,7 @@ public class Controller extends OpMode {
             bPressed = !bPressed;
         }
 
+        // Toggle the wobbleGrabber being clamped.
         if (gamepad2.a && !aPressed) {
             aPressed = !aPressed;
             armRaised = !armRaised;
@@ -178,25 +181,68 @@ public class Controller extends OpMode {
             robot.wobbleGrabber.setPosition(1);
         }
         else {
-            robot.wobbleGrabber.setPosition(0);
+            robot.wobbleGrabber.setPosition(0.5);
         }
 
         if (armRaised) {
-            robot.grabberArm.setPosition(1);
+            robot.grabberArm.setPosition(0.6);
         }
         else {
             robot.grabberArm.setPosition(0);
         }
+        /*
+        if (gamepad2.y && !y2Pressed) {
+            y2Pressed = !y2Pressed;
+            hopperDepth += 1;
+        }
+        if (!gamepad2.y && y2Pressed) {
+            y2Pressed = !y2Pressed;
+        }
 
+        hopperDepth = hopperDepth % 4;
+
+         */
+
+        /*
+        if (gamepad2.y && !y2Pressed) {
+            y2Pressed = !y2Pressed;
+            hopperDepth += 1;
+        }
+        if (!gamepad2.y && y2Pressed) {
+            y2Pressed = !y2Pressed;
+        }
+
+        hopperDepth = hopperDepth % 4;
+
+         */
+
+        if (gamepad2.y && !y2Pressed) {
+            y2Pressed = !y2Pressed;
+            hopperDepth += 0.01;
+        }
+        if (!gamepad2.y && y2Pressed) {
+            y2Pressed = !y2Pressed;
+        }
+
+        hopperDepth = hopperDepth % 1;
+
+        robot.intakeArm.setPower(-gamepad2.left_stick_y/2);
+
+        robot.ringClamp.setPosition(gamepad2.right_stick_x);
+
+        //robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
+        //gamepad2.left_stick_x
 
 
         if(gamepad2.x) {
             robot.leftShooter.setPower(1);
             robot.rightShooter.setPower(1);
+            robot.shooterArm.setPosition(1);
         }
         else {
             robot.leftShooter.setPower(0);
             robot.rightShooter.setPower(0);
+            robot.shooterArm.setPosition(.8);
         }
 
         //robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
@@ -228,7 +274,9 @@ public class Controller extends OpMode {
 
         telemetry.addData("Wobble Grabber Servo: ", robot.wobbleGrabber.getPosition());
         telemetry.addData("Grabber Arm Servo: ", robot.grabberArm.getPosition());
+        telemetry.addData("HopperDepth ", hopperDepth);
 
+        telemetry.addData("Ring Clamp: ", robot.ringClamp.getPosition());
         telemetry.update();
 
 

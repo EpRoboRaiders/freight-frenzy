@@ -69,6 +69,11 @@ public class RobotTemplate
 
     public Servo  grabberArm = null;
 
+    public Servo  hopperLifter = null;
+
+    public Servo shooterArm = null;
+
+    public Servo ringClamp = null;
 /*
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -102,6 +107,12 @@ public class RobotTemplate
 
         wobbleGrabber = hwMap.get(Servo.class, "wobble_grabber");
         grabberArm = hwMap.get(Servo.class, "grabber_arm");
+
+        hopperLifter = hwMap.get(Servo.class, "hopper_lifter");
+
+        shooterArm = hwMap.get(Servo.class, "shooter_arm");
+
+        ringClamp = hwMap.get(Servo.class, "ring_clamp");
 
         /*
         leftArm    = hwMap.get(DcMotor.class, "left_arm");
