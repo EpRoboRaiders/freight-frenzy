@@ -11,19 +11,21 @@ import static com.qualcomm.robotcore.util.Range.clip;
 //@Disabled
 public class Controller extends OpMode {
 
-    RobotTemplate robot = new RobotTemplate();
-    boolean y1Pressed = false;
-    // hello
-    static final double SPEED = -.5;
-    double grabberPower = 0;
-    boolean upPressed = false;
-    boolean downPressed = false;
-    boolean aPressed = false;
-    boolean bPressed = false;
-    boolean wobbleClamped = true;
-    boolean armRaised = true;
-    double hopperDepth = 0; //int hopperDepth = 0;
-    boolean y2Pressed = false;
+    RobotTemplate       robot         = new RobotTemplate();
+    static final double SPEED         = -.5;
+    double              grabberPower  = 0;
+
+    boolean             upPressed     = false;
+    boolean             downPressed   = false;
+    boolean             aPressed      = false;
+    boolean             bPressed      = false;
+    boolean             y2Pressed     = false;
+    boolean             y1Pressed     = false;
+
+    boolean             wobbleClamped = true;
+    boolean             armRaised     = true;
+
+    int                 hopperDepth   = 0;
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
     // the program, the mode is set to 0, or "tank."
@@ -177,12 +179,16 @@ public class Controller extends OpMode {
             aPressed = !aPressed;
         }
 
+        // Set the position of the wobbleGrabber based on whether it is "supposed" to be clamped
+        // or unclamped.
         if (wobbleClamped) {
             robot.wobbleGrabber.setPosition(1);
         }
         else {
             robot.wobbleGrabber.setPosition(0.5);
         }
+
+        // Set the position of the grabberArm based on whether it is "supposed" to be up or down.
 
         if (armRaised) {
             robot.grabberArm.setPosition(0.6);
@@ -200,10 +206,8 @@ public class Controller extends OpMode {
         }
 
         hopperDepth = hopperDepth % 4;
-
          */
 
-        /*
         if (gamepad2.y && !y2Pressed) {
             y2Pressed = !y2Pressed;
             hopperDepth += 1;
@@ -211,32 +215,36 @@ public class Controller extends OpMode {
         if (!gamepad2.y && y2Pressed) {
             y2Pressed = !y2Pressed;
         }
-
         hopperDepth = hopperDepth % 4;
 
-         */
-
-        if (gamepad2.y && !y2Pressed) {
-            y2Pressed = !y2Pressed;
-            hopperDepth += 0.01;
+        if (hopperDepth == 0) {
+            robot.hopperLifter.setPosition(0.15);
         }
-        if (!gamepad2.y && y2Pressed) {
-            y2Pressed = !y2Pressed;
+        else if (hopperDepth == 1) {
+            robot.hopperLifter.setPosition(0.09);
+        }
+        else if (hopperDepth == 2) {
+            robot.hopperLifter.setPosition(0.05);
+        }
+        else {
+            robot.hopperLifter.setPosition(0);
         }
 
-        hopperDepth = hopperDepth % 1;
 
+        // Raise or lower the intake arm with the left stick.
         robot.intakeArm.setPower(-gamepad2.left_stick_y/2);
 
-        robot.ringClamp.setPosition(gamepad2.right_stick_x);
+
+        // robot.ringClamp.setPosition(gamepad2.right_stick_x);
 
         //robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
         //gamepad2.left_stick_x
 
+        // If the X button is pressed, activate the shooter arm and the shooter mechanism itself.
 
         if(gamepad2.x) {
-            robot.leftShooter.setPower(1);
-            robot.rightShooter.setPower(1);
+            robot.leftShooter.setPower(.8);
+            robot.rightShooter.setPower(.8);
             robot.shooterArm.setPosition(1);
         }
         else {

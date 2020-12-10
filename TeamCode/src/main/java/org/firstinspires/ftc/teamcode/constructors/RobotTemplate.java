@@ -53,35 +53,36 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class RobotTemplate
 {
-    /* Public OpMode members. */
-    public DcMotor  leftFrontDrive   = null;
-    public DcMotor  leftBackDrive   = null;
-    public DcMotor  rightFrontDrive  = null;
-    public DcMotor  rightBackDrive  = null;
-    // public DcMotor  leftArm     = null;
+    // Motors on the drivetrain.
+    public DcMotor leftFrontDrive  = null;
+    public DcMotor leftBackDrive   = null;
+    public DcMotor rightFrontDrive = null;
+    public DcMotor rightBackDrive  = null;
 
-    public DcMotor  leftShooter   = null;
-    public DcMotor  rightShooter   = null;
+    // Motors that shoot rings in the code.
+    public DcMotor leftShooter     = null;
+    public DcMotor rightShooter    = null;
 
-    public DcMotor  intakeArm  = null;
+    // Motor that raises and lowers the intake mechanism.
+    public DcMotor intakeArm       = null;
 
-    public Servo  wobbleGrabber = null;
+    // Servo that latches onto wobble goals.
+    public Servo   wobbleGrabber   = null;
 
-    public Servo  grabberArm = null;
+    // Servo that raises and lowers wobbleGrabber.
+    public Servo   grabberArm      = null;
 
-    public Servo  hopperLifter = null;
+    // Servo that raises and lowers the hopper to shoot rings.
+    public Servo   hopperLifter    = null;
 
-    public Servo shooterArm = null;
+    // Servo that pushes rings from the hopper into the shooter mechanism.
+    public Servo   shooterArm      = null;
 
-    public Servo ringClamp = null;
-/*
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
-     */
+    // Servo that clamps onto rings in the intake.
+    public Servo   ringClamp       = null;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
+    HardwareMap    hwMap           = null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
@@ -92,31 +93,26 @@ public class RobotTemplate
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
-        hwMap = ahwMap;
+        hwMap           = ahwMap;
 
         // Define and Initialize Motors
         leftFrontDrive  = hwMap.get(DcMotor.class, "left_front");
-        leftBackDrive  = hwMap.get(DcMotor.class, "left_back");
-        rightFrontDrive  = hwMap.get(DcMotor.class, "right_front");
-        rightBackDrive = hwMap.get(DcMotor.class, "right_back");
+        leftBackDrive   = hwMap.get(DcMotor.class, "left_back");
+        rightFrontDrive = hwMap.get(DcMotor.class, "right_front");
+        rightBackDrive  = hwMap.get(DcMotor.class, "right_back");
 
-        leftShooter = hwMap.get(DcMotor.class, "left_shooter");
-        rightShooter = hwMap.get(DcMotor.class, "right_shooter");
+        leftShooter     = hwMap.get(DcMotor.class, "left_shooter");
+        rightShooter    = hwMap.get(DcMotor.class, "right_shooter");
+        shooterArm      = hwMap.get(Servo.class, "shooter_arm");
 
-        intakeArm = hwMap.get(DcMotor.class, "intake_arm");
+        hopperLifter    = hwMap.get(Servo.class, "hopper_lifter");
+        ringClamp       = hwMap.get(Servo.class, "ring_clamp");
 
-        wobbleGrabber = hwMap.get(Servo.class, "wobble_grabber");
-        grabberArm = hwMap.get(Servo.class, "grabber_arm");
+        intakeArm       = hwMap.get(DcMotor.class, "intake_arm");
 
-        hopperLifter = hwMap.get(Servo.class, "hopper_lifter");
+        wobbleGrabber   = hwMap.get(Servo.class, "wobble_grabber");
+        grabberArm      = hwMap.get(Servo.class, "grabber_arm");
 
-        shooterArm = hwMap.get(Servo.class, "shooter_arm");
-
-        ringClamp = hwMap.get(Servo.class, "ring_clamp");
-
-        /*
-        leftArm    = hwMap.get(DcMotor.class, "left_arm");
-         */
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -128,7 +124,6 @@ public class RobotTemplate
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
-        //leftArm.setPower(0);
 
         leftShooter.setPower(0);
         rightShooter.setPower(0);
@@ -147,7 +142,6 @@ public class RobotTemplate
         leftShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
 
         // Set motors to brake.
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
