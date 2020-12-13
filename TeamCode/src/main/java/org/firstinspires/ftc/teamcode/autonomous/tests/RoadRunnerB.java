@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+import java.util.Vector;
+
 @Autonomous(name = "RoadRunnerB", group = "RoadrunnerTest")
 public class RoadRunnerB extends LinearOpMode {
 
@@ -20,44 +22,44 @@ public class RoadRunnerB extends LinearOpMode {
         //drive.setPoseEstimate(startPose);
 
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
-                //first trajectory moves the first wobble goal into box A
-                //every time the robot stops, a new trajectory must be made
-                .lineToConstantHeading(new Vector2d(74, 9))
+                //first trajectory moves the robot towards box B
+                .forward(60)
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                //second trajectory moves the robot to line up with the second wobble goal
-                .lineToConstantHeading(new Vector2d(92, -14))
+                //second trajectory moves the robot into the box
+                .lineToConstantHeading(new Vector2d(95, -14))
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                //moves forward to grab the wobble goal
-                .lineToLinearHeading(new Pose2d(15, -46, Math.toRadians(90)))
+                //moves the robot out of the box and towards the second wobble goal
+                .lineToLinearHeading(new Pose2d(12, -50, Math.toRadians(90)))
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
                 //moves forward to grab the wobble goal
-                .forward(14)
+                .forward(15)
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                //moves the wobble goal into box A
-                .lineToLinearHeading(new Pose2d(90, -14, Math.toRadians(0)))
+                //moves the second wobble goal away form the ring
+                .lineToLinearHeading(new Pose2d(30, 4, Math.toRadians(0)))
                 .build();
 
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                //pulls away from the wobble goal and out of the box
-                .back(15)
+                //moves the wobble goal into the box
+                .lineToConstantHeading(new Vector2d(90, -14 ))
                 .build();
 
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(61, -16))
+                .lineToConstantHeading(new Vector2d(58, -22))
                 .build();
 
         //insert shooting
 
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                //parks on the white line
                 .forward(8)
                 .build();
 
@@ -67,8 +69,8 @@ public class RoadRunnerB extends LinearOpMode {
         drive.followTrajectory(traj3);
         drive.followTrajectory(traj4);
         drive.followTrajectory(traj5);
-        //drive.followTrajectory(traj6);
-        //drive.followTrajectory(traj7);
-        //drive.followTrajectory(traj8);
+        drive.followTrajectory(traj6);
+        drive.followTrajectory(traj7);
+        drive.followTrajectory(traj8);
     }
 }
