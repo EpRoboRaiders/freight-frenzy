@@ -81,6 +81,9 @@ public class RobotTemplate
     // Servo that clamps onto rings in the intake.
     public Servo   ringClamp       = null;
 
+    // Servo that rotates the mechanism that clamps onto rings.
+    public Servo   clampRotator    = null;
+
     /* local OpMode members. */
     HardwareMap    hwMap           = null;
     private ElapsedTime period  = new ElapsedTime();
@@ -112,6 +115,9 @@ public class RobotTemplate
 
         wobbleGrabber   = hwMap.get(Servo.class, "wobble_grabber");
         grabberArm      = hwMap.get(Servo.class, "grabber_arm");
+        clampRotator    = hwMap.get(Servo.class, "clamp_rotator");
+
+
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
@@ -141,7 +147,6 @@ public class RobotTemplate
 
         leftShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set motors to brake.
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

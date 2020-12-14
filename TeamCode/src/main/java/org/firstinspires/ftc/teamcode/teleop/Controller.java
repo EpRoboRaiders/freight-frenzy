@@ -21,9 +21,13 @@ public class Controller extends OpMode {
     boolean             bPressed      = false;
     boolean             y2Pressed     = false;
     boolean             y1Pressed     = false;
+    boolean             rightBumperPressed = false;
+    boolean             rightTriggerPressed = false;
 
     boolean             wobbleClamped = true;
     boolean             armRaised     = true;
+    boolean             ringClamped   = false;
+    boolean             collectingRings = true;
 
     int                 hopperDepth   = 0;
 
@@ -208,6 +212,8 @@ public class Controller extends OpMode {
         hopperDepth = hopperDepth % 4;
          */
 
+        // Cycle hopperDepth between 0 and 3, incrementing by 1 when the y button is pressed
+        // (and back to 0 when it exceeds 3).
         if (gamepad2.y && !y2Pressed) {
             y2Pressed = !y2Pressed;
             hopperDepth += 1;
@@ -217,6 +223,8 @@ public class Controller extends OpMode {
         }
         hopperDepth = hopperDepth % 4;
 
+
+        // Set the hopperLifter to a corresponding position based on the hopperDepth.
         if (hopperDepth == 0) {
             robot.hopperLifter.setPosition(0.15);
         }
@@ -230,9 +238,29 @@ public class Controller extends OpMode {
             robot.hopperLifter.setPosition(0);
         }
 
+        // Toggle ringClamped using the right bumper on the second controller.
+        if (gamepad2.right_bumper && !rightBumperPressed) {
+            rightBumperPressed = !rightBumperPressed;
+            ringClamped = !ringClamped;
+        }
+        if (!gamepad2.right_bumper && rightBumperPressed) {
+            rightBumperPressed = !rightBumperPressed;
+        }
+
+        // Set the ringClamp to a corresponding state based on if ringClamped is true.
+        if (ringClamped) {
+            robot.ringClamp.setPosition(.75);
+        }
+        else {
+            robot.ringClamp.setPosition(1);
+        }
+
+        // Map the clampRotator to the x axis of the second gamepad's right joystick.
+        // robot.clampRotator.setPosition(gamepad2.right_stick_x);
+
 
         // Raise or lower the intake arm with the left stick.
-        robot.intakeArm.setPower(-gamepad2.left_stick_y/2);
+        robot.intakeArm.setPower(-gamepad2.left_stick_y*.4);
 
 
         // robot.ringClamp.setPosition(gamepad2.right_stick_x);
@@ -252,6 +280,24 @@ public class Controller extends OpMode {
             robot.rightShooter.setPower(0);
             robot.shooterArm.setPosition(.8);
         }
+
+        // Toggle collectingRings using the right trigger on the second controller.
+        if (gamepad2.right_trigger > .2 && !rightTriggerPressed) {
+            rightTriggerPressed = !rightTriggerPressed;
+            collectingRings = !collectingRings;
+        }
+        if (gamepad2.right_trigger <= .2 && rightTriggerPressed) {
+            rightTriggerPressed = !rightTriggerPressed;
+        }
+
+        // Set the clampRotator to a corresponding state based on if collectingRings is true.
+        if (collectingRings) {
+            robot.clampRotator.setPosition(.85);
+        }
+        else {
+            robot.clampRotator.setPosition(.24);
+        }
+
 
         //robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
         /*
@@ -285,6 +331,9 @@ public class Controller extends OpMode {
         telemetry.addData("HopperDepth ", hopperDepth);
 
         telemetry.addData("Ring Clamp: ", robot.ringClamp.getPosition());
+        telemetry.addData("Clamp Rotator: ", robot.clampRotator.getPosition());
+        telemetry.addData("intakeArm :", robot.intakeArm.getCurrentPosition());
+
         telemetry.update();
 
 
