@@ -31,7 +31,7 @@ public class RoadrunnerTest extends LinearOpMode {
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(15, -46, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(14, -46, Math.toRadians(90)))
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())

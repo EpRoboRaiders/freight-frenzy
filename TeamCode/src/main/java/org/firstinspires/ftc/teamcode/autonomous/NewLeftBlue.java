@@ -93,22 +93,22 @@ public class NewLeftBlue extends AutonomousBase {
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box A
                 //every time the robot stops, a new trajectory must be made
-                .lineToConstantHeading(new Vector2d(73, 9))
+                .lineToConstantHeading(new Vector2d(74, 9))
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(12, -46, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(15, -46, Math.toRadians(90)))
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 //moves forward to grab the wobble goal
-                .forward(18)
+                .forward(14)
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
                 //moves the wobble goal into box A
-                .lineToLinearHeading(new Pose2d(62, 9, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(64, 9, Math.toRadians(0)))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
@@ -118,7 +118,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(61, -20))
+                .lineToConstantHeading(new Vector2d(61, -16))
                 .build();
 
         //insert shooting
@@ -133,6 +133,9 @@ public class NewLeftBlue extends AutonomousBase {
         drive.followTrajectory(traj4);
         drive.followTrajectory(traj5);
         drive.followTrajectory(traj6);
+
+        shooterPosition();
+
         drive.followTrajectory(traj7);
     }
 
@@ -282,6 +285,11 @@ public class NewLeftBlue extends AutonomousBase {
         robot.leftShooter.setPower(0);
         robot.rightShooter.setPower(0);
         robot.shooterArm.setPosition(.8);
+        robot.intakeArm.setPower(.6);
+
+        sleep(1500);
+
+        robot.intakeArm.setPower(0);
 
     }
 }

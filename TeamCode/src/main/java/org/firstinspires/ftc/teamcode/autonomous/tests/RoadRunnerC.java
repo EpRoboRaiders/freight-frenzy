@@ -32,27 +32,31 @@ public class RoadRunnerC extends LinearOpMode {
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 //moves forward to grab the wobble goal
-                .forward(44)
+                .forward(15)
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
                 //moves the wobble goal into box C
-                .lineToLinearHeading(new Pose2d(110, 9, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(30, 4, Math.toRadians(0)))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
+                .forward(90)
+                .build();
+
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
                 //pulls away from the wobble goal and out of the box
                 .back(15)
                 .build();
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(61, -16))
                 .build();
 
         //insert shooting
 
-        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+        Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
                 //moves forward to park
                 .forward(8)
                 .build();
@@ -67,7 +71,7 @@ public class RoadRunnerC extends LinearOpMode {
         drive.followTrajectory(traj5);
         drive.followTrajectory(traj6);
         drive.followTrajectory(traj7);
-
+        drive.followTrajectory(traj8);
 
     }
 }
