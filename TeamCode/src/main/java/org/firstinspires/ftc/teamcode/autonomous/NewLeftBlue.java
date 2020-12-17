@@ -93,27 +93,29 @@ public class NewLeftBlue extends AutonomousBase {
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box A
                 //every time the robot stops, a new trajectory must be made
-                .lineToConstantHeading(new Vector2d(74, 9))
+                .lineToConstantHeading(new Vector2d(75, 9))
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(15, -46, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(16, -46, Math.toRadians(90)))
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 //moves forward to grab the wobble goal
-                .forward(14)
+                //.forward(14)
+                .lineToConstantHeading(new Vector2d(16, -32))
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
                 //moves the wobble goal into box A
-                .lineToLinearHeading(new Pose2d(64, 9, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(65, 9, Math.toRadians(0)))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 //pulls away from the wobble goal and out of the box
-                .back(15)
+                // .back(15)
+                .lineToConstantHeading(new Vector2d(49, 9))
                 .build();
 
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
@@ -124,7 +126,8 @@ public class NewLeftBlue extends AutonomousBase {
         //insert shooting
 
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .forward(8)
+                // .forward(8)
+                .lineToConstantHeading(new Vector2d(69, -16))
                 .build();
 
         drive.followTrajectory(traj1);
@@ -142,7 +145,8 @@ public class NewLeftBlue extends AutonomousBase {
     public void positionB() {
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the robot towards box B
-                .forward(60)
+                // .forward(60)
+                .lineToConstantHeading(new Vector2d(60, 0))
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
@@ -151,35 +155,36 @@ public class NewLeftBlue extends AutonomousBase {
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                //moves the robot out of the box and towards the second wobble goal
-                .lineToLinearHeading(new Pose2d(6, -50, Math.toRadians(90)))
+                //second trajectory moves the robot to line up with the second wobble goal
+                .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(90)))
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
                 //moves forward to grab the wobble goal
-                .forward(15)
+                //.forward(14)
+                .lineToConstantHeading(new Vector2d(13, -36))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 //moves the second wobble goal away form the ring
-                .lineToLinearHeading(new Pose2d(26, 6, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(30, 4, Math.toRadians(0)))
                 .build();
 
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
                 //moves the wobble goal into the box
-                .lineToConstantHeading(new Vector2d(80, -18 ))
+                .lineToConstantHeading(new Vector2d(87, -14 ))
                 .build();
 
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(50, -24))
+                .lineToConstantHeading(new Vector2d(60, -16))
                 .build();
 
         //insert shooting
 
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                //parks on the white line
-                .forward(8)
+                // .forward(8)
+                .lineToConstantHeading(new Vector2d(68, -16))
                 .build();
 
         drive.followTrajectory(traj1);
@@ -189,6 +194,9 @@ public class NewLeftBlue extends AutonomousBase {
         drive.followTrajectory(traj5);
         drive.followTrajectory(traj6);
         drive.followTrajectory(traj7);
+
+        shooterPosition();
+
         drive.followTrajectory(traj8);
     }
 
@@ -201,35 +209,39 @@ public class NewLeftBlue extends AutonomousBase {
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                //18 is actually 15 for the x coordinate
-                .lineToLinearHeading(new Pose2d(18.5, -46, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(19, -46, Math.toRadians(90)))
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 //moves forward to grab the wobble goal
-                .forward(44)
+                //.forward(14)
+                .lineToConstantHeading(new Vector2d(19, -32))
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
                 //moves the wobble goal into box C
-                .lineToLinearHeading(new Pose2d(110, 9, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(30, 4, Math.toRadians(0)))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                //pulls away from the wobble goal and out of the box
-                .back(15)
+                .lineToConstantHeading(new Vector2d(115, 4))
                 .build();
 
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                //pulls away from the wobble goal and out of the box
+                .lineToConstantHeading(new Vector2d(105, 4))
+                .build();
+
+        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(61, -16))
+                .lineToConstantHeading(new Vector2d(66, -16))
                 .build();
 
         //insert shooting
 
-        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+        Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
                 //moves forward to park
-                .forward(8)
+                .lineToConstantHeading(new Vector2d(74, -16))
                 .build();
 
         waitForStart();
@@ -240,6 +252,10 @@ public class NewLeftBlue extends AutonomousBase {
         drive.followTrajectory(traj5);
         drive.followTrajectory(traj6);
         drive.followTrajectory(traj7);
+
+        shooterPosition();
+
+        drive.followTrajectory(traj8);
     }
 
     public void shooterPosition() {
@@ -250,8 +266,8 @@ public class NewLeftBlue extends AutonomousBase {
         sleep(500);
 
         robot.intakeArm.setPower(0);
-        robot.leftShooter.setPower(.75);
-        robot.rightShooter.setPower(.75);
+        robot.leftShooter.setPower(.71);
+        robot.rightShooter.setPower(.71);
         robot.shooterArm.setPosition(1);
 
         sleep(500);
@@ -259,12 +275,14 @@ public class NewLeftBlue extends AutonomousBase {
         robot.leftShooter.setPower(0);
         robot.rightShooter.setPower(0);
         robot.shooterArm.setPosition(.75);
-        robot.hopperLifter.setPosition(0.05);
 
-        sleep(500);
+        sleep(100);
+        robot.hopperLifter.setPosition(0.04);
 
-        robot.leftShooter.setPower(.75);
-        robot.rightShooter.setPower(.75);
+        sleep(1000);
+
+        robot.leftShooter.setPower(.71);
+        robot.rightShooter.setPower(.71);
         robot.shooterArm.setPosition(1);
 
         sleep(500);
@@ -272,12 +290,14 @@ public class NewLeftBlue extends AutonomousBase {
         robot.leftShooter.setPower(0);
         robot.rightShooter.setPower(0);
         robot.shooterArm.setPosition(.8);
+
+        sleep(100);
         robot.hopperLifter.setPosition(0);
 
-        sleep(500);
+        sleep(1000);
 
-        robot.leftShooter.setPower(.70);
-        robot.rightShooter.setPower(.70);
+        robot.leftShooter.setPower(.71);
+        robot.rightShooter.setPower(.71);
         robot.shooterArm.setPosition(1);
 
         sleep(500);
