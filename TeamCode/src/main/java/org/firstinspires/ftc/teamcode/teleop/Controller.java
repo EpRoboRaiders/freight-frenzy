@@ -22,12 +22,16 @@ public class Controller extends OpMode {
     boolean             y2Pressed     = false;
     boolean             y1Pressed     = false;
     boolean             rightBumperPressed = false;
+    boolean             leftBumperPressed = false;
     boolean             rightTriggerPressed = false;
 
     boolean             wobbleClamped = true;
     boolean             armRaised     = true;
     boolean             ringClamped   = false;
     boolean             collectingRings = true;
+    boolean             rotatorLocked = false;
+    
+    double              intakeArmPower = 0;
 
     int                 hopperDepth   = 0;
 
@@ -232,7 +236,7 @@ public class Controller extends OpMode {
             robot.hopperLifter.setPosition(0.09);
         }
         else if (hopperDepth == 2) {
-            robot.hopperLifter.setPosition(0.05);
+            robot.hopperLifter.setPosition(0.03);
         }
         else {
             robot.hopperLifter.setPosition(0);
@@ -259,8 +263,7 @@ public class Controller extends OpMode {
         // robot.clampRotator.setPosition(gamepad2.right_stick_x);
 
 
-        // Raise or lower the intake arm with the left stick.
-        robot.intakeArm.setPower(-gamepad2.left_stick_y*.4);
+
 
 
         // robot.ringClamp.setPosition(gamepad2.right_stick_x);
@@ -271,8 +274,13 @@ public class Controller extends OpMode {
         // If the X button is pressed, activate the shooter arm and the shooter mechanism itself.
 
         if(gamepad2.x) {
-            robot.leftShooter.setPower(.8);
-            robot.rightShooter.setPower(.8);
+            robot.leftShooter.setPower(.71);
+            robot.rightShooter.setPower(.71);
+            robot.shooterArm.setPosition(1);
+        }
+        else if(gamepad2.left_trigger > .2) {
+            robot.leftShooter.setPower(.62);
+            robot.rightShooter.setPower(.62);
             robot.shooterArm.setPosition(1);
         }
         else {
@@ -295,9 +303,26 @@ public class Controller extends OpMode {
             robot.clampRotator.setPosition(.85);
         }
         else {
-            robot.clampRotator.setPosition(.24);
+            robot.clampRotator.setPosition(.21);
         }
 
+        if (gamepad2.left_bumper && !leftBumperPressed) {
+            leftBumperPressed = !leftBumperPressed;
+            rotatorLocked = !rotatorLocked;
+            intakeArmPower = robot.intakeArm.getPower();
+            
+        }
+        if (!gamepad2.left_bumper && leftBumperPressed) {
+            leftBumperPressed = !leftBumperPressed;
+        }
+        
+        if (rotatorLocked) {
+            robot.intakeArm.setPower(intakeArmPower);
+        }
+        else {
+            // Raise or lower the intake arm with the left stick.
+            robot.intakeArm.setPower(-gamepad2.left_stick_y*.4);
+        }
 
         //robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
         /*
