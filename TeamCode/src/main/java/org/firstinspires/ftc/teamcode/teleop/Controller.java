@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -34,6 +35,12 @@ public class Controller extends OpMode {
     double              intakeArmPower = 0;
 
     int                 hopperDepth   = 0;
+
+    // The following is COMPLETELY COSMETIC; don't touch unless you hate fun.
+
+    boolean moyesFound;
+    int moyesSoundID;
+    boolean leftStickPressed = false;
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
     // the program, the mode is set to 0, or "tank."
@@ -70,6 +77,13 @@ public class Controller extends OpMode {
 
     public void init() {
         robot.init(hardwareMap);
+
+        // Also cosmetic
+        int moyesSoundID = hardwareMap.appContext.getResources().getIdentifier("moyes", "raw", hardwareMap.appContext.getPackageName());
+
+        if (moyesSoundID != 0)
+            moyesFound   = SoundPlayer.getInstance().preload(hardwareMap.appContext, moyesSoundID);
+
     }
 
     @Override
@@ -332,9 +346,17 @@ public class Controller extends OpMode {
         else {
             robot.grabberArm.setPower(-gamepad2.left_stick_y);
         }
-
          */
 
+        // Also cosmetic
+        if (gamepad2.left_stick_button && !leftStickPressed) {
+            leftStickPressed = !leftStickPressed;
+            SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, moyesSoundID);
+
+        }
+        if (!gamepad2.left_stick_button && leftStickPressed) {
+            leftStickPressed = !leftStickPressed;
+        }
 
         // Display the current mode of the robot in Telemetry for reasons deemed obvious.
         for (int i=0; i<(Mode.values().length); i++){
@@ -358,6 +380,7 @@ public class Controller extends OpMode {
         telemetry.addData("Ring Clamp: ", robot.ringClamp.getPosition());
         telemetry.addData("Clamp Rotator: ", robot.clampRotator.getPosition());
         telemetry.addData("intakeArm :", robot.intakeArm.getCurrentPosition());
+        telemetry.addData("gold resource",   moyesFound ?   "Found" : "NOT found\n Add moyes.wav to /src/main/res/raw" );
 
         telemetry.update();
 
