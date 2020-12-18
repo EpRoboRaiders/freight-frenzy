@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.teleop.Button;
 
 import org.firstinspires.ftc.teamcode.constructors.RobotTemplate;
 
@@ -18,18 +19,14 @@ public class Controller extends OpMode {
 
     boolean             upPressed     = false;
     boolean             downPressed   = false;
-    boolean             aPressed      = false;
-    boolean             bPressed      = false;
     boolean             y2Pressed     = false;
     boolean             y1Pressed     = false;
-    boolean             rightBumperPressed = false;
     boolean             leftBumperPressed = false;
-    boolean             rightTriggerPressed = false;
+    Button              wobbleButton = new Button();
+    Button              armRaised = new Button();
+    Button              ringClamped = new Button();
+    Button              collectingRings = new Button();
 
-    boolean             wobbleClamped = true;
-    boolean             armRaised     = true;
-    boolean             ringClamped   = false;
-    boolean             collectingRings = true;
     boolean             rotatorLocked = false;
     
     double              intakeArmPower = 0;
@@ -38,9 +35,9 @@ public class Controller extends OpMode {
 
     // The following is COMPLETELY COSMETIC; don't touch unless you hate fun.
 
-    boolean moyesFound;
-    int moyesSoundID;
-    boolean leftStickPressed = false;
+    //boolean moyesFound;
+    //int moyesSoundID;
+    //boolean leftStickPressed = false;
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
     // the program, the mode is set to 0, or "tank."
@@ -78,24 +75,30 @@ public class Controller extends OpMode {
     public void init() {
         robot.init(hardwareMap);
 
+        /*
         // Also cosmetic
         int moyesSoundID = hardwareMap.appContext.getResources().getIdentifier("moyes", "raw", hardwareMap.appContext.getPackageName());
 
         if (moyesSoundID != 0)
             moyesFound   = SoundPlayer.getInstance().preload(hardwareMap.appContext, moyesSoundID);
 
+         */
+
     }
 
     @Override
     public void loop() {// Cycle through the driving modes when the "b" button on the first controller is pressed.
 
-        if (gamepad1.b != y1Pressed) {
+        /*
+        if (gamepad1.y != y1Pressed) {
 
             if(!y1Pressed) {
                 mode = mode.getNext();
             }
             y1Pressed = !y2Pressed;
         }
+
+         */
 
         // Run code depending on which drive mode is currently active (at 75% speed, because
         // our robot is too fast at full speed):
@@ -183,27 +186,9 @@ public class Controller extends OpMode {
             }
         }
 
-        // Toggle the grabberArm being raised.
-        if (gamepad2.b && !bPressed) {
-            bPressed = !bPressed;
-            wobbleClamped = !wobbleClamped;
-        }
-        if (!gamepad2.b && bPressed) {
-            bPressed = !bPressed;
-        }
-
-        // Toggle the wobbleGrabber being clamped.
-        if (gamepad2.a && !aPressed) {
-            aPressed = !aPressed;
-            armRaised = !armRaised;
-        }
-        if (!gamepad2.a && aPressed) {
-            aPressed = !aPressed;
-        }
-
         // Set the position of the wobbleGrabber based on whether it is "supposed" to be clamped
         // or unclamped.
-        if (wobbleClamped) {
+        if (wobbleButton.checkstate(gamepad2.b)) {
             robot.wobbleGrabber.setPosition(1);
         }
         else {
@@ -212,7 +197,7 @@ public class Controller extends OpMode {
 
         // Set the position of the grabberArm based on whether it is "supposed" to be up or down.
 
-        if (armRaised) {
+        if (armRaised.checkstate(gamepad2.a)) {
             robot.grabberArm.setPosition(0.6);
         }
         else {
@@ -250,23 +235,14 @@ public class Controller extends OpMode {
             robot.hopperLifter.setPosition(0.09);
         }
         else if (hopperDepth == 2) {
-            robot.hopperLifter.setPosition(0.03);
+            robot.hopperLifter.setPosition(0.04);
         }
         else {
             robot.hopperLifter.setPosition(0);
         }
 
-        // Toggle ringClamped using the right bumper on the second controller.
-        if (gamepad2.right_bumper && !rightBumperPressed) {
-            rightBumperPressed = !rightBumperPressed;
-            ringClamped = !ringClamped;
-        }
-        if (!gamepad2.right_bumper && rightBumperPressed) {
-            rightBumperPressed = !rightBumperPressed;
-        }
-
         // Set the ringClamp to a corresponding state based on if ringClamped is true.
-        if (ringClamped) {
+        if (ringClamped.checkstate(gamepad2.right_bumper)) {
             robot.ringClamp.setPosition(.75);
         }
         else {
@@ -292,9 +268,10 @@ public class Controller extends OpMode {
             robot.rightShooter.setPower(.71);
             robot.shooterArm.setPosition(1);
         }
+        // Less powerful shot for the Power Targets.
         else if(gamepad2.left_trigger > .2) {
-            robot.leftShooter.setPower(.62);
-            robot.rightShooter.setPower(.62);
+            robot.leftShooter.setPower(.61);
+            robot.rightShooter.setPower(.61);
             robot.shooterArm.setPosition(1);
         }
         else {
@@ -303,23 +280,16 @@ public class Controller extends OpMode {
             robot.shooterArm.setPosition(.8);
         }
 
-        // Toggle collectingRings using the right trigger on the second controller.
-        if (gamepad2.right_trigger > .2 && !rightTriggerPressed) {
-            rightTriggerPressed = !rightTriggerPressed;
-            collectingRings = !collectingRings;
-        }
-        if (gamepad2.right_trigger <= .2 && rightTriggerPressed) {
-            rightTriggerPressed = !rightTriggerPressed;
-        }
-
         // Set the clampRotator to a corresponding state based on if collectingRings is true.
-        if (collectingRings) {
+        if (collectingRings.checkstate(gamepad2.right_trigger >.2)) {
             robot.clampRotator.setPosition(.85);
         }
         else {
             robot.clampRotator.setPosition(.21);
         }
 
+        // If the leftBumper is pressed, "save" the current power of the intakeArm, and
+        // set the intake Arm to this power until the button is pressed again.
         if (gamepad2.left_bumper && !leftBumperPressed) {
             leftBumperPressed = !leftBumperPressed;
             rotatorLocked = !rotatorLocked;
@@ -348,6 +318,7 @@ public class Controller extends OpMode {
         }
          */
 
+        /*
         // Also cosmetic
         if (gamepad2.left_stick_button && !leftStickPressed) {
             leftStickPressed = !leftStickPressed;
@@ -357,6 +328,8 @@ public class Controller extends OpMode {
         if (!gamepad2.left_stick_button && leftStickPressed) {
             leftStickPressed = !leftStickPressed;
         }
+
+         */
 
         // Display the current mode of the robot in Telemetry for reasons deemed obvious.
         for (int i=0; i<(Mode.values().length); i++){
@@ -380,7 +353,7 @@ public class Controller extends OpMode {
         telemetry.addData("Ring Clamp: ", robot.ringClamp.getPosition());
         telemetry.addData("Clamp Rotator: ", robot.clampRotator.getPosition());
         telemetry.addData("intakeArm :", robot.intakeArm.getCurrentPosition());
-        telemetry.addData("gold resource",   moyesFound ?   "Found" : "NOT found\n Add moyes.wav to /src/main/res/raw" );
+        //telemetry.addData("gold resource",   moyesFound ?   "Found" : "NOT found\n Add moyes.wav to /src/main/res/raw" );
 
         telemetry.update();
 
