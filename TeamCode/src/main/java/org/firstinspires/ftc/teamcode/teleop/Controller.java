@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.teleop.Button;
 
 import org.firstinspires.ftc.teamcode.constructors.RobotTemplate;
@@ -17,15 +19,27 @@ public class Controller extends OpMode {
     static final double SPEED         = -.5;
     double              grabberPower  = 0;
 
+    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime looptime = new ElapsedTime();
+
+
     boolean             upPressed     = false;
     boolean             downPressed   = false;
     boolean             y2Pressed     = false;
     boolean             y1Pressed     = false;
     boolean             leftBumperPressed = false;
-    Button              wobbleButton = new Button();
-    Button              armRaised = new Button();
+
+
+
+    OneShot             wobbleButton = new OneShot();
+    boolean             armRaised = true;
+
+    Button              wobbleToggled = new Button();
+
     Button              ringClamped = new Button();
     Button              collectingRings = new Button();
+    Button              shooterActivated = new Button();
+
 
     boolean             rotatorLocked = false;
     
@@ -74,6 +88,9 @@ public class Controller extends OpMode {
 
     public void init() {
         robot.init(hardwareMap);
+        robot.shooterArm.setPosition(.75);
+        robot.wobbleGrabber.setPosition(0.5);
+        robot.grabberArm.setPosition(0.6);
 
         /*
         // Also cosmetic
@@ -88,7 +105,7 @@ public class Controller extends OpMode {
 
     @Override
     public void loop() {// Cycle through the driving modes when the "b" button on the first controller is pressed.
-
+        looptime.reset();
         /*
         if (gamepad1.y != y1Pressed) {
 
@@ -188,21 +205,32 @@ public class Controller extends OpMode {
 
         // Set the position of the wobbleGrabber based on whether it is "supposed" to be clamped
         // or unclamped.
-        if (wobbleButton.checkstate(gamepad2.b)) {
-            robot.wobbleGrabber.setPosition(1);
-        }
-        else {
-            robot.wobbleGrabber.setPosition(0.5);
+
+        if (wobbleButton.checkState(gamepad2.b)) {
+
+            armRaised = !armRaised;
+            if (armRaised) {
+                runtime.reset();
+                robot.wobbleGrabber.setPosition(0.5);
+
+                while (runtime.milliseconds() < 500) {}
+
+                robot.grabberArm.setPosition(0.6);
+
+            }
+            else {
+
+                runtime.reset();
+
+                robot.grabberArm.setPosition(0);
+
+                while (runtime.milliseconds() < 500) {}
+
+                robot.wobbleGrabber.setPosition(1);
+
+            }
         }
 
-        // Set the position of the grabberArm based on whether it is "supposed" to be up or down.
-
-        if (armRaised.checkstate(gamepad2.a)) {
-            robot.grabberArm.setPosition(0.6);
-        }
-        else {
-            robot.grabberArm.setPosition(0);
-        }
         /*
         if (gamepad2.y && !y2Pressed) {
             y2Pressed = !y2Pressed;
@@ -217,32 +245,49 @@ public class Controller extends OpMode {
 
         // Cycle hopperDepth between 0 and 3, incrementing by 1 when the y button is pressed
         // (and back to 0 when it exceeds 3).
-        if (gamepad2.y && !y2Pressed) {
-            y2Pressed = !y2Pressed;
+        if (gamepad2.y) {
+            runtime.reset();
+
+            // Increase the box "depth" by 1, looping back to 0 after it reaches 3.
             hopperDepth += 1;
-        }
-        if (!gamepad2.y && y2Pressed) {
-            y2Pressed = !y2Pressed;
-        }
-        hopperDepth = hopperDepth % 4;
+            hopperDepth = hopperDepth % 4;
 
+            // Set the hopper box to the corresponding position.
+            if (hopperDepth == 0) {
+                robot.hopperLifter.setPosition(0.15);
+                while (runtime.milliseconds() < 250) {}
+            }
+            else if (hopperDepth == 1) {
+                robot.hopperLifter.setPosition(0.09);
+            }
+            else if (hopperDepth == 2) {
+                robot.hopperLifter.setPosition(0.04);
+            }
+            else {
+                robot.hopperLifter.setPosition(0);
 
-        // Set the hopperLifter to a corresponding position based on the hopperDepth.
-        if (hopperDepth == 0) {
-            robot.hopperLifter.setPosition(0.15);
-        }
-        else if (hopperDepth == 1) {
-            robot.hopperLifter.setPosition(0.09);
-        }
-        else if (hopperDepth == 2) {
-            robot.hopperLifter.setPosition(0.04);
-        }
-        else {
-            robot.hopperLifter.setPosition(0);
+            }
+
+            // If the hopper box has raised to a point where a ring is available to shoot,
+            // do so.
+            if (hopperDepth != 0) {
+
+                while (runtime.milliseconds() < 250) {}
+
+                robot.leftShooter.setPower(.71);
+                robot.rightShooter.setPower(.71);
+                robot.shooterArm.setPosition(1);
+
+                while (runtime.milliseconds() < 750) {}
+
+                robot.leftShooter.setPower(0);
+                robot.rightShooter.setPower(0);
+                robot.shooterArm.setPosition(.75);
+            }
         }
 
         // Set the ringClamp to a corresponding state based on if ringClamped is true.
-        if (ringClamped.checkstate(gamepad2.right_bumper)) {
+        if (ringClamped.checkState(gamepad2.right_bumper)) {
             robot.ringClamp.setPosition(.75);
         }
         else {
@@ -263,6 +308,8 @@ public class Controller extends OpMode {
 
         // If the X button is pressed, activate the shooter arm and the shooter mechanism itself.
 
+
+        /*
         if(gamepad2.x) {
             robot.leftShooter.setPower(.71);
             robot.rightShooter.setPower(.71);
@@ -280,8 +327,10 @@ public class Controller extends OpMode {
             robot.shooterArm.setPosition(.8);
         }
 
+         */
+
         // Set the clampRotator to a corresponding state based on if collectingRings is true.
-        if (collectingRings.checkstate(gamepad2.right_trigger >.2)) {
+        if (collectingRings.checkState(gamepad2.right_trigger >.2)) {
             robot.clampRotator.setPosition(.85);
         }
         else {
@@ -353,6 +402,8 @@ public class Controller extends OpMode {
         telemetry.addData("Ring Clamp: ", robot.ringClamp.getPosition());
         telemetry.addData("Clamp Rotator: ", robot.clampRotator.getPosition());
         telemetry.addData("intakeArm :", robot.intakeArm.getCurrentPosition());
+
+        telemetry.addData("looptime :", looptime.milliseconds());
         //telemetry.addData("gold resource",   moyesFound ?   "Found" : "NOT found\n Add moyes.wav to /src/main/res/raw" );
 
         telemetry.update();

@@ -15,6 +15,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 @Autonomous(name = "NewLeftBlue", group = "Autonomous")
@@ -90,172 +91,159 @@ public class NewLeftBlue extends AutonomousBase {
     }
 
     public void positionA() {
-        Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
+
+        ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
+        trajectories.add(drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box A
                 //every time the robot stops, a new trajectory must be made
                 .lineToConstantHeading(new Vector2d(75, 9))
-                .build();
+                .build());
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
                 .lineToLinearHeading(new Pose2d(16, -46, Math.toRadians(90)))
-                .build();
+                .build());
 
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the wobble goal
                 //.forward(14)
                 .lineToConstantHeading(new Vector2d(16, -32))
-                .build();
+                .build());
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the wobble goal into box A
                 .lineToLinearHeading(new Pose2d(65, 9, Math.toRadians(0)))
-                .build();
+                .build());
 
-        Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //pulls away from the wobble goal and out of the box
                 // .back(15)
                 .lineToConstantHeading(new Vector2d(49, 9))
-                .build();
+                .build());
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(61, -12))
-                .build();
+                .build());
 
-        //insert shooting
-
-        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 // .forward(8)
                 .lineToConstantHeading(new Vector2d(69, -12))
-                .build();
+                .build());
 
-        drive.followTrajectory(traj1);
-        drive.followTrajectory(traj2);
-        drive.followTrajectory(traj3);
-        drive.followTrajectory(traj4);
-        drive.followTrajectory(traj5);
-        drive.followTrajectory(traj6);
+        for (int i = 0; i < trajectories.size(); i++) {
+            if (i == 6) {
+                shooterPosition();
+            }
+            drive.followTrajectory(trajectories.get(i));
+        }
 
-        shooterPosition();
-
-        drive.followTrajectory(traj7);
     }
 
     public void positionB() {
-        Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
+
+
+        ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
+        trajectories.add(drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the robot towards box B
                 // .forward(60)
                 .lineToConstantHeading(new Vector2d(60, 0))
-                .build();
+                .build());
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot into the box
                 .lineToConstantHeading(new Vector2d(95, -14))
-                .build();
+                .build());
 
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //third trajectory moves the robot to line up with the second wobble goal
                 .lineToLinearHeading(new Pose2d(14, -50, Math.toRadians(90)))
-                .build();
+                .build());
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the wobble goal
                 //.forward(14)
                 .lineToConstantHeading(new Vector2d(13, -36))
-                .build();
+                .build());
 
-        Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the second wobble goal away form the ring
                 .lineToLinearHeading(new Pose2d(30, 4, Math.toRadians(0)))
-                .build();
+                .build());
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the wobble goal into the box
                 .lineToConstantHeading(new Vector2d(87, -14 ))
-                .build();
+                .build());
 
-        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(60, -16))
-                .build();
+                .build());
 
-        //insert shooting
-
-        Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 // .forward(8)
                 .lineToConstantHeading(new Vector2d(68, -16))
-                .build();
+                .build());
 
-        drive.followTrajectory(traj1);
-        drive.followTrajectory(traj2);
-        drive.followTrajectory(traj3);
-        drive.followTrajectory(traj4);
-        drive.followTrajectory(traj5);
-        drive.followTrajectory(traj6);
-        drive.followTrajectory(traj7);
-
-        shooterPosition();
-
-        drive.followTrajectory(traj8);
+        for (int i = 0; i < trajectories.size(); i++) {
+            if(i == 7) {
+                shooterPosition();
+            }
+            drive.followTrajectory(trajectories.get(i));
+        }
     }
 
     public void positionC() {
-        Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
+
+        ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
+        trajectories.add(drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box C
                 //every time the robot stops, a new trajectory must be made
                 .lineToConstantHeading(new Vector2d(120, 9))
-                .build();
+                .build());
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
                 .lineToLinearHeading(new Pose2d(19, -46, Math.toRadians(90)))
-                .build();
+                .build());
 
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //moves forward to grab the wobble goal
                 //.forward(14)
                 .lineToConstantHeading(new Vector2d(19, -32))
-                .build();
+                .build());
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //moves the wobble goal into box C
                 .lineToLinearHeading(new Pose2d(30, 4, Math.toRadians(0)))
-                .build();
+                .build());
 
-        Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 .lineToConstantHeading(new Vector2d(115, 4))
-                .build();
+                .build());
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //pulls away from the wobble goal and out of the box
                 .lineToConstantHeading(new Vector2d(105, 4))
-                .build();
+                .build());
 
-        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(66, -16))
-                .build();
+                .build());
 
-        //insert shooting
-
-        Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //moves forward to park
                 .lineToConstantHeading(new Vector2d(74, -16))
-                .build();
+                .build());
 
-        waitForStart();
-        drive.followTrajectory(traj1);
-        drive.followTrajectory(traj2);
-        drive.followTrajectory(traj3);
-        drive.followTrajectory(traj4);
-        drive.followTrajectory(traj5);
-        drive.followTrajectory(traj6);
-        drive.followTrajectory(traj7);
-
-        shooterPosition();
-
-        drive.followTrajectory(traj8);
+        for (int i = 0; i < trajectories.size(); i++) {
+            if (i == 7) {
+                shooterPosition();
+            }
+            drive.followTrajectory(trajectories.get(i));
+        }
     }
 
     public void shooterPosition() {
