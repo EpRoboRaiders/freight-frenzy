@@ -17,6 +17,8 @@ public class Controller extends OpMode {
 
     RobotTemplate       robot         = new RobotTemplate();
     static final double SPEED         = -.5;
+    static final double POWERSHOT_SPEED = .57;
+    static final double TOWERSHOT_SPEED = .71;
     double              grabberPower  = 0;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -245,7 +247,13 @@ public class Controller extends OpMode {
 
         // Cycle hopperDepth between 0 and 3, incrementing by 1 when the y button is pressed
         // (and back to 0 when it exceeds 3).
-        if (gamepad2.y) {
+        if (gamepad2.y||gamepad2.x) {
+            double shotspeed = POWERSHOT_SPEED;
+
+            if (gamepad2.y) {
+                shotspeed = TOWERSHOT_SPEED;
+            }
+
             runtime.reset();
 
             // Increase the box "depth" by 1, looping back to 0 after it reaches 3.
@@ -274,8 +282,11 @@ public class Controller extends OpMode {
 
                 while (runtime.milliseconds() < 250) {}
 
-                robot.leftShooter.setPower(.71);
-                robot.rightShooter.setPower(.71);
+
+                    robot.leftShooter.setPower(shotspeed);
+                    robot.rightShooter.setPower(shotspeed);
+
+
                 robot.shooterArm.setPosition(1);
 
                 while (runtime.milliseconds() < 750) {}
@@ -283,6 +294,7 @@ public class Controller extends OpMode {
                 robot.leftShooter.setPower(0);
                 robot.rightShooter.setPower(0);
                 robot.shooterArm.setPosition(.75);
+                // TODO: add strafing to the right 5 inches after robot shoots
             }
         }
 
