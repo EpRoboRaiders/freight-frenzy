@@ -55,10 +55,13 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
+
+    // Lines unique to our robot.
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.29;
+    // End of changes unique to our robot.
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -86,7 +89,9 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private LinkedList<Pose2d> poseHistory;
 
+    // Lines unique to our robot.
     private DcMotorEx leftFrontDrive, leftBackDrive, rightBackDrive, rightFrontDrive;
+    // End of changes unique to our robot.
     private List<DcMotorEx> motors;
     private BNO055IMU imu;
 
@@ -131,10 +136,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
+        // Lines unique to our robot.
         leftFrontDrive = hardwareMap.get(DcMotorEx.class, "left_front");
         leftBackDrive = hardwareMap.get(DcMotorEx.class, "left_back");
         rightBackDrive = hardwareMap.get(DcMotorEx.class, "right_back");
         rightFrontDrive = hardwareMap.get(DcMotorEx.class, "right_front");
+        // End of changes unique to our robot.
 
         motors = Arrays.asList(leftFrontDrive, leftBackDrive, rightBackDrive, rightFrontDrive);
 
@@ -156,8 +163,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: reverse any motors using DcMotor.setDirection()
 
+        // Lines unique to our robot.
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        // End of changes unique to our robot.
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
@@ -205,6 +214,10 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void followTrajectory(Trajectory trajectory) {
         followTrajectoryAsync(trajectory);
         waitForIdle();
+    }
+
+    public void cancelFollowing() {
+        mode = Mode.IDLE;
     }
 
     public Pose2d getLastError() {
@@ -379,10 +392,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
+        // Lines unique to our robot.
         leftFrontDrive.setPower(v);
         leftBackDrive.setPower(v1);
         rightBackDrive.setPower(v2);
         rightFrontDrive.setPower(v3);
+        // End of changes unique to our robot.
     }
 
     @Override

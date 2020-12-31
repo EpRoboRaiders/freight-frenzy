@@ -1,10 +1,17 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.constructors.AttachmentTemplate;
+import org.firstinspires.ftc.teamcode.drive.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.teleop.Button;
 
 import org.firstinspires.ftc.teamcode.constructors.RobotTemplate;
@@ -49,6 +56,7 @@ public class Controller extends OpMode {
 
     int                 hopperDepth   = 0;
 
+
     // The following is COMPLETELY COSMETIC; don't touch unless you hate fun.
 
     //boolean moyesFound;
@@ -89,6 +97,8 @@ public class Controller extends OpMode {
     Mode mode = Mode.SIDESTRAFE;
 
     public void init() {
+
+
         robot.init(hardwareMap);
         robot.shooterArm.setPosition(.75);
         robot.wobbleGrabber.setPosition(0.5);
@@ -118,6 +128,8 @@ public class Controller extends OpMode {
         }
 
          */
+
+
 
         // Run code depending on which drive mode is currently active (at 75% speed, because
         // our robot is too fast at full speed):
@@ -294,7 +306,18 @@ public class Controller extends OpMode {
                 robot.leftShooter.setPower(0);
                 robot.rightShooter.setPower(0);
                 robot.shooterArm.setPosition(.75);
-                // TODO: add strafing to the right 5 inches after robot shoots
+
+                /*
+                // after shooting the robot strafes over 6 inches to line up with the next target
+                Trajectory traj1 = drive.trajectoryBuilder(poseEstimate)
+                        .strafeRight(6)
+                        .build();
+
+                drive.followTrajectory(traj1);
+
+                 */
+
+                //TODO: Strafe at the end of shooting
             }
         }
 
@@ -400,7 +423,7 @@ public class Controller extends OpMode {
 
         // Display other information, including the position, speed, and mode of motors.
         telemetry.addData("Robot Mode:", mode.getDescription());
-        telemetry.addData("Motor Position:", robot.leftFrontDrive.getCurrentPosition());
+        // telemetry.addData("Motor Position:", robot.leftFrontDrive.getCurrentPosition());
 
         telemetry.addData("Left Front Motor: ", robot.leftFrontDrive.getPower());
         telemetry.addData("Right Front Motor: ", robot.rightFrontDrive.getPower());
@@ -416,7 +439,7 @@ public class Controller extends OpMode {
         telemetry.addData("intakeArm :", robot.intakeArm.getCurrentPosition());
 
         telemetry.addData("looptime :", looptime.milliseconds());
-        //telemetry.addData("gold resource",   moyesFound ?   "Found" : "NOT found\n Add moyes.wav to /src/main/res/raw" );
+        // telemetry.addData("gold resource",   moyesFound ?   "Found" : "NOT found\n Add moyes.wav to /src/main/res/raw" );
 
         telemetry.update();
 
