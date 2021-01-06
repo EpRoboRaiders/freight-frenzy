@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.constructors.CWobbleGrabber;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 /**
  * This is NOT an opmode.
@@ -26,20 +27,22 @@ import org.firstinspires.ftc.teamcode.constructors.CWobbleGrabber;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class AttachmentTemplate
+public class AutonomousTemplate
 {
     public CWobbleGrabber wobbleGrabber = new CWobbleGrabber();
 
     public CRingShooter   ringShooter   = new CRingShooter();
 
-    public CRingIntake        ringIntake        = new CRingIntake();
+    public CRingIntake    ringIntake    = new CRingIntake();
 
     public CWebcam        webcam        = new CWebcam();
 
-    HardwareMap    hwMap           = null;
+    public SampleMecanumDrive drive     = null;
+
+    HardwareMap           hwMap         = null;
 
     /* Constructor */
-    public AttachmentTemplate() {
+    public AutonomousTemplate() {
 
     }
 
@@ -47,10 +50,13 @@ public class AttachmentTemplate
         // Save reference to Hardware map
         hwMap           = ahwMap;
 
+        drive = new SampleMecanumDrive(hwMap);
+
         wobbleGrabber.init(hwMap);
         ringShooter.init(hwMap);
         ringIntake.init(hwMap);
         webcam.init(hwMap);
+
     }
     public void teleOpInit(HardwareMap ahwMap) {
         init(ahwMap);

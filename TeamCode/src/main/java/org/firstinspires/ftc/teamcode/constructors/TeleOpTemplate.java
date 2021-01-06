@@ -51,13 +51,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class RobotTemplate
-{
+public class TeleOpTemplate {
     public CWobbleGrabber wobbleGrabber = new CWobbleGrabber();
 
     public CRingShooter   ringShooter   = new CRingShooter();
 
-    public CRingIntake    ringIntake    = new CRingIntake();
+    public CRingIntake    ringIntake        = new CRingIntake();
 
     public CWebcam        webcam        = new CWebcam();
 
@@ -78,7 +77,7 @@ public class RobotTemplate
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
     /* Constructor */
-    public RobotTemplate() {
+    public TeleOpTemplate() {
 
     }
 
@@ -187,16 +186,16 @@ public class RobotTemplate
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (/*opModeIsActive() && */
                     (runtime.seconds() < timeoutS) &&
-                    (leftFrontDrive.isBusy() && leftBackDrive.isBusy()
-                            /*&& .rightFrontDrive.isBusy()*/ && rightBackDrive.isBusy())) {
+                            (leftFrontDrive.isBusy() && leftBackDrive.isBusy()
+                                    /*&& .rightFrontDrive.isBusy()*/ && rightBackDrive.isBusy())) {
 
                 // Display it for the driver.
                 // telemetry.addData("Path1",  "Running to %7d :%7d %7d %7d", newLeftFrontTarget, newLeftBackTarget, newRightFrontTarget, newRightBackTarget);
                 // telemetry.addData("Path2",  "Running at %7d :%7d %7d %7d",
-                        //leftFrontDrive.getCurrentPosition(),
-                        //leftBackDrive.getCurrentPosition(),
-                        //rightFrontDrive.getCurrentPosition(),
-                        //rightBackDrive.getCurrentPosition()
+                //leftFrontDrive.getCurrentPosition(),
+                //leftBackDrive.getCurrentPosition(),
+                //rightFrontDrive.getCurrentPosition(),
+                //rightBackDrive.getCurrentPosition()
                 //);
                 // telemetry.update();
             }

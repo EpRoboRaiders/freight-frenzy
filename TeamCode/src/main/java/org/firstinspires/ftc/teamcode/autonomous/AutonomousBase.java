@@ -58,8 +58,7 @@ public abstract class AutonomousBase extends LinearOpMode {
 
     Orientation lastAngles = new Orientation();
 
-    OpenCvWebcam webcam;
-    public RingStackMeasurerPipeline pipeline;
+
 
     public void runOpMode() {}
 
@@ -462,109 +461,7 @@ public abstract class AutonomousBase extends LinearOpMode {
 
 
 
-    public static class RingStackMeasurerPipeline extends OpenCvPipeline
-    {
-        /*
-         * An enum to define the skystone position
-         */
-        public enum RingPosition
-        {
-            FOUR,
-            ONE,
-            NONE
-        }
 
-        /*
-         * Some color constants
-         */
-        static final Scalar BLUE = new Scalar(0, 0, 255);
-        static final Scalar GREEN = new Scalar(0, 255, 0);
-
-        /*
-         * The core values which define the location and size of the sample regions
-         */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(200,90);
-
-        static final int REGION_WIDTH = 65; // 35
-        static final int REGION_HEIGHT = 58; // 25
-
-        final int FOUR_RING_THRESHOLD = 150;
-        final int ONE_RING_THRESHOLD = 135;
-
-        Point region1_pointA = new Point(
-                REGION1_TOPLEFT_ANCHOR_POINT.x,
-                REGION1_TOPLEFT_ANCHOR_POINT.y);
-        Point region1_pointB = new Point(
-                REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-                REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
-
-        /*
-         * Working variables
-         */
-        Mat region1_Cb;
-        Mat YCrCb = new Mat();
-        Mat Cb = new Mat();
-        int avg1;
-
-        // Volatile since accessed by OpMode thread w/o synchronization
-        public volatile RingStackMeasurerPipeline.RingPosition position = RingStackMeasurerPipeline.RingPosition.FOUR;
-
-        /*
-         * This function takes the RGB frame, converts to YCrCb,
-         * and extracts the Cb channel to the 'Cb' variable
-         */
-        void inputToCb(Mat input)
-        {
-            Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
-            Core.extractChannel(YCrCb, Cb, 1);
-        }
-
-        @Override
-        public void init(Mat firstFrame)
-        {
-            inputToCb(firstFrame);
-
-            region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
-        }
-
-        @Override
-        public Mat processFrame(Mat input)
-        {
-            inputToCb(input);
-
-            avg1 = (int) Core.mean(region1_Cb).val[0];
-
-            Imgproc.rectangle(
-                    input, // Buffer to draw on
-                    region1_pointA, // First point which defines the rectangle
-                    region1_pointB, // Second point which defines the rectangle
-                    BLUE, // The color the rectangle is drawn in
-                    2); // Thickness of the rectangle lines
-
-            position = RingStackMeasurerPipeline.RingPosition.FOUR; // Record our analysis
-            if(avg1 > FOUR_RING_THRESHOLD){
-                position = RingStackMeasurerPipeline.RingPosition.FOUR;
-            }else if (avg1 > ONE_RING_THRESHOLD){
-                position = RingStackMeasurerPipeline.RingPosition.ONE;
-            }else{
-                position = RingStackMeasurerPipeline.RingPosition.NONE;
-            }
-
-            Imgproc.rectangle(
-                    input, // Buffer to draw on
-                    region1_pointA, // First point which defines the rectangle
-                    region1_pointB, // Second point which defines the rectangle
-                    GREEN, // The color the rectangle is drawn in
-                    1); // Negative thickness means solid fill
-
-            return input;
-        }
-
-        public int getAnalysis()
-        {
-            return avg1;
-        }
-    }
 
     public void initialize() {
 
@@ -579,24 +476,6 @@ public abstract class AutonomousBase extends LinearOpMode {
         // causes the PID controller to gently increase power if the turn is not completed.
         pidRotate = new PIDController(.09, .0009, 0);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new RingStackMeasurerPipeline();
-        webcam.setPipeline(pipeline);
-
-        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
-        // out when the RC activity is in portrait. We do our actual image processing assuming
-        // landscape orientation, though.
-        //webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-            }
-        });
         telemetry.addData("Status", "Camera initializing; please wait (~10 seconds)");
         telemetry.update();
         sleep(10000);

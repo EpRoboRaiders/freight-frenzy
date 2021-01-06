@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.constructors.CPipeline;
+
 @Autonomous(name="LeftBlue", group="AutonomousBase")
 // @Disabled
 
@@ -11,22 +13,24 @@ public class LeftBlue extends AutonomousBase {
 
         initialize();
 
-        telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.addData("Position", pipeline.position);
+        telemetry.addData("Analysis", robot.webcam.pipeline.getAnalysis());
+        telemetry.addData("Position", robot.webcam.pipeline.getRingAmount());
         telemetry.update();
 
         sleep(2000);
 
-        if (pipeline.position == RingStackMeasurerPipeline.RingPosition.NONE) {
+        if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.NONE) {
             // Placement A2
             positionA2();
-        } else if (pipeline.position == RingStackMeasurerPipeline.RingPosition.ONE) {
+            //shooterPosition();
+        } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.ONE) {
             // Placement B
             positionB();
-
-        } else if (pipeline.position == RingStackMeasurerPipeline.RingPosition.FOUR) {
+            //shooterPosition();
+        } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.FOUR) {
             // Placement C (Default)
             positionC();
+            //shooterPosition();
         }
     }
 

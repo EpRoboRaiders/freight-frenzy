@@ -1,20 +1,14 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.constructors.AttachmentTemplate;
-import org.firstinspires.ftc.teamcode.drive.PoseStorage;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.teleop.Button;
+import org.firstinspires.ftc.teamcode.constructors.Button;
+import org.firstinspires.ftc.teamcode.constructors.OneShot;
 
 import org.firstinspires.ftc.teamcode.constructors.RobotTemplate;
+import org.firstinspires.ftc.teamcode.constructors.TeleOpTemplate;
 
 import static com.qualcomm.robotcore.util.Range.clip;
 
@@ -22,33 +16,24 @@ import static com.qualcomm.robotcore.util.Range.clip;
 //@Disabled
 public class Controller extends OpMode {
 
-    RobotTemplate       robot         = new RobotTemplate();
+    TeleOpTemplate robot         = new TeleOpTemplate();
     static final double SPEED         = -.5;
-    static final double POWERSHOT_SPEED = .57;
-    static final double TOWERSHOT_SPEED = .71;
+
+
     double              grabberPower  = 0;
 
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime looptime = new ElapsedTime();
 
 
-    boolean             upPressed     = false;
-    boolean             downPressed   = false;
-    boolean             y2Pressed     = false;
-    boolean             y1Pressed     = false;
-    boolean             leftBumperPressed = false;
-
-
-
-    OneShot             wobbleButton = new OneShot();
+    OneShot wobbleButton = new OneShot();
     boolean             armRaised = true;
 
-    Button              wobbleToggled = new Button();
+    Button wobbleToggled = new Button();
 
     Button              ringClamped = new Button();
     Button              collectingRings = new Button();
     Button              shooterActivated = new Button();
-
 
     boolean             rotatorLocked = false;
     
@@ -98,11 +83,7 @@ public class Controller extends OpMode {
 
     public void init() {
 
-
-        robot.init(hardwareMap);
-        robot.shooterArm.setPosition(.75);
-        robot.wobbleGrabber.setPosition(0.5);
-        robot.grabberArm.setPosition(0.6);
+        robot.teleOpInit(hardwareMap);
 
         /*
         // Also cosmetic
@@ -224,117 +205,45 @@ public class Controller extends OpMode {
 
             armRaised = !armRaised;
             if (armRaised) {
-                runtime.reset();
-                robot.wobbleGrabber.setPosition(0.5);
-
-                while (runtime.milliseconds() < 500) {}
-
-                robot.grabberArm.setPosition(0.6);
+                robot.wobbleGrabber.clampAndRaise();
 
             }
             else {
-
-                runtime.reset();
-
-                robot.grabberArm.setPosition(0);
-
-                while (runtime.milliseconds() < 500) {}
-
-                robot.wobbleGrabber.setPosition(1);
-
+                robot.wobbleGrabber.lowerAndUnclamp();
             }
         }
 
-        /*
-        if (gamepad2.y && !y2Pressed) {
-            y2Pressed = !y2Pressed;
-            hopperDepth += 1;
+        if(gamepad2.y) {
+            // robot.ringShooter.towerShot();
+            robot.ringShooter.ringShoot(.7, .5);
         }
-        if (!gamepad2.y && y2Pressed) {
-            y2Pressed = !y2Pressed;
+        else if (gamepad2.x) {
+            robot.ringShooter.powerShot();
         }
 
-        hopperDepth = hopperDepth % 4;
-         */
-
-        // Cycle hopperDepth between 0 and 3, incrementing by 1 when the y button is pressed
-        // (and back to 0 when it exceeds 3).
-        if (gamepad2.y||gamepad2.x) {
-            double shotspeed = POWERSHOT_SPEED;
-
-            if (gamepad2.y) {
-                shotspeed = TOWERSHOT_SPEED;
-            }
-
-            runtime.reset();
-
-            // Increase the box "depth" by 1, looping back to 0 after it reaches 3.
-            hopperDepth += 1;
-            hopperDepth = hopperDepth % 4;
-
-            // Set the hopper box to the corresponding position.
-            if (hopperDepth == 0) {
-                robot.hopperLifter.setPosition(0.15);
-                while (runtime.milliseconds() < 250) {}
-            }
-            else if (hopperDepth == 1) {
-                robot.hopperLifter.setPosition(0.09);
-            }
-            else if (hopperDepth == 2) {
-                robot.hopperLifter.setPosition(0.04);
-            }
-            else {
-                robot.hopperLifter.setPosition(0);
-
-            }
-
-            // If the hopper box has raised to a point where a ring is available to shoot,
-            // do so.
-            if (hopperDepth != 0) {
-
-                while (runtime.milliseconds() < 250) {}
-
-
-                    robot.leftShooter.setPower(shotspeed);
-                    robot.rightShooter.setPower(shotspeed);
-
-
-                robot.shooterArm.setPosition(1);
-
-                while (runtime.milliseconds() < 750) {}
-
-                robot.leftShooter.setPower(0);
-                robot.rightShooter.setPower(0);
-                robot.shooterArm.setPosition(.75);
-
-                /*
-                // after shooting the robot strafes over 6 inches to line up with the next target
-                Trajectory traj1 = drive.trajectoryBuilder(poseEstimate)
-                        .strafeRight(6)
-                        .build();
-
-                drive.followTrajectory(traj1);
-
-                 */
-
-                //TODO: Strafe at the end of shooting
-            }
-        }
 
         // Set the ringClamp to a corresponding state based on if ringClamped is true.
         if (ringClamped.checkState(gamepad2.right_bumper)) {
-            robot.ringClamp.setPosition(.75);
+            robot.ringIntake.clampRing();
         }
         else {
-            robot.ringClamp.setPosition(1);
+            robot.ringIntake.clampRing();
         }
+
+        // Set the clampRotator to a corresponding state based on if collectingRings is true.
+        if (collectingRings.checkState(gamepad2.right_trigger >.2)) {
+            robot.ringIntake.extendClampRotator();
+        }
+        else {
+            robot.ringIntake.retractClampRotator();
+        }
+
+        robot.ringIntake.controlIntakeArm(-gamepad2.left_stick_y*.4);
+
+
 
         // Map the clampRotator to the x axis of the second gamepad's right joystick.
         // robot.clampRotator.setPosition(gamepad2.right_stick_x);
-
-
-
-
 
         // robot.ringClamp.setPosition(gamepad2.right_stick_x);
 
@@ -364,33 +273,9 @@ public class Controller extends OpMode {
 
          */
 
-        // Set the clampRotator to a corresponding state based on if collectingRings is true.
-        if (collectingRings.checkState(gamepad2.right_trigger >.2)) {
-            robot.clampRotator.setPosition(.85);
-        }
-        else {
-            robot.clampRotator.setPosition(.21);
-        }
 
-        // If the leftBumper is pressed, "save" the current power of the intakeArm, and
-        // set the intake Arm to this power until the button is pressed again.
-        if (gamepad2.left_bumper && !leftBumperPressed) {
-            leftBumperPressed = !leftBumperPressed;
-            rotatorLocked = !rotatorLocked;
-            intakeArmPower = robot.intakeArm.getPower();
-            
-        }
-        if (!gamepad2.left_bumper && leftBumperPressed) {
-            leftBumperPressed = !leftBumperPressed;
-        }
-        
-        if (rotatorLocked) {
-            robot.intakeArm.setPower(intakeArmPower);
-        }
-        else {
-            // Raise or lower the intake arm with the left stick.
-            robot.intakeArm.setPower(-gamepad2.left_stick_y*.4);
-        }
+
+
 
         //robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
         /*
@@ -430,13 +315,13 @@ public class Controller extends OpMode {
         telemetry.addData("Left Back Motor: ", robot.leftBackDrive.getPower());
         telemetry.addData("Fight Back Motor: ", robot.rightBackDrive.getPower());
 
-        telemetry.addData("Wobble Grabber Servo: ", robot.wobbleGrabber.getPosition());
-        telemetry.addData("Grabber Arm Servo: ", robot.grabberArm.getPosition());
+        // telemetry.addData("Wobble Grabber Servo: ", robot.wobbleGrabber.getPosition());
+        // telemetry.addData("Grabber Arm Servo: ", robot.grabberArm.getPosition());
         telemetry.addData("HopperDepth ", hopperDepth);
 
-        telemetry.addData("Ring Clamp: ", robot.ringClamp.getPosition());
-        telemetry.addData("Clamp Rotator: ", robot.clampRotator.getPosition());
-        telemetry.addData("intakeArm :", robot.intakeArm.getCurrentPosition());
+        // telemetry.addData("Ring Clamp: ", robot.ringClamp.getPosition());
+        // telemetry.addData("Clamp Rotator: ", robot.clampRotator.getPosition());
+        // telemetry.addData("intakeArm :", robot.intakeArm.getCurrentPosition());
 
         telemetry.addData("looptime :", looptime.milliseconds());
         // telemetry.addData("gold resource",   moyesFound ?   "Found" : "NOT found\n Add moyes.wav to /src/main/res/raw" );

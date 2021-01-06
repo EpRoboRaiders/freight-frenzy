@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.constructors.AttachmentTemplate;
+import org.firstinspires.ftc.teamcode.constructors.AutonomousTemplate;
+import org.firstinspires.ftc.teamcode.constructors.CPipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -20,38 +22,38 @@ import java.util.Vector;
 
 @Autonomous(name = "NewLeftBlue", group = "Autonomous")
 public class NewLeftBlue extends AutonomousBase {
-    private SampleMecanumDrive drive = null;
-    private AttachmentTemplate robot = new AttachmentTemplate();
+    private AutonomousTemplate robot = new AutonomousTemplate();
 
     @Override
     public void runOpMode() {
-
-        drive = new SampleMecanumDrive(hardwareMap);
         robot.init(hardwareMap);
-        cameraInit();
+
+        telemetry.addData("Status", "Camera initializing; please wait (~5 seconds)");
+        telemetry.update();
+        sleep(5000);
+        
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
         waitForStart();
-        robot.hopperLifter.setPosition(0.15);
-        robot.shooterArm.setPosition(.8);
+        robot.ringShooter.teleOpInit();
 
-        telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.addData("Position", pipeline.position);
+        telemetry.addData("Analysis", robot.webcam.pipeline.getAnalysis());
+        telemetry.addData("Position", robot.webcam.pipeline.getRingAmount());
         telemetry.update();
 
         sleep(2000);
 
-        if (pipeline.position == RingStackMeasurerPipeline.RingPosition.NONE) {
-            // Placement A2
+        if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.NONE) {
+            // Placement A
             positionA();
             //shooterPosition();
-        } else if (pipeline.position == RingStackMeasurerPipeline.RingPosition.ONE) {
+        } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.ONE) {
             // Placement B
             positionB();
             //shooterPosition();
-        } else if (pipeline.position == RingStackMeasurerPipeline.RingPosition.FOUR) {
+        } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.FOUR) {
             // Placement C (Default)
             positionC();
             //shooterPosition();
@@ -59,84 +61,91 @@ public class NewLeftBlue extends AutonomousBase {
 
     }
 
-
-    public void cameraInit() {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new RingStackMeasurerPipeline();
-        webcam.setPipeline(pipeline);
-
-        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
-        // out when the RC activity is in portrait. We do our actual image processing assuming
-        // landscape orientation, though.
-        //webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-            }
-        });
-        telemetry.addData("Status", "Camera initializing; please wait (~5 seconds)");
-        telemetry.update();
-        sleep(5000);
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
-        telemetry.update();
-
-        waitForStart();
-    }
-
     public void positionA() {
 
         ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
-        trajectories.add(drive.trajectoryBuilder(new Pose2d())
+        trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box A
                 //every time the robot stops, a new trajectory must be made
                 .lineToConstantHeading(new Vector2d(75, 9))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
                 .lineToLinearHeading(new Pose2d(16, -46, Math.toRadians(90)))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the wobble goal
                 //.forward(14)
                 .lineToConstantHeading(new Vector2d(16, -32))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the wobble goal into box A
                 .lineToLinearHeading(new Pose2d(65, 9, Math.toRadians(0)))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //pulls away from the wobble goal and out of the box
                 // .back(15)
                 .lineToConstantHeading(new Vector2d(49, 9))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(61, -12))
+                .lineToConstantHeading(new Vector2d(61, -30))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(61, -36))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(61, -42))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 // .forward(8)
-                .lineToConstantHeading(new Vector2d(69, -12))
+                .lineToConstantHeading(new Vector2d(69, -42))
                 .build());
 
+        robot.drive.followTrajectory(trajectories.get(0));
+        robot.drive.followTrajectory(trajectories.get(1));
+        robot.drive.followTrajectory(trajectories.get(2));
+        robot.drive.followTrajectory(trajectories.get(3));
+        robot.drive.followTrajectory(trajectories.get(4));
+        robot.drive.followTrajectory(trajectories.get(5));
+
+        robot.ringIntake.extendIntake();
+        robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(6));
+
+        robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(7));
+
+        robot.ringShooter.powerShot();
+        robot.ringShooter.powerShot();
+
+        robot.ringIntake.retractIntake();
+
+        robot.drive.followTrajectory(trajectories.get(8));
+
+
+
+        /*
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 6) {
                 shooterPosition();
             }
-            drive.followTrajectory(trajectories.get(i));
+            robot.drive.followTrajectory(trajectories.get(i));
         }
+
+         */
 
     }
 
@@ -144,96 +153,143 @@ public class NewLeftBlue extends AutonomousBase {
 
 
         ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
-        trajectories.add(drive.trajectoryBuilder(new Pose2d())
+        trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the robot towards box B
                 // .forward(60)
                 .lineToConstantHeading(new Vector2d(60, 0))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot into the box
                 .lineToConstantHeading(new Vector2d(95, -14))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //third trajectory moves the robot to line up with the second wobble goal
                 .lineToLinearHeading(new Pose2d(14, -50, Math.toRadians(90)))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the wobble goal
                 //.forward(14)
                 .lineToConstantHeading(new Vector2d(13, -36))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the second wobble goal away form the ring
                 .lineToLinearHeading(new Pose2d(30, 4, Math.toRadians(0)))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the wobble goal into the box
                 .lineToConstantHeading(new Vector2d(87, -14 ))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+        /*
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(60, -16))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
-                // .forward(8)
-                .lineToConstantHeading(new Vector2d(68, -16))
+         */
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(60, -22))
                 .build());
 
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(60, -28))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(60, -34))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                // .forward(8)
+                .lineToConstantHeading(new Vector2d(68, -34))
+                .build());
+
+        robot.drive.followTrajectory(trajectories.get(0));
+        robot.drive.followTrajectory(trajectories.get(1));
+        robot.drive.followTrajectory(trajectories.get(2));
+        robot.drive.followTrajectory(trajectories.get(3));
+        robot.drive.followTrajectory(trajectories.get(4));
+        robot.drive.followTrajectory(trajectories.get(5));
+        robot.drive.followTrajectory(trajectories.get(6));
+
+        // robot.ringIntake.extendIntake();
+        // robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(7));
+
+        // robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(8));
+
+        // robot.ringShooter.powerShot();
+        // robot.ringShooter.powerShot();
+
+        // robot.ringIntake.retractIntake();
+
+        robot.drive.followTrajectory(trajectories.get(9));
+        /*
         for (int i = 0; i < trajectories.size(); i++) {
-            if(i == 7) {
+
+            robot.drive.followTrajectory(trajectories.get(i));
+
+            if(i == 6) {
                 shooterPosition();
             }
-            drive.followTrajectory(trajectories.get(i));
-        }
+
+             */
+
+
     }
 
     public void positionC() {
 
         ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
-        trajectories.add(drive.trajectoryBuilder(new Pose2d())
+        trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box C
                 //every time the robot stops, a new trajectory must be made
                 .lineToConstantHeading(new Vector2d(120, 9))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
                 .lineToLinearHeading(new Pose2d(19, -46, Math.toRadians(90)))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //moves forward to grab the wobble goal
                 //.forward(14)
                 .lineToConstantHeading(new Vector2d(19, -32))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //moves the wobble goal into box C
                 .lineToLinearHeading(new Pose2d(30, 4, Math.toRadians(0)))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 .lineToConstantHeading(new Vector2d(115, 4))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //pulls away from the wobble goal and out of the box
                 .lineToConstantHeading(new Vector2d(105, 4))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(66, -16))
                 .build());
 
-        trajectories.add(drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //moves forward to park
                 .lineToConstantHeading(new Vector2d(74, -16))
                 .build());
@@ -242,13 +298,63 @@ public class NewLeftBlue extends AutonomousBase {
             if (i == 7) {
                 shooterPosition();
             }
-            drive.followTrajectory(trajectories.get(i));
+            robot.drive.followTrajectory(trajectories.get(i));
         }
     }
 
     public void shooterPosition() {
 
-        robot.intakeArm.setPower(-.4);
+        /*
+        ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
+
+        trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
+                //first trajectory moves the first wobble goal into box C
+                //every time the robot stops, a new trajectory must be made
+                .strafeRight(6)
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+                //second trajectory moves the robot to line up with the second wobble goal
+                .strafeRight(6)
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+                //moves forward to grab the wobble goal
+                //.forward(14)
+                .strafeRight(6)
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+                //moves the wobble goal into box C
+                .forward(8)
+                .build());
+
+        robot.ringIntake.extendIntake();
+
+        robot.drive.followTrajectory(trajectories.get(0));
+
+        robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(1));
+
+        robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(2));
+
+        robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(3));
+        
+        //robot.ringShooter.autonomousTowerShot();
+        
+        robot.ringIntake.retractIntake();
+        \
+         */
+
+
+        
+        /*
+        robot.ringShooter.towerShot();
         robot.hopperLifter.setPosition(0.09);
 
         sleep(500);
@@ -298,6 +404,7 @@ public class NewLeftBlue extends AutonomousBase {
         sleep(1500);
 
         robot.intakeArm.setPower(0);
-
+        robot.hopperLifter.setPosition(0.15);
+         */
     }
 }
