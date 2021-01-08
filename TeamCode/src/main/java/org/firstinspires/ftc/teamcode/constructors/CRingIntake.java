@@ -40,11 +40,13 @@ public class CRingIntake {
         clampRotator    = ahwMap.get(Servo.class, "clamp_rotator");
 
         intakeArm.setPower(0);
+        intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void clampRing() {
+
         ringClamp.setPosition(RING_CLAMP_ENGAGED);
     }
 
@@ -86,4 +88,26 @@ public class CRingIntake {
         intakeArm.setPower(SERVOS_OFF);
     }
 
+    public int returnIntakeArmPosition() {
+        return intakeArm.getCurrentPosition();
+    }
+
+    public void proportionalClampRotator() {
+        int x = intakeArm.getCurrentPosition();
+
+        if (x < -270) {
+            clampRotator.setPosition(.85);
+        }
+        else if (x >= -270 && x <= -60) {
+            clampRotator.setPosition(-0.0030952*x + 0.0142857);
+        }
+        else { // x > -60
+            clampRotator.setPosition(.2);
+        }
+
+
+        // clampRotator.setPosition((0.000008513)*intakeArm.getCurrentPosition()*intakeArm.getCurrentPosition()
+               //  + (0.0005874)*intakeArm.getCurrentPosition() + 0.2046);
+
+    }
 }
