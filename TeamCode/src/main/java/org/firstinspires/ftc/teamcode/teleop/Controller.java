@@ -191,7 +191,7 @@ public class Controller extends OpMode {
         }
 
 
-        // Set the ringClamp to a corresponding state based on if ringClamped is true.
+        // Set the ringClamp to a corresponding state based on if ringClamped is true..
         if (ringClamped.checkState(gamepad2.right_trigger >.2)) {
             robot.ringIntake.clampRing();
         }
