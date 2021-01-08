@@ -95,11 +95,11 @@ public class CRingIntake {
     public void proportionalClampRotator() {
         int x = intakeArm.getCurrentPosition();
 
-        if (x < -270) {
+        if (x < -170) {
             clampRotator.setPosition(.85);
         }
-        else if (x >= -270 && x <= -60) {
-            clampRotator.setPosition(-0.0030952*x + 0.0142857);
+        else if (x >= -170 && x <= -60) {
+            clampRotator.setPosition(-0.00590591*x - 0.154545);
         }
         else { // x > -60
             clampRotator.setPosition(.2);
