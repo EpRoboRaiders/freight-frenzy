@@ -194,9 +194,11 @@ public class Controller extends OpMode {
         // Set the ringClamp to a corresponding state based on if ringClamped is true..
         if (ringClamped.checkState(gamepad2.right_trigger >.2)) {
             robot.ringIntake.clampRing();
+            robot.ringIntake.controlIntakeArm(-gamepad2.left_stick_y*.4);
         }
         else {
             robot.ringIntake.unclampRing();
+            robot.ringIntake.controlIntakeArm(-gamepad2.left_stick_y*.375);
         }
 
         /*
@@ -212,7 +214,7 @@ public class Controller extends OpMode {
 
         robot.ringIntake.proportionalClampRotator();
 
-        robot.ringIntake.controlIntakeArm(-gamepad2.left_stick_y*.4);
+
 
         // Display the current mode of the robot in Telemetry for reasons deemed obvious.
         for (int i=0; i<(Mode.values().length); i++){
