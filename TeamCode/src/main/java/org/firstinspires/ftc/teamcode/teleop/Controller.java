@@ -184,7 +184,7 @@ public class Controller extends OpMode {
 
         if(gamepad2.y) {
             // robot.ringShooter.towerShot();
-            robot.ringShooter.ringShoot(.7, .5);
+            robot.ringShooter.towerShot();
         }
         else if (gamepad2.x) {
             robot.ringShooter.powerShot();

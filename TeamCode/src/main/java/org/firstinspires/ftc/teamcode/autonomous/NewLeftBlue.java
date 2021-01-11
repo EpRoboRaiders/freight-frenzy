@@ -3,26 +3,19 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.constructors.AttachmentTemplate;
 import org.firstinspires.ftc.teamcode.constructors.AutonomousTemplate;
 import org.firstinspires.ftc.teamcode.constructors.CPipeline;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-
 import java.util.ArrayList;
-import java.util.Vector;
+
 
 @Autonomous(name = "NewLeftBlue", group = "Autonomous")
 public class NewLeftBlue extends AutonomousBase {
     private AutonomousTemplate robot = new AutonomousTemplate();
+
+    //private final double POWER_SHOT_TURN_TO_POSITION_A =   0 ; //-10.57;
+    //private final double POWER_SHOT_TURN_TO_POSITION_B =  -5 ; // -16.35 + 10.57;
+    //private final double POWER_SHOT_TURN_TO_POSITION_C =  -10; //-21.80 + 5;
 
     @Override
     public void runOpMode() {
@@ -47,7 +40,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.NONE) {
             // Placement A
-            positionC();
+            positionA();
             //shooterPosition();
         } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.ONE) {
             // Placement B
@@ -76,29 +69,33 @@ public class NewLeftBlue extends AutonomousBase {
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
-                //moves forward to grab the wobble goal
+                //moves forward to grab the second wobble goal
                 //.forward(14)
                 .lineToConstantHeading(new Vector2d(16, -32))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
-                //moves the wobble goal into box A
+                //moves the second wobble goal into box A
                 .lineToLinearHeading(new Pose2d(65, 9, Math.toRadians(0)))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //pulls away from the wobble goal and out of the box
-                // .back(15)
                 .lineToConstantHeading(new Vector2d(49, 9))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
-                //pulls away from the wobble goal and out of the box
-                // .back(15)
-                .lineToConstantHeading(new Vector2d(55, -11))
+                //moves to line up with the tower shot
+                .lineToConstantHeading(new Vector2d(61, -10))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //parks on white line
+                .lineToConstantHeading(new Vector2d(69, -10))
                 .build());
 
 
+        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(61, -24))
@@ -119,6 +116,9 @@ public class NewLeftBlue extends AutonomousBase {
                 .lineToConstantHeading(new Vector2d(69, -36))
                 .build());
 
+         */
+
+        /*
         robot.drive.followTrajectory(trajectories.get(0));
         robot.drive.followTrajectory(trajectories.get(1));
         robot.drive.followTrajectory(trajectories.get(2));
@@ -143,17 +143,15 @@ public class NewLeftBlue extends AutonomousBase {
 
         robot.drive.followTrajectory(trajectories.get(9));
 
+         */
 
 
-        /*
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 6) {
                 shooterPosition();
             }
             robot.drive.followTrajectory(trajectories.get(i));
         }
-
-         */
 
     }
 
@@ -196,9 +194,16 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(75, -18))
+                .lineToConstantHeading(new Vector2d(60, -16))
                 .build());
 
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(68, -16))
+                .build());
+
+
+        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(60, -33))
@@ -219,6 +224,9 @@ public class NewLeftBlue extends AutonomousBase {
                 .lineToConstantHeading(new Vector2d(68, -46))
                 .build());
 
+         */
+
+        /*
         robot.drive.followTrajectory(trajectories.get(0));
         robot.drive.followTrajectory(trajectories.get(1));
         robot.drive.followTrajectory(trajectories.get(2));
@@ -245,17 +253,17 @@ public class NewLeftBlue extends AutonomousBase {
 
         robot.drive.followTrajectory(trajectories.get(10));
 
-        /*
+         */
+
+
         for (int i = 0; i < trajectories.size(); i++) {
 
-            robot.drive.followTrajectory(trajectories.get(i));
+            shooterPosition();
 
-            if(i == 6) {
-                shooterPosition();
+            if (i == 6) {
+                robot.ringShooter.autonomousTowerShot();
             }
-
-             */
-
+        }
 
     }
 
@@ -300,11 +308,11 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(66, -22))
+                .lineToConstantHeading(new Vector2d(74, -16))
                 .build());
 
 
-
+        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(66, -28))
@@ -331,6 +339,9 @@ public class NewLeftBlue extends AutonomousBase {
                 .lineToConstantHeading(new Vector2d(74, -40))
                 .build());
 
+         */
+
+        /*
         robot.drive.followTrajectory(trajectories.get(0));
         robot.drive.followTrajectory(trajectories.get(1));
         robot.drive.followTrajectory(trajectories.get(2));
@@ -357,7 +368,9 @@ public class NewLeftBlue extends AutonomousBase {
 
         robot.drive.followTrajectory(trajectories.get(10));
 
-        /*
+         */
+
+
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 7) {
                 shooterPosition();
@@ -365,114 +378,14 @@ public class NewLeftBlue extends AutonomousBase {
             robot.drive.followTrajectory(trajectories.get(i));
         }
 
-         */
+
     }
 
     public void shooterPosition() {
 
-        /*
-        ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
-
-        trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
-                //first trajectory moves the first wobble goal into box C
-                //every time the robot stops, a new trajectory must be made
-                .strafeRight(6)
-                .build());
-
-        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
-                //second trajectory moves the robot to line up with the second wobble goal
-                .strafeRight(6)
-                .build());
-
-        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
-                //moves forward to grab the wobble goal
-                //.forward(14)
-                .strafeRight(6)
-                .build());
-
-        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
-                //moves the wobble goal into box C
-                .forward(8)
-                .build());
-
         robot.ringIntake.extendIntake();
-
-        robot.drive.followTrajectory(trajectories.get(0));
-
-        robot.ringShooter.powerShot();
-
-        robot.drive.followTrajectory(trajectories.get(1));
-
-        robot.ringShooter.powerShot();
-
-        robot.drive.followTrajectory(trajectories.get(2));
-
-        robot.ringShooter.powerShot();
-
-        robot.drive.followTrajectory(trajectories.get(3));
-        
-        //robot.ringShooter.autonomousTowerShot();
-        
+        robot.ringShooter.autonomousTowerShot();
         robot.ringIntake.retractIntake();
-
-         */
-
-
-        
-        /*
-        robot.ringShooter.towerShot();
-        robot.hopperLifter.setPosition(0.09);
-
-        sleep(500);
-
-        robot.intakeArm.setPower(0);
-        robot.leftShooter.setPower(.71);
-        robot.rightShooter.setPower(.71);
-        robot.shooterArm.setPosition(1);
-
-        sleep(500);
-
-        robot.leftShooter.setPower(0);
-        robot.rightShooter.setPower(0);
-        robot.shooterArm.setPosition(.75);
-
-        sleep(100);
-        robot.hopperLifter.setPosition(0.04);
-
-        sleep(1000);
-
-        robot.leftShooter.setPower(.71);
-        robot.rightShooter.setPower(.71);
-        robot.shooterArm.setPosition(1);
-
-        sleep(500);
-
-        robot.leftShooter.setPower(0);
-        robot.rightShooter.setPower(0);
-        robot.shooterArm.setPosition(.8);
-
-        sleep(100);
-        robot.hopperLifter.setPosition(0);
-
-        sleep(1000);
-
-        robot.leftShooter.setPower(.71);
-        robot.rightShooter.setPower(.71);
-        robot.shooterArm.setPosition(1);
-
-        sleep(500);
-
-        robot.leftShooter.setPower(0);
-        robot.rightShooter.setPower(0);
-        robot.shooterArm.setPosition(.8);
-        robot.intakeArm.setPower(.6);
-
-        sleep(1500);
-
-        robot.intakeArm.setPower(0);
-        robot.hopperLifter.setPosition(0.15);
-
-         */
 
     }
 }

@@ -103,4 +103,111 @@ public class CommentDump {
 
 // telemetry.addData("looptime :", looptime.milliseconds());
 // telemetry.addData("gold resource",   moyesFound ?   "Found" : "NOT found\n Add moyes.wav to /src/main/res/raw" );
+
+
+
+    // NewLeftBlue (ring shooter)
+    /*
+        ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
+
+        trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
+                //first trajectory moves the first wobble goal into box C
+                //every time the robot stops, a new trajectory must be made
+                .strafeRight(6)
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+                //second trajectory moves the robot to line up with the second wobble goal
+                .strafeRight(6)
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+                //moves forward to grab the wobble goal
+                //.forward(14)
+                .strafeRight(6)
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+                //moves the wobble goal into box C
+                .forward(8)
+                .build());
+
+        robot.ringIntake.extendIntake();
+
+        robot.drive.followTrajectory(trajectories.get(0));
+
+        robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(1));
+
+        robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(2));
+
+        robot.ringShooter.powerShot();
+
+        robot.drive.followTrajectory(trajectories.get(3));
+
+        //robot.ringShooter.autonomousTowerShot();
+
+        robot.ringIntake.retractIntake();
+
+         */
+
+
+
+        /*
+        robot.ringShooter.towerShot();
+        robot.hopperLifter.setPosition(0.09);
+
+        sleep(500);
+
+        robot.intakeArm.setPower(0);
+        robot.leftShooter.setPower(.71);
+        robot.rightShooter.setPower(.71);
+        robot.shooterArm.setPosition(1);
+
+        sleep(500);
+
+        robot.leftShooter.setPower(0);
+        robot.rightShooter.setPower(0);
+        robot.shooterArm.setPosition(.75);
+
+        sleep(100);
+        robot.hopperLifter.setPosition(0.04);
+
+        sleep(1000);
+
+        robot.leftShooter.setPower(.71);
+        robot.rightShooter.setPower(.71);
+        robot.shooterArm.setPosition(1);
+
+        sleep(500);
+
+        robot.leftShooter.setPower(0);
+        robot.rightShooter.setPower(0);
+        robot.shooterArm.setPosition(.8);
+
+        sleep(100);
+        robot.hopperLifter.setPosition(0);
+
+        sleep(1000);
+
+        robot.leftShooter.setPower(.71);
+        robot.rightShooter.setPower(.71);
+        robot.shooterArm.setPosition(1);
+
+        sleep(500);
+
+        robot.leftShooter.setPower(0);
+        robot.rightShooter.setPower(0);
+        robot.shooterArm.setPosition(.8);
+        robot.intakeArm.setPower(.6);
+
+        sleep(1500);
+
+        robot.intakeArm.setPower(0);
+        robot.hopperLifter.setPosition(0.15);
+
+         */
 }

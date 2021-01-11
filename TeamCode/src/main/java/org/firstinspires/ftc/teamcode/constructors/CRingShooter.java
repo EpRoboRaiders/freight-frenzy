@@ -23,12 +23,13 @@ public class CRingShooter {
 
     private final int HOPPER_RAISE_TIME_MS = 250;
     private final int RING_SHOOT_TIME_MS = 500;
+    private final int SHOT_DELAY_TIME_MS = 5000;
 
     private final double SHOOTER_ARM_DISENGAGED = .75;
     private final double SHOOTER_ARM_ENGAGED = 1;
     
     private final double POWERSHOT_SPEED = .58;
-    private final double TOWERSHOT_SPEED = .71;
+    private final double TOWERSHOT_SPEED = .69;
 
     private final double NO_RING_SHOT_HOPPER_DEPTH = 0.15;
     private final double TOP_RING_SHOT_HOPPER_DEPTH = 0.09;
@@ -107,8 +108,20 @@ public class CRingShooter {
 
             shooterArm.setPosition(SHOOTER_ARM_DISENGAGED);
         }
+
+        // Automatically reset the hopper down to the lowest position.
+        if (hopperDepth == 3) {
+            hopperIncrement();
+        }
+        shooterTimer.reset();
+
+        while (shooterTimer.milliseconds() < SHOT_DELAY_TIME_MS) {}
+
     }
 
+    // Existed to test whether using different speeds for each shooter would result in the shooter
+    // shooting diagonally. It didn't.
+    /*
     public void ringShoot(double leftSpeed, double rightSpeed) {
         hopperIncrement();
 
@@ -134,6 +147,8 @@ public class CRingShooter {
             shooterArm.setPosition(SHOOTER_ARM_DISENGAGED);
         }
     }
+
+     */
     
     public void towerShot() {
 
@@ -154,9 +169,11 @@ public class CRingShooter {
     }
 
     public void autonomousTowerShot() {
-        for (int i = 0; i < 4; i++) {
+
+        for (int i = 0; i < 3; i++) {
             towerShot();
         }
+
     }
 
 }
