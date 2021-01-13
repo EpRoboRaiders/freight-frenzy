@@ -21,9 +21,9 @@ public class CRingShooter {
 
     private final double MOTORS_OFF = 0;
 
-    private final int HOPPER_RAISE_TIME_MS = 250;
-    private final int RING_SHOOT_TIME_MS = 500;
-    private final int SHOT_DELAY_TIME_MS = 5000;
+    private final int HOPPER_RAISE_TIME_MS = 500; //250;
+    private final int RING_SHOOT_TIME_MS   = 500;
+    private final int SHOT_DELAY_TIME_MS   = 500;
 
     private final double SHOOTER_ARM_DISENGAGED = .75;
     private final double SHOOTER_ARM_ENGAGED = 1;
@@ -31,10 +31,11 @@ public class CRingShooter {
     private final double POWERSHOT_SPEED = .58;
     private final double TOWERSHOT_SPEED = .69;
 
+    //increasing this value lowers the hopper position
     private final double NO_RING_SHOT_HOPPER_DEPTH = 0.15;
-    private final double TOP_RING_SHOT_HOPPER_DEPTH = 0.09;
-    private final double MIDDLE_RING_SHOT_HOPPER_DEPTH = 0.04;
-    private final double BOTTOM_RING_SHOT_HOPPER_DEPTH = 0;
+    private final double TOP_RING_SHOT_HOPPER_DEPTH = 0.11; //0.09;
+    private final double MIDDLE_RING_SHOT_HOPPER_DEPTH = 0.07; //0.04;
+    private final double BOTTOM_RING_SHOT_HOPPER_DEPTH = 0.01; //0;
     
     private int hopperDepth = 0;
     

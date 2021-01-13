@@ -40,12 +40,12 @@ public class NewLeftBlue extends AutonomousBase {
 
         if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.NONE) {
             // Placement A
-            positionA();
-            //shooterPosition();
+            //positionA();
+            shooterPosition();
         } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.ONE) {
             // Placement B
-            positionB();
-            //shooterPosition();
+            //positionB();
+            shooterPosition();
         } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.FOUR) {
             // Placement C (Default)
             positionC();
@@ -93,6 +93,8 @@ public class NewLeftBlue extends AutonomousBase {
                 //parks on white line
                 .lineToConstantHeading(new Vector2d(69, -10))
                 .build());
+
+
 
 
         /*
@@ -258,10 +260,10 @@ public class NewLeftBlue extends AutonomousBase {
 
         for (int i = 0; i < trajectories.size(); i++) {
 
-            shooterPosition();
+            robot.drive.followTrajectory(trajectories.get(i));
 
             if (i == 6) {
-                robot.ringShooter.autonomousTowerShot();
+                shooterPosition(); //robot.ringShooter.autonomousTowerShot();
             }
         }
 
