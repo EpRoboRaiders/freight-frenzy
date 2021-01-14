@@ -40,12 +40,12 @@ public class NewLeftBlue extends AutonomousBase {
 
         if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.NONE) {
             // Placement A
-            //positionA();
-            shooterPosition();
+            positionA();
+            // shooterPosition();
         } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.ONE) {
             // Placement B
-            //positionB();
-            shooterPosition();
+            positionB();
+            // shooterPosition();
         } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.FOUR) {
             // Placement C (Default)
             positionC();
@@ -89,10 +89,13 @@ public class NewLeftBlue extends AutonomousBase {
                 .lineToConstantHeading(new Vector2d(61, -10))
                 .build());
 
+        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //parks on white line
                 .lineToConstantHeading(new Vector2d(69, -10))
                 .build());
+
+         */
 
 
 
@@ -150,7 +153,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 6) {
-                shooterPosition();
+                // shooterPosition();
             }
             robot.drive.followTrajectory(trajectories.get(i));
         }
@@ -180,7 +183,7 @@ public class NewLeftBlue extends AutonomousBase {
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the wobble goal
                 //.forward(14)
-                .lineToConstantHeading(new Vector2d(13, -36))
+                .lineToConstantHeading(new Vector2d(14, -36))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -190,7 +193,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the wobble goal into the box
-                .lineToConstantHeading(new Vector2d(87, -14 ))
+                .lineToConstantHeading(new Vector2d(90, -14 ))
                 .build());
 
 
@@ -199,10 +202,15 @@ public class NewLeftBlue extends AutonomousBase {
                 .lineToConstantHeading(new Vector2d(60, -16))
                 .build());
 
+        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(68, -16))
                 .build());
+
+         */
+
+
 
 
         /*
@@ -263,7 +271,7 @@ public class NewLeftBlue extends AutonomousBase {
             robot.drive.followTrajectory(trajectories.get(i));
 
             if (i == 6) {
-                shooterPosition(); //robot.ringShooter.autonomousTowerShot();
+                // shooterPosition(); //robot.ringShooter.autonomousTowerShot();
             }
         }
 
@@ -308,10 +316,14 @@ public class NewLeftBlue extends AutonomousBase {
                 .lineToConstantHeading(new Vector2d(66, -16))
                 .build());
 
+        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //lines up with the ring goal so it can score and park
                 .lineToConstantHeading(new Vector2d(74, -16))
                 .build());
+               */
+
+
 
 
         /*
@@ -375,7 +387,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 7) {
-                shooterPosition();
+                // shooterPosition();
             }
             robot.drive.followTrajectory(trajectories.get(i));
         }

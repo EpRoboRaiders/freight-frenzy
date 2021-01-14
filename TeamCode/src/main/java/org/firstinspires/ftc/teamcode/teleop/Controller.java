@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.constructors.Button;
+import org.firstinspires.ftc.teamcode.constructors.CRingIntake;
 import org.firstinspires.ftc.teamcode.constructors.OneShot;
 
 import org.firstinspires.ftc.teamcode.constructors.TeleOpTemplate;
@@ -32,11 +33,16 @@ public class Controller extends OpMode {
     Button              collectingRings = new Button();
     Button              shooterActivated = new Button();
 
+    OneShot             downToggle  = new OneShot();
+    OneShot             hoverToggle = new OneShot();
+    OneShot             boxToggle   = new OneShot();
+
     boolean             rotatorLocked = false;
     
     double              intakeArmPower = 0;
 
     int                 hopperDepth   = 0;
+
 
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
@@ -214,7 +220,19 @@ public class Controller extends OpMode {
 
         robot.ringIntake.proportionalClampRotator();
 
+        robot.ringIntake.pastIntakeArmPosition = robot.ringIntake.intakeArmPosition;
 
+        if (downToggle.checkState(gamepad2.dpad_down)) {
+            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.DOWN;
+        }
+        else if (hoverToggle.checkState(gamepad2.dpad_right) || hoverToggle.checkState(gamepad2.dpad_left)) {
+            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.HOVERING;
+        }
+        else if (boxToggle.checkState(gamepad2.dpad_up)) {
+            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.IN_BOX;
+        }
+
+        robot.ringIntake.intakeArmPositionUpdater();
 
         // Display the current mode of the robot in Telemetry for reasons deemed obvious.
         for (int i=0; i<(Mode.values().length); i++){
@@ -222,11 +240,14 @@ public class Controller extends OpMode {
             telemetry.addData("Name", Mode.values()[i]);
         }
         telemetry.addData("Intake Position:", robot.ringIntake.returnIntakeArmPosition());
+        telemetry.addData("Intake Power:", robot.ringIntake.returnIntakeArmPower());
 
         // Display other information, including the position, speed, and mode of motors.
         telemetry.addData("Robot Mode:", mode.getDescription());
 
         telemetry.addData("HopperDepth ", hopperDepth);
+
+        telemetry.addData("Intake Arm Position:", robot.ringIntake.intakeArmPosition);
 
         telemetry.update();
     }

@@ -25,13 +25,22 @@ public class CRingIntake {
     private final double CLAMP_ROTATOR_RETRACTED = .21;
 
     private final int EXTEND_INTAKE_MS = 500;
-    private final int RETRACT_INTAKE_MS = 1500;
+    private final int RETRACT_INTAKE_MS = 800;
 
     private final double EXTEND_INTAKE_POWER = -.4;
     private final double RETRACT_INTAKE_POWER = .6;
 
     private final double SERVOS_OFF = 0;
 
+    public enum IntakeArmPosition {
+        IN_BOX,
+        HOVERING,
+        DOWN;
+    }
+
+    public IntakeArmPosition intakeArmPosition = IntakeArmPosition.IN_BOX;
+
+    public IntakeArmPosition pastIntakeArmPosition = IntakeArmPosition.IN_BOX;
 
     public void init(HardwareMap ahwMap) {
 
@@ -89,7 +98,12 @@ public class CRingIntake {
     }
 
     public int returnIntakeArmPosition() {
+
         return intakeArm.getCurrentPosition();
+    }
+
+    public double returnIntakeArmPower() {
+        return intakeArm.getPower();
     }
 
     public void proportionalClampRotator() {
@@ -110,4 +124,35 @@ public class CRingIntake {
                //  + (0.0005874)*intakeArm.getCurrentPosition() + 0.2046);
 
     }
+
+    // TODO: Actual motor instructions in each of the 6 cases where a transition is needed
+    public void intakeArmPositionUpdater() {
+
+        if (pastIntakeArmPosition == IntakeArmPosition.DOWN) {
+            if (intakeArmPosition == IntakeArmPosition.HOVERING) {
+                // Transition from down to hovering.
+            }
+            else if (intakeArmPosition == IntakeArmPosition.IN_BOX) {
+                // Transition from down to in box.
+            }
+        }
+        else if (pastIntakeArmPosition == IntakeArmPosition.HOVERING) {
+            if (intakeArmPosition == IntakeArmPosition.DOWN) {
+                // Transition from hovering to down.
+            }
+            else if (intakeArmPosition == IntakeArmPosition.IN_BOX) {
+                // Transition from hovering to in box.
+            }
+        }
+        else { /*pastIntakeArmPosition == IntakeArmPosition.IN_BOX*/
+            if (intakeArmPosition == IntakeArmPosition.DOWN) {
+                // Transition from in box to down.
+            }
+            else if (intakeArmPosition == IntakeArmPosition.HOVERING) {
+                // Transition from in box to hovering.
+            }
+        }
+    }
+
+
 }
