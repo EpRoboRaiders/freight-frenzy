@@ -86,16 +86,15 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves to line up with the tower shot
-                .lineToConstantHeading(new Vector2d(61, -10))
+                .lineToConstantHeading(new Vector2d(61, -4))
                 .build());
 
-        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //parks on white line
                 .lineToConstantHeading(new Vector2d(69, -10))
                 .build());
 
-         */
+
 
 
 
@@ -153,7 +152,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 6) {
-                // shooterPosition();
+                 shooterPosition();
             }
             robot.drive.followTrajectory(trajectories.get(i));
         }
@@ -177,13 +176,14 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //third trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(14, -50, Math.toRadians(90)))
+                //.lineToLinearHeading(new Pose2d(14, -50, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(17, -46, Math.toRadians(90)))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the wobble goal
                 //.forward(14)
-                .lineToConstantHeading(new Vector2d(14, -36))
+                .lineToConstantHeading(new Vector2d(14, -46))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -199,16 +199,15 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(60, -16))
+                .lineToConstantHeading(new Vector2d(61, -6))
                 .build());
 
-        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
-                //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(68, -16))
+                //parks on white line
+                .lineToConstantHeading(new Vector2d(61, -16))
                 .build());
 
-         */
+
 
 
 
@@ -268,11 +267,10 @@ public class NewLeftBlue extends AutonomousBase {
 
         for (int i = 0; i < trajectories.size(); i++) {
 
-            robot.drive.followTrajectory(trajectories.get(i));
-
-            if (i == 6) {
-                // shooterPosition(); //robot.ringShooter.autonomousTowerShot();
+            if (i == 7) {
+                 shooterPosition(); //robot.ringShooter.autonomousTowerShot();
             }
+            robot.drive.followTrajectory(trajectories.get(i));
         }
 
     }
@@ -303,6 +301,7 @@ public class NewLeftBlue extends AutonomousBase {
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
+                //
                 .lineToConstantHeading(new Vector2d(115, 4))
                 .build());
 
@@ -313,15 +312,14 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
                 //lines up with the ring goal so it can score and park
-                .lineToConstantHeading(new Vector2d(66, -16))
+                .lineToConstantHeading(new Vector2d(61, -4))
                 .build());
 
-        /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size() - 1).end())
-                //lines up with the ring goal so it can score and park
+                //parks on white line
                 .lineToConstantHeading(new Vector2d(74, -16))
                 .build());
-               */
+
 
 
 
@@ -387,7 +385,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 7) {
-                // shooterPosition();
+                 shooterPosition();
             }
             robot.drive.followTrajectory(trajectories.get(i));
         }

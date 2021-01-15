@@ -25,7 +25,7 @@ public class CRingIntake {
     private final double CLAMP_ROTATOR_RETRACTED = .21;
 
     private final int EXTEND_INTAKE_MS = 500;
-    private final int RETRACT_INTAKE_MS = 800;
+    private final int RETRACT_INTAKE_MS = 500; // 800;
 
     private final double EXTEND_INTAKE_POWER = -.4;
     private final double RETRACT_INTAKE_POWER = .6;
