@@ -29,13 +29,14 @@ public class Controller extends OpMode {
 
     Button wobbleToggled = new Button();
 
-    Button              ringClamped = new Button();
+
     Button              collectingRings = new Button();
     Button              shooterActivated = new Button();
 
     OneShot             downToggle  = new OneShot();
     OneShot             hoverToggle = new OneShot();
     OneShot             boxToggle   = new OneShot();
+    OneShot             ringClampToggle = new OneShot();
 
     boolean             rotatorLocked = false;
     
@@ -43,6 +44,7 @@ public class Controller extends OpMode {
 
     int                 hopperDepth   = 0;
 
+    boolean ringClamped = false;
 
 
     // The array driveMode stores all of the possible modes for driving our robot. At the start of
@@ -197,7 +199,8 @@ public class Controller extends OpMode {
 
         if(gamepad2.y) {
             // robot.ringShooter.towerShot();
-            robot.ringShooter.towerShot();
+            // robot.ringShooter.towerShot();
+           robot.ringIntake.intakeArmTransition = CRingIntake.IntakeArmTransition.DOWN_TO_INTAKE_RING;
         }
         else if (gamepad2.x) {
             robot.ringShooter.powerShot();
@@ -205,15 +208,14 @@ public class Controller extends OpMode {
 
 
         // Set the ringClamp to a corresponding state based on if ringClamped is true..
-        if (ringClamped.checkState(gamepad2.right_trigger >.2)) {
-            robot.ringIntake.clampRing();
-            // robot.ringIntake.controlIntakeArm(0);
-            //-gamepad2.left_stick_y*.4
-        }
-        else {
-            robot.ringIntake.unclampRing();
-            // robot.ringIntake.controlIntakeArm(0);
-            //-gamepad2.left_stick_y*.375
+        if (ringClampToggle.checkState(gamepad2.right_trigger >.2)) {
+
+            ringClamped = !ringClamped;
+            if (ringClamped) {
+                robot.ringIntake.clampRing();
+            } else {
+                robot.ringIntake.unclampRing();
+            }
         }
 
         /*
