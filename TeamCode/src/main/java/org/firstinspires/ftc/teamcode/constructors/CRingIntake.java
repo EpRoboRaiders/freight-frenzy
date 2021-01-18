@@ -32,15 +32,28 @@ public class CRingIntake {
 
     private final double SERVOS_OFF = 0;
 
+
     public enum IntakeArmPosition {
         IN_BOX,
         HOVERING,
         DOWN;
     }
 
+    public enum IntakeArmTransition {
+        IN_BOX_TO_HOVERING,
+        IN_BOX_TO_DOWN,
+        HOVERING_TO_IN_BOX,
+        HOVERING_TO_DOWN,
+        DOWN_TO_IN_BOX,
+        DOWN_TO_HOVERING;
+
+    }
+
     public IntakeArmPosition intakeArmPosition = IntakeArmPosition.IN_BOX;
 
     public IntakeArmPosition pastIntakeArmPosition = IntakeArmPosition.IN_BOX;
+
+    public IntakeArmTransition intakeArmTransition = IntakeArmTransition.DOWN_TO_IN_BOX;
 
     public void init(HardwareMap ahwMap) {
 
@@ -74,8 +87,77 @@ public class CRingIntake {
         clampRotator.setPosition(CLAMP_ROTATOR_RETRACTED);
     }
 
-    public void controlIntakeArm(double power) {
-        intakeArm.setPower(power); //-gamepad2.left_stick_y*.4
+    public void controlIntakeArm(/*double power*/) {
+
+
+
+        if (intakeArmTransition == IntakeArmTransition.IN_BOX_TO_HOVERING) {
+            // Transition from in box to hovering.
+            if (intakeArm.getCurrentPosition() > -120) {
+                intakeArm.setPower(-.3);
+            }
+            if (intakeArm.getCurrentPosition() > -278) {
+                intakeArm.setPower(intakeArm.getCurrentPosition()*-0.00287 - .545);
+            }
+            else {
+                intakeArm.setPower(.254);
+            }
+        }
+        else if (intakeArmTransition == IntakeArmTransition.IN_BOX_TO_DOWN) {
+            // Transition from in box to down.
+            if (intakeArm.getCurrentPosition() > -120) {
+                intakeArm.setPower(-.3);
+
+            }
+            else {
+                intakeArm.setPower(0);
+            }
+        }
+        else if (intakeArmTransition == IntakeArmTransition.HOVERING_TO_IN_BOX) {
+            // Transition from hovering to in box.
+            if (intakeArm.getCurrentPosition() < -104) {
+                intakeArm.setPower(.375);
+
+            }
+            else if (intakeArm.getCurrentPosition() < -6) {
+                intakeArm.setPower(.1);
+                // clampRotator.setPosition(.2);
+            }
+            else {
+                intakeArm.setPower(0);
+            }
+        }
+        else if (intakeArmTransition == IntakeArmTransition.HOVERING_TO_DOWN) {
+            // Transition from hovering to down.
+            intakeArm.setPower(0);
+
+        }
+        else if (intakeArmTransition == IntakeArmTransition.DOWN_TO_IN_BOX) {
+            // Transition from down to in box.
+            if (intakeArm.getCurrentPosition() < -104) {
+                intakeArm.setPower(.375);
+
+            }
+            else if (intakeArm.getCurrentPosition() < -6) {
+                intakeArm.setPower(.1);
+                // clampRotator.setPosition(.2);
+            }
+            else {
+                intakeArm.setPower(0);
+            }
+
+        }
+        else { // intakeArmTransition == IntakeArmTransition.DOWN_TO_HOVERING
+            // Transition from down to hovering.
+            if (intakeArm.getCurrentPosition() < -278) {
+                intakeArm.setPower(.4);
+            }
+            else {
+                intakeArm.setPower(.254);
+            }
+        }
+
+        // intakeArm.setPower(power); //-gamepad2.left_stick_y*.4
     }
 
     public void extendIntake() {
@@ -130,28 +212,43 @@ public class CRingIntake {
 
         if (pastIntakeArmPosition == IntakeArmPosition.DOWN) {
             if (intakeArmPosition == IntakeArmPosition.HOVERING) {
-                // Transition from down to hovering.
+                intakeArmTransition = IntakeArmTransition.DOWN_TO_HOVERING;
+
             }
             else if (intakeArmPosition == IntakeArmPosition.IN_BOX) {
-                // Transition from down to in box.
+                intakeArmTransition = IntakeArmTransition.DOWN_TO_IN_BOX;
             }
         }
         else if (pastIntakeArmPosition == IntakeArmPosition.HOVERING) {
             if (intakeArmPosition == IntakeArmPosition.DOWN) {
-                // Transition from hovering to down.
+                intakeArmTransition = IntakeArmTransition.HOVERING_TO_DOWN;
             }
             else if (intakeArmPosition == IntakeArmPosition.IN_BOX) {
-                // Transition from hovering to in box.
+                intakeArmTransition = IntakeArmTransition.HOVERING_TO_IN_BOX;
             }
         }
         else { /*pastIntakeArmPosition == IntakeArmPosition.IN_BOX*/
             if (intakeArmPosition == IntakeArmPosition.DOWN) {
-                // Transition from in box to down.
+                intakeArmTransition = IntakeArmTransition.IN_BOX_TO_DOWN;
             }
             else if (intakeArmPosition == IntakeArmPosition.HOVERING) {
-                // Transition from in box to hovering.
+                intakeArmTransition = IntakeArmTransition.IN_BOX_TO_HOVERING;
             }
         }
+        controlIntakeArm();
+    }
+
+    public void intakeArmPrimer() {
+        while (intakeArm.getCurrentPosition() > -104) {
+            intakeArm.setPower(-.3);
+
+        }
+        while (intakeArm.getCurrentPosition() < -6) {
+            intakeArm.setPower(.1);
+            clampRotator.setPosition(.2);
+        }
+        intakeArm.setPower(0);
+
     }
 
 
