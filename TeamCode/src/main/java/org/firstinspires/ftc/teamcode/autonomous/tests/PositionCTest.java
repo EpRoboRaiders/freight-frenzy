@@ -20,8 +20,6 @@ public class PositionCTest extends LinearOpMode {
         Pose2d startPose = new Pose2d(-63, 48, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
 
-
-
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
                 .splineToConstantHeading(new Vector2d(-24, 60), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(52, 60), Math.toRadians(0))
