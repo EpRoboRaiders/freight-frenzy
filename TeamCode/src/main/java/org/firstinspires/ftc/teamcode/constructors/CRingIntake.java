@@ -18,11 +18,33 @@ public class CRingIntake {
 
     private ElapsedTime intakeTimer   = new ElapsedTime();
 
+    private ElapsedTime clampTimer1   = new ElapsedTime();
+    private ElapsedTime clampTimer2   = new ElapsedTime();
+
+    private boolean clampTimer1Reset = false;
+    private boolean clampTimer2Reset = false;
+
     private final double RING_CLAMP_ENGAGED = .75;
     private final double RING_CLAMP_DISENGAGED = 1;
 
     private final double CLAMP_ROTATOR_EXTENDED = .85;
-    private final double CLAMP_ROTATOR_RETRACTED = .21;
+    private final double CLAMP_ROTATOR_RETRACTED = .22;
+
+    private final int RING_INTAKE_VERTICAL_COUNTS = -104;
+    private final int RING_INTAKE_HOVERING_COUNTS = -278;
+    private final int RING_INTAKE_IN_BOX_COUNTS = -20;
+
+    private final double RING_INTAKE_TRANSITION_TO_BOX_POWER = .4;
+    private final double RING_INTAKE_TRANSITION_OUT_OF_BOX_POWER = -.3;
+    private final double RING_INTAKE_TRANSITION_VERTICAL_TO_IN_BOX_POWER = .1;
+
+    private final int RING_INTAKE_SLIGHTLY_PAST_VERTICAL_TO_DOWN_COUNTS = -150;
+    private final int RING_INTAKE_SLIGHTLY_PAST_VERTICAL_TO_HOVERING_COUNTS = -120;
+
+    private final double RING_INTAKE_IN_BOX_TO_HOVERING_POWER_SLOPE = -0.00287;
+    private final double RING_INTAKE_IN_BOX_TO_HOVERING_POWER_Y_INTERCEPT = -.545;
+
+    private final double RING_INTAKE_HOVERING_POWER = .254;
 
     private final int EXTEND_INTAKE_MS = 500;
     private final int RETRACT_INTAKE_MS = 500; // 800;
@@ -34,6 +56,9 @@ public class CRingIntake {
 
     private boolean transitionBusy = false;
 
+    private final double COUNTERACT_GRAVITY_POWER = .1;
+
+    private final double COUNTERACT_BOX_FORCE_POWER = 0;
 
     public enum IntakeArmPosition {
         IN_BOX,
@@ -58,7 +83,7 @@ public class CRingIntake {
 
     public IntakeArmTransition intakeArmTransition = IntakeArmTransition.DOWN_TO_IN_BOX;
 
-    private final int CLAMP_TRANSITION_MS = 200;
+    private final int CLAMP_TRANSITION_MS = 750;
 
     public void init(HardwareMap ahwMap) {
 
@@ -98,103 +123,115 @@ public class CRingIntake {
         switch (intakeArmTransition) {
             case IN_BOX_TO_HOVERING:
                 // Transition from in box to hovering.
-                if (intakeArm.getCurrentPosition() > -120) {
-                    intakeArm.setPower(-.3);
+                if (intakeArm.getCurrentPosition() > RING_INTAKE_SLIGHTLY_PAST_VERTICAL_TO_HOVERING_COUNTS) {
+                    intakeArm.setPower(RING_INTAKE_TRANSITION_OUT_OF_BOX_POWER);
                     transitionBusy = true;
                 }
-                if (intakeArm.getCurrentPosition() > -278) {
-                    intakeArm.setPower(intakeArm.getCurrentPosition() * -0.00287 - .545);
+                if (intakeArm.getCurrentPosition() > RING_INTAKE_HOVERING_COUNTS) {
+                    intakeArm.setPower(linearPower(RING_INTAKE_IN_BOX_TO_HOVERING_POWER_SLOPE, intakeArm.getCurrentPosition(), RING_INTAKE_IN_BOX_TO_HOVERING_POWER_Y_INTERCEPT));
                     transitionBusy = true;
                 } else {
-                    intakeArm.setPower(.254);
+                    intakeArm.setPower(RING_INTAKE_HOVERING_POWER);
                     transitionBusy = false;
                 }
                 break;
 
             case IN_BOX_TO_DOWN:
                 // Transition from in box to down.
-                if (intakeArm.getCurrentPosition() > -120) {
-                    intakeArm.setPower(-.3);
+                if (intakeArm.getCurrentPosition() > RING_INTAKE_SLIGHTLY_PAST_VERTICAL_TO_DOWN_COUNTS) {
+                    intakeArm.setPower(RING_INTAKE_TRANSITION_OUT_OF_BOX_POWER);
                     transitionBusy = true;
 
                 } else {
-                    intakeArm.setPower(0);
+                    intakeArm.setPower(COUNTERACT_GRAVITY_POWER);
                     transitionBusy = false;
                 }
                 break;
 
             case HOVERING_TO_IN_BOX:
                 // Transition from hovering to in box.
-                if (intakeArm.getCurrentPosition() < -104) {
-                    intakeArm.setPower(.375);
+                if (intakeArm.getCurrentPosition() < RING_INTAKE_VERTICAL_COUNTS) {
+                    intakeArm.setPower(RING_INTAKE_TRANSITION_TO_BOX_POWER);
                     transitionBusy = true;
 
-                } else if (intakeArm.getCurrentPosition() < -6) {
-                    intakeArm.setPower(.1);
+                } else if (intakeArm.getCurrentPosition() < RING_INTAKE_IN_BOX_COUNTS) {
+                    intakeArm.setPower(RING_INTAKE_TRANSITION_VERTICAL_TO_IN_BOX_POWER);
                     transitionBusy = true;
                     // clampRotator.setPosition(.2);
                 } else {
-                    intakeArm.setPower(0);
+                    intakeArm.setPower(COUNTERACT_BOX_FORCE_POWER);
                     transitionBusy = false;
                 }
                 break;
 
             case HOVERING_TO_DOWN:
                 // Transition from hovering to down.
-                intakeArm.setPower(0);
+                intakeArm.setPower(COUNTERACT_GRAVITY_POWER);
                 transitionBusy = false;
                 break;
 
             case DOWN_TO_IN_BOX:
                 // Transition from down to in box.
-                if (intakeArm.getCurrentPosition() < -104) {
-                    intakeArm.setPower(.375);
+                if (intakeArm.getCurrentPosition() < RING_INTAKE_VERTICAL_COUNTS) {
+                    intakeArm.setPower(RING_INTAKE_TRANSITION_TO_BOX_POWER);
                     transitionBusy = true;
 
 
-                } else if (intakeArm.getCurrentPosition() < -6) {
-                    intakeArm.setPower(.1);
+                } else if (intakeArm.getCurrentPosition() < RING_INTAKE_IN_BOX_COUNTS) {
+                    intakeArm.setPower(RING_INTAKE_TRANSITION_VERTICAL_TO_IN_BOX_POWER);
                     transitionBusy = true;
                     // clampRotator.setPosition(.2);
                 } else {
-                    intakeArm.setPower(0);
+                    intakeArm.setPower(COUNTERACT_BOX_FORCE_POWER);
                     transitionBusy = false;
                 }
                 break;
 
 
-
             case DOWN_TO_HOVERING:
                 // Transition from down to hovering.
-                if (intakeArm.getCurrentPosition() < -278) {
-                    intakeArm.setPower(.4);
+                if (intakeArm.getCurrentPosition() < RING_INTAKE_HOVERING_COUNTS) {
+                    intakeArm.setPower(RING_INTAKE_TRANSITION_TO_BOX_POWER);
                 } else {
-                    intakeArm.setPower(.254);
+                    intakeArm.setPower(RING_INTAKE_HOVERING_POWER);
                     transitionBusy = false;
                 }
                 break;
 
             case DOWN_TO_INTAKE_RING:
-                // Place a ring into the hopper.
-
-                clampRing();
-
-                if (intakeArm.getCurrentPosition() < -104) {
-                    intakeArm.setPower(.375);
-                    transitionBusy = true;
-                } else if (intakeArm.getCurrentPosition() < -6) {
-                    intakeArm.setPower(.1);
-                    transitionBusy = true;
-                    // clampRotator.setPosition(.2);
-                } else {
-                    intakeArm.setPower(0);
-                    unclampRing();
-                    intakeArmTransition = IntakeArmTransition.IN_BOX_TO_HOVERING;
-                    intakeArmPosition = IntakeArmPosition.HOVERING;
-                    pastIntakeArmPosition = IntakeArmPosition.HOVERING;
+                if (!clampTimer1Reset) {
+                    clampTimer1.reset();
+                    clampRing();
+                    clampTimer1Reset = !clampTimer1Reset;
                 }
 
 
+                if (clampTimer1.milliseconds() > CLAMP_TRANSITION_MS) {
+                    if (intakeArm.getCurrentPosition() < RING_INTAKE_VERTICAL_COUNTS) {
+                        intakeArm.setPower(RING_INTAKE_TRANSITION_TO_BOX_POWER);
+                        transitionBusy = true;
+                    } else if (intakeArm.getCurrentPosition() < RING_INTAKE_IN_BOX_COUNTS) {
+                        intakeArm.setPower(RING_INTAKE_TRANSITION_VERTICAL_TO_IN_BOX_POWER);
+                        transitionBusy = true;
+                    } else {
+                        intakeArm.setPower(COUNTERACT_BOX_FORCE_POWER);
+
+                        if (!clampTimer2Reset) {
+                            clampTimer2.reset();
+                            unclampRing();
+                            clampTimer2Reset = !clampTimer2Reset;
+                        }
+
+                        if (clampTimer2.milliseconds() > CLAMP_TRANSITION_MS) {
+                            intakeArmTransition = IntakeArmTransition.IN_BOX_TO_HOVERING;
+                            clampTimer1Reset = !clampTimer1Reset;
+                            clampTimer2Reset = !clampTimer2Reset;
+                            intakeArmPosition = IntakeArmPosition.HOVERING;
+                            pastIntakeArmPosition = IntakeArmPosition.HOVERING;
+                        }
+
+                    }
+                }
         }
     }
 
@@ -236,7 +273,7 @@ public class CRingIntake {
             clampRotator.setPosition(-0.013*x - 1.75);
         }
         else { // x > -60
-            clampRotator.setPosition(.2);
+            clampRotator.setPosition(.22);
         }
 
 
@@ -299,6 +336,11 @@ public class CRingIntake {
             intakeArmTransition = IntakeArmTransition.IN_BOX_TO_HOVERING;
         }
 
+    }
+
+    // return y if y=mx+b
+    private double linearPower(double m, double x, double b) {
+        return m*x+b;
     }
 
 

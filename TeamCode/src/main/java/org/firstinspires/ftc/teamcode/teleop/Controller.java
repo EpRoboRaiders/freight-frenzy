@@ -199,11 +199,14 @@ public class Controller extends OpMode {
 
         if(gamepad2.y) {
             // robot.ringShooter.towerShot();
-            // robot.ringShooter.towerShot();
-           robot.ringIntake.intakeArmTransition = CRingIntake.IntakeArmTransition.DOWN_TO_INTAKE_RING;
+            robot.ringShooter.towerShot();
         }
         else if (gamepad2.x) {
             robot.ringShooter.powerShot();
+        }
+
+        if(gamepad2.right_bumper) {
+            robot.ringIntake.intakeArmTransition = CRingIntake.IntakeArmTransition.DOWN_TO_INTAKE_RING;
         }
 
 
