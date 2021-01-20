@@ -18,9 +18,6 @@ public class CRingIntake {
 
     private ElapsedTime intakeTimer   = new ElapsedTime();
 
-    private ElapsedTime clampTimer1   = new ElapsedTime();
-    private ElapsedTime clampTimer2   = new ElapsedTime();
-
     private final double RING_CLAMP_ENGAGED = .75;
     private final double RING_CLAMP_DISENGAGED = 1;
 
@@ -36,9 +33,6 @@ public class CRingIntake {
     private final double SERVOS_OFF = 0;
 
     private boolean transitionBusy = false;
-
-    private boolean clampTimer1Reset = false;
-    private boolean clampTimer2Reset = false;
 
 
     public enum IntakeArmPosition {
@@ -183,39 +177,22 @@ public class CRingIntake {
             case DOWN_TO_INTAKE_RING:
                 // Place a ring into the hopper.
 
-                if (!clampTimer1Reset) {
-                    clampTimer1.reset();
-                    clampTimer1Reset = !clampTimer1Reset;
-                }
-
                 clampRing();
-                if (clampTimer1.milliseconds() > CLAMP_TRANSITION_MS) {
-                    if (intakeArm.getCurrentPosition() < -104) {
-                        intakeArm.setPower(.375);
-                        transitionBusy = true;
-                    }
-                    else if (intakeArm.getCurrentPosition() < -6) {
-                        intakeArm.setPower(.1);
-                        transitionBusy = true;
-                    }
-                    else {
-                        intakeArm.setPower(0);
-                        unclampRing();
-                        if (!clampTimer2Reset) {
-                            clampTimer1.reset();
-                            clampTimer2Reset = !clampTimer1Reset;
-                        }
-                        if (clampTimer2.milliseconds() > CLAMP_TRANSITION_MS) {
-                            intakeArmTransition = IntakeArmTransition.IN_BOX_TO_HOVERING;
-                            clampTimer1Reset = !clampTimer1Reset;
-                            clampTimer2Reset = !clampTimer2Reset;
-                            intakeArmPosition = IntakeArmPosition.HOVERING;
-                            pastIntakeArmPosition = IntakeArmPosition.HOVERING;
-                        }
 
-                    }
+                if (intakeArm.getCurrentPosition() < -104) {
+                    intakeArm.setPower(.375);
+                    transitionBusy = true;
+                } else if (intakeArm.getCurrentPosition() < -6) {
+                    intakeArm.setPower(.1);
+                    transitionBusy = true;
+                    // clampRotator.setPosition(.2);
+                } else {
+                    intakeArm.setPower(0);
+                    unclampRing();
+                    intakeArmTransition = IntakeArmTransition.IN_BOX_TO_HOVERING;
+                    intakeArmPosition = IntakeArmPosition.HOVERING;
+                    pastIntakeArmPosition = IntakeArmPosition.HOVERING;
                 }
-
 
 
         }
@@ -311,5 +288,18 @@ public class CRingIntake {
         intakeArm.setPower(0);
 
     }
+
+    public void intakeRing() {
+        clampRing();
+
+        intakeArmTransition = IntakeArmTransition.DOWN_TO_IN_BOX;
+        if (!transitionBusy) {
+            unclampRing();
+
+            intakeArmTransition = IntakeArmTransition.IN_BOX_TO_HOVERING;
+        }
+
+    }
+
 
 }
