@@ -32,9 +32,9 @@ public class CRingIntake {
 
     private final int RING_INTAKE_VERTICAL_COUNTS = -104;
     private final int RING_INTAKE_HOVERING_COUNTS = -278;
-    private final int RING_INTAKE_IN_BOX_COUNTS = -20;
+    private final int RING_INTAKE_IN_BOX_COUNTS = -30;
 
-    private final double RING_INTAKE_TRANSITION_TO_BOX_POWER = .4;
+    private final double RING_INTAKE_TRANSITION_TO_BOX_POWER = .425;
     private final double RING_INTAKE_TRANSITION_OUT_OF_BOX_POWER = -.3;
     private final double RING_INTAKE_TRANSITION_VERTICAL_TO_IN_BOX_POWER = .1;
 
@@ -49,7 +49,7 @@ public class CRingIntake {
     private final int EXTEND_INTAKE_MS = 500;
     private final int RETRACT_INTAKE_MS = 500; // 800;
 
-    private final double EXTEND_INTAKE_POWER = -.4;
+    private final double EXTEND_INTAKE_POWER = -.425;
     private final double RETRACT_INTAKE_POWER = .6;
 
     private final double SERVOS_OFF = 0;
@@ -83,7 +83,7 @@ public class CRingIntake {
 
     public IntakeArmTransition intakeArmTransition = IntakeArmTransition.DOWN_TO_IN_BOX;
 
-    private final int CLAMP_TRANSITION_MS = 750;
+    private final int CLAMP_TRANSITION_MS = 500;
 
     public void init(HardwareMap ahwMap) {
 
@@ -108,16 +108,6 @@ public class CRingIntake {
 
     }
 
-    public void extendClampRotator() {
-
-        clampRotator.setPosition(CLAMP_ROTATOR_EXTENDED);
-    }
-
-    public void retractClampRotator() {
-
-        clampRotator.setPosition(CLAMP_ROTATOR_RETRACTED);
-    }
-
     public void controlIntakeArm(/*double power*/) {
 
         switch (intakeArmTransition) {
@@ -130,7 +120,11 @@ public class CRingIntake {
                 if (intakeArm.getCurrentPosition() > RING_INTAKE_HOVERING_COUNTS) {
                     intakeArm.setPower(linearPower(RING_INTAKE_IN_BOX_TO_HOVERING_POWER_SLOPE, intakeArm.getCurrentPosition(), RING_INTAKE_IN_BOX_TO_HOVERING_POWER_Y_INTERCEPT));
                     transitionBusy = true;
-                } else {
+                }
+                else if (intakeArm.getCurrentPosition() < RING_INTAKE_HOVERING_COUNTS) {
+                    intakeArm.setPower(RING_INTAKE_TRANSITION_TO_BOX_POWER);
+                }
+                else {
                     intakeArm.setPower(RING_INTAKE_HOVERING_POWER);
                     transitionBusy = false;
                 }

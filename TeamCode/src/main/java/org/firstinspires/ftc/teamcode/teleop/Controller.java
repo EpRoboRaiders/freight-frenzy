@@ -197,18 +197,17 @@ public class Controller extends OpMode {
             }
         }
 
-        if(gamepad2.y) {
+        if(/*gamepad2.y ||*/ gamepad1.x) {
             // robot.ringShooter.towerShot();
             robot.ringShooter.towerShot();
         }
-        else if (gamepad2.x) {
+        else if (/*gamepad2.x ||*/ gamepad1.y) {
             robot.ringShooter.powerShot();
         }
 
         if(gamepad2.right_bumper) {
             robot.ringIntake.intakeArmTransition = CRingIntake.IntakeArmTransition.DOWN_TO_INTAKE_RING;
         }
-
 
         // Set the ringClamp to a corresponding state based on if ringClamped is true..
         if (ringClampToggle.checkState(gamepad2.right_trigger >.2)) {
