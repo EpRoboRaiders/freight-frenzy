@@ -38,6 +38,20 @@ public class CommentDump {
     //robot.wobbleGrabber.setPosition(gamepad2.right_stick_x);
     //gamepad2.left_stick_x
 
+     /*
+        // Set the clampRotator to a corresponding state based on if collectingRings is true.
+        if (collectingRings.checkState(gamepad2.right_trigger >.2)) {
+            robot.ringIntake.extendClampRotator();
+        }
+        else {
+            robot.ringIntake.retractClampRotator();
+        }
+
+
+         */
+// clampRotator.setPosition((0.000008513)*intakeArm.getCurrentPosition()*intakeArm.getCurrentPosition()
+    //  + (0.0005874)*intakeArm.getCurrentPosition() + 0.2046);
+
     // If the X button is pressed, activate the shooter arm and the shooter mechanism itself.
 
 
@@ -210,4 +224,70 @@ public class CommentDump {
         robot.hopperLifter.setPosition(0.15);
 
          */
+
+        // CWobbleGrabber
+
+    /*
+    public void lowerAndUnclamp() {
+        clampTimer.reset();
+
+        grabberArm.setPosition(GRABBER_ARM_LOWERED);
+
+        while (clampTimer.milliseconds() < SERVO_ACTIVATION_PAUSE_MS) {}
+
+        wobbleGrabber.setPosition(WOBBLE_GRABBER_UNCLAMPED);
+    }
+
+    public void clampAndRaise() {
+        clampTimer.reset();
+
+        wobbleGrabber.setPosition(WOBBLE_GRABBER_CLAMPED);
+
+        while (clampTimer.milliseconds() < SERVO_ACTIVATION_PAUSE_MS) {}
+
+        grabberArm.setPosition(GRABBER_ARM_RAISED);
+    }
+     */
+
+    //CRingShooter
+    // Existed to test whether using different speeds for each shooter would result in the shooter
+    // shooting diagonally. It didn't.
+    /*
+    public void ringShoot(double leftSpeed, double rightSpeed) {
+        hopperIncrement();
+
+        shooterTimer.reset();
+
+        while (shooterTimer.milliseconds() < HOPPER_RAISE_TIME_MS) {}
+
+        // If the hopper box has raised to a point where a ring is available to shoot,
+        // do so.
+        if (hopperDepth != 0) {
+
+            leftShooter.setPower(leftSpeed);
+            rightShooter.setPower(rightSpeed);
+
+            shooterArm.setPosition(SHOOTER_ARM_ENGAGED);
+
+            shooterTimer.reset();
+
+            while (shooterTimer.milliseconds() < RING_SHOOT_TIME_MS) {}
+
+            setShooterPower(MOTORS_OFF);
+
+            shooterArm.setPosition(SHOOTER_ARM_DISENGAGED);
+        }
+    }
+
+     */
+
+     /*
+    Button              collectingRings = new Button();
+    Button              shooterActivated = new Button();
+    Button wobbleToggled = new Button();
+    boolean             rotatorLocked = false;
+    OneShot wobbleButton = new OneShot();
+    boolean             armRaised = true;
+
+     */
 }

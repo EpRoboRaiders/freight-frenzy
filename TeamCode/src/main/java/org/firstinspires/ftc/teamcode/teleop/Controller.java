@@ -19,28 +19,23 @@ public class Controller extends OpMode {
     TeleOpTemplate robot         = new TeleOpTemplate();
     static final double SPEED         = -.5;
 
-    double              grabberPower  = 0;
-
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime looptime = new ElapsedTime();
 
-    OneShot wobbleButton = new OneShot();
-    boolean             armRaised = true;
 
-    Button wobbleToggled = new Button();
+    Button              wobbleLowered = new Button();
+    Button              wobbleUnclamped = new Button();
 
 
-    Button              collectingRings = new Button();
-    Button              shooterActivated = new Button();
+
 
     OneShot             downToggle  = new OneShot();
     OneShot             hoverToggle = new OneShot();
     OneShot             boxToggle   = new OneShot();
     OneShot             ringClampToggle = new OneShot();
 
-    boolean             rotatorLocked = false;
-    
-    double              intakeArmPower = 0;
+
+
 
     int                 hopperDepth   = 0;
 
@@ -185,18 +180,13 @@ public class Controller extends OpMode {
         // Set the position of the wobbleGrabber based on whetherr it is "supposed" to be clamped
         // or unclamped.
 
-        if (wobbleButton.checkState(gamepad2.b)) {
+        // raises and lowers grabberArm using A button.
+        robot.wobbleGrabber.raiseAndLower(wobbleLowered.checkState(gamepad2.a));
 
-            armRaised = !armRaised;
-            if (armRaised) {
-                robot.wobbleGrabber.clampAndRaise();
+        // opens and closes wobbleGrabber using B button
+        robot.wobbleGrabber.openAndClose(wobbleUnclamped.checkState(gamepad2.b));
 
-            }
-            else {
-                robot.wobbleGrabber.lowerAndUnclamp();
-            }
-        }
-
+        // Delegates the x and y buttons on Gamepad 1 to shooting rings.
         if(/*gamepad2.y ||*/ gamepad1.x) {
             // robot.ringShooter.towerShot();
             robot.ringShooter.towerShot();
@@ -205,6 +195,7 @@ public class Controller extends OpMode {
             robot.ringShooter.powerShot();
         }
 
+        // If the right bumper on Gamepad 2 is pressed, intake a ring (detailed in CRingIntake).
         if(gamepad2.right_bumper) {
             robot.ringIntake.intakeArmTransition = CRingIntake.IntakeArmTransition.DOWN_TO_INTAKE_RING;
         }
@@ -219,17 +210,6 @@ public class Controller extends OpMode {
                 robot.ringIntake.unclampRing();
             }
         }
-
-        /*
-        // Set the clampRotator to a corresponding state based on if collectingRings is true.
-        if (collectingRings.checkState(gamepad2.right_trigger >.2)) {
-            robot.ringIntake.extendClampRotator();
-        }
-        else {
-            robot.ringIntake.retractClampRotator();
-        }
-
-         */
 
         robot.ringIntake.proportionalClampRotator();
 

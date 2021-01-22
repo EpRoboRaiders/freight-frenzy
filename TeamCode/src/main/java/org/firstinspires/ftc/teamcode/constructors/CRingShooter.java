@@ -127,36 +127,7 @@ public class CRingShooter {
 
     }
 
-    // Existed to test whether using different speeds for each shooter would result in the shooter
-    // shooting diagonally. It didn't.
-    /*
-    public void ringShoot(double leftSpeed, double rightSpeed) {
-        hopperIncrement();
 
-        shooterTimer.reset();
-
-        while (shooterTimer.milliseconds() < HOPPER_RAISE_TIME_MS) {}
-
-        // If the hopper box has raised to a point where a ring is available to shoot,
-        // do so.
-        if (hopperDepth != 0) {
-
-            leftShooter.setPower(leftSpeed);
-            rightShooter.setPower(rightSpeed);
-
-            shooterArm.setPosition(SHOOTER_ARM_ENGAGED);
-
-            shooterTimer.reset();
-
-            while (shooterTimer.milliseconds() < RING_SHOOT_TIME_MS) {}
-
-            setShooterPower(MOTORS_OFF);
-
-            shooterArm.setPosition(SHOOTER_ARM_DISENGAGED);
-        }
-    }
-
-     */
     
     public void towerShot() {
 

@@ -269,11 +269,6 @@ public class CRingIntake {
         else { // x > -60
             clampRotator.setPosition(.22);
         }
-
-
-        // clampRotator.setPosition((0.000008513)*intakeArm.getCurrentPosition()*intakeArm.getCurrentPosition()
-               //  + (0.0005874)*intakeArm.getCurrentPosition() + 0.2046);
-
     }
 
     // TODO: Actual motor instructions in each of the 6 cases where a transition is needed

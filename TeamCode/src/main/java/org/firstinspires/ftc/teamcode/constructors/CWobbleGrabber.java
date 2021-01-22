@@ -35,23 +35,29 @@ public class CWobbleGrabber {
         grabberArm.setPosition(GRABBER_ARM_RAISED);
     }
 
-    public void lowerAndUnclamp() {
-        clampTimer.reset();
+    //raises and lowers grabberArm.
+    public void raiseAndLower(boolean lowered) {
+        if (lowered) {
+            grabberArm.setPosition(GRABBER_ARM_LOWERED);
 
-        grabberArm.setPosition(GRABBER_ARM_LOWERED);
+        }
 
-        while (clampTimer.milliseconds() < SERVO_ACTIVATION_PAUSE_MS) {}
+        else {
+            grabberArm.setPosition(GRABBER_ARM_RAISED);
 
-        wobbleGrabber.setPosition(WOBBLE_GRABBER_UNCLAMPED);
+        }
     }
 
-    public void clampAndRaise() {
-        clampTimer.reset();
+    //opens and closes wobbleGrabber.
+    public void openAndClose(boolean unclamped) {
+        if (unclamped) {
+            wobbleGrabber.setPosition(WOBBLE_GRABBER_UNCLAMPED);
 
-        wobbleGrabber.setPosition(WOBBLE_GRABBER_CLAMPED);
-
-        while (clampTimer.milliseconds() < SERVO_ACTIVATION_PAUSE_MS) {}
-
-        grabberArm.setPosition(GRABBER_ARM_RAISED);
+        }
+        else {
+            wobbleGrabber.setPosition(WOBBLE_GRABBER_CLAMPED);
+        }
     }
+
+
 }
