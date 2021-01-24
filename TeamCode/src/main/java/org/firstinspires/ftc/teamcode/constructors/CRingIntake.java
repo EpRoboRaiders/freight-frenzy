@@ -303,11 +303,14 @@ public class CRingIntake {
     }
 
     public void intakeArmPrimer() {
-        while (intakeArm.getCurrentPosition() > -104) {
+
+        intakeTimer.reset();
+
+        while (intakeArm.getCurrentPosition() > -104 && intakeTimer.milliseconds() < 4000) {
             intakeArm.setPower(-.3);
 
         }
-        while (intakeArm.getCurrentPosition() < -6) {
+        while (intakeArm.getCurrentPosition() < -6 && intakeTimer.milliseconds() < 4000) {
             intakeArm.setPower(.1);
             clampRotator.setPosition(.2);
         }

@@ -181,10 +181,10 @@ public class Controller extends OpMode {
         // or unclamped.
 
         // raises and lowers grabberArm using A button.
-        robot.wobbleGrabber.raiseAndLower(wobbleLowered.checkState(gamepad2.a));
+        robot.wobbleGrabber.raiseAndLower(wobbleLowered.checkState(gamepad2.left_stick_y > .7 || gamepad2.left_stick_y < -.7));
 
         // opens and closes wobbleGrabber using B button
-        robot.wobbleGrabber.openAndClose(wobbleUnclamped.checkState(gamepad2.b));
+        robot.wobbleGrabber.openAndClose(wobbleUnclamped.checkState(gamepad2.left_stick_x > .7 || gamepad2.left_stick_x < -.7));
 
         // Delegates the x and y buttons on Gamepad 1 to shooting rings.
         if(/*gamepad2.y ||*/ gamepad1.x) {
@@ -242,6 +242,7 @@ public class Controller extends OpMode {
         telemetry.addData("HopperDepth ", hopperDepth);
 
         telemetry.addData("Intake Arm Position:", robot.ringIntake.intakeArmPosition);
+        telemetry.addData("looptime: ", looptime.milliseconds());
 
         telemetry.update();
     }
