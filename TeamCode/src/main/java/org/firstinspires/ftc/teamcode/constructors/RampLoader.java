@@ -39,6 +39,7 @@ public class RampLoader extends CoreImplement {
 
     @Override
     public void init(HardwareMap ahwMap) {
+        //TODO: add configuration
     }
 
     public void swingRingKicker() {
