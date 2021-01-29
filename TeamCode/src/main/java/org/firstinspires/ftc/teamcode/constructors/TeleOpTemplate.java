@@ -59,7 +59,7 @@ public class TeleOpTemplate {
 
     public CRingShooter   ringShooter   = new CRingShooter();
 
-    public CRingIntake    ringIntake        = new CRingIntake();
+    public Intake         ringIntake    = new Intake();
 
     public CWebcam        webcam        = new CWebcam();
 

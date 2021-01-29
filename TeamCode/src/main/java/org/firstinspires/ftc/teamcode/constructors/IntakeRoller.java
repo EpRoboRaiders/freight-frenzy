@@ -4,6 +4,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+/**
+ * Controls the roller that sucks in rings.
+ * This class raises and lowers the IntakeRoller as well as controls the speed.
+ */
 public class IntakeRoller extends CoreImplement {
 
     private DcMotor rollerArm = null;
@@ -16,7 +20,9 @@ public class IntakeRoller extends CoreImplement {
 
     @Override
     public void init(HardwareMap ahwMap) {
-        //TODO: add configuration
+
+        rollerArm   = ahwMap.get(DcMotor.class, "roller_arm");
+        armLocker   = ahwMap.get(Servo.class, "arm_locker");
     }
 
     @Override

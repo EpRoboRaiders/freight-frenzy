@@ -26,15 +26,10 @@ public class Controller extends OpMode {
     Button              wobbleLowered = new Button();
     Button              wobbleUnclamped = new Button();
 
+    OneShot             intakeRollerToggle = new OneShot();
+    boolean             intakeRollerState = false;
 
-
-
-    OneShot             downToggle  = new OneShot();
-    OneShot             hoverToggle = new OneShot();
-    OneShot             boxToggle   = new OneShot();
-    OneShot             ringClampToggle = new OneShot();
-
-
+    OneShot             intakeChainStarter = new OneShot();
 
 
     int                 hopperDepth   = 0;
@@ -83,7 +78,6 @@ public class Controller extends OpMode {
     @Override
     public void start() {
 
-        robot.ringIntake.intakeArmPrimer();
 
     }
 
@@ -195,37 +189,6 @@ public class Controller extends OpMode {
             robot.ringShooter.powerShot();
         }
 
-        // If the right bumper on Gamepad 2 is pressed, intake a ring (detailed in CRingIntake).
-        if(gamepad2.right_bumper) {
-            robot.ringIntake.intakeArmTransition = CRingIntake.IntakeArmTransition.DOWN_TO_INTAKE_RING;
-        }
-
-        // Set the ringClamp to a corresponding state based on if ringClamped is true..
-        if (ringClampToggle.checkState(gamepad2.right_trigger >.2)) {
-
-            ringClamped = !ringClamped;
-            if (ringClamped) {
-                robot.ringIntake.clampRing();
-            } else {
-                robot.ringIntake.unclampRing();
-            }
-        }
-
-        robot.ringIntake.proportionalClampRotator();
-
-        robot.ringIntake.pastIntakeArmPosition = robot.ringIntake.intakeArmPosition;
-
-        if (downToggle.checkState(gamepad2.dpad_down)) {
-            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.DOWN;
-        }
-        else if (hoverToggle.checkState(gamepad2.dpad_right) || hoverToggle.checkState(gamepad2.dpad_left)) {
-            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.HOVERING;
-        }
-        else if (boxToggle.checkState(gamepad2.dpad_up)) {
-            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.IN_BOX;
-        }
-
-        robot.ringIntake.intakeArmPositionUpdater();
 
 
         // Display the current mode of the robot in Telemetry for reasons deemed obvious.
@@ -233,15 +196,22 @@ public class Controller extends OpMode {
             telemetry.addData("Mode ", Mode.values()[i].ordinal());
             telemetry.addData("Name", Mode.values()[i]);
         }
-        telemetry.addData("Intake Position:", robot.ringIntake.returnIntakeArmPosition());
-        telemetry.addData("Intake Power:", robot.ringIntake.returnIntakeArmPower());
+
+        if (intakeRollerToggle.checkState(gamepad2.left_bumper)) {
+            intakeRollerState = !intakeRollerState;
+            robot.ringIntake.intakeRollerToggle(intakeRollerState);
+        }
+
+        if (intakeChainStarter.checkState(gamepad2.left_trigger >= .5)) {
+            robot.ringIntake.ringToBox();
+        }
+
 
         // Display other information, including the position, speed, and mode of motors.
         telemetry.addData("Robot Mode:", mode.getDescription());
 
         telemetry.addData("HopperDepth ", hopperDepth);
 
-        telemetry.addData("Intake Arm Position:", robot.ringIntake.intakeArmPosition);
         telemetry.addData("looptime: ", looptime.milliseconds());
 
         telemetry.update();

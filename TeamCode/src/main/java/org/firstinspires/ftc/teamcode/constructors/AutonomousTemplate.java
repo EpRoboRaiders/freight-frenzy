@@ -33,13 +33,13 @@ public class AutonomousTemplate
 
     public CRingShooter   ringShooter   = new CRingShooter();
 
-    public CRingIntake    ringIntake    = new CRingIntake();
+    public Intake         ringIntake    = new Intake();
 
-    public CWebcam        webcam        = new CWebcam();
+    public CWebcam            webcam        = new CWebcam();
 
     public SampleMecanumDrive drive     = null;
 
-    HardwareMap           hwMap         = null;
+    HardwareMap               hwMap         = null;
 
     /* Constructor */
     public AutonomousTemplate() {

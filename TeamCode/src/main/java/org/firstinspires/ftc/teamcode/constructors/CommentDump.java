@@ -290,4 +290,40 @@ public class CommentDump {
     boolean             armRaised = true;
 
      */
+
+     /*
+        // If the right bumper on Gamepad 2 is pressed, intake a ring (detailed in CRingIntake).
+        if(gamepad2.right_bumper) {
+            robot.ringIntake.intakeArmTransition = CRingIntake.IntakeArmTransition.DOWN_TO_INTAKE_RING;
+        }
+
+        // Set the ringClamp to a corresponding state based on if ringClamped is true..
+        if (ringClampToggle.checkState(gamepad2.right_trigger >.2)) {
+
+            ringClamped = !ringClamped;
+            if (ringClamped) {
+                robot.ringIntake.clampRing();
+            } else {
+                robot.ringIntake.unclampRing();
+            }
+        }
+
+        robot.ringIntake.proportionalClampRotator();
+
+        robot.ringIntake.pastIntakeArmPosition = robot.ringIntake.intakeArmPosition;
+
+        if (downToggle.checkState(gamepad2.dpad_down)) {
+            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.DOWN;
+        }
+        else if (hoverToggle.checkState(gamepad2.dpad_right) || hoverToggle.checkState(gamepad2.dpad_left)) {
+            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.HOVERING;
+        }
+        else if (boxToggle.checkState(gamepad2.dpad_up)) {
+            robot.ringIntake.intakeArmPosition = CRingIntake.IntakeArmPosition.IN_BOX;
+        }
+
+        robot.ringIntake.intakeArmPositionUpdater();
+
+         */
+
 }

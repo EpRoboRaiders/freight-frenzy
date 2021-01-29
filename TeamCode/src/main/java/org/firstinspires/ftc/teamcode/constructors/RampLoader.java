@@ -6,22 +6,26 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.lang.annotation.ElementType;
 
+/**
+ * Controls the kicker for the rings.
+ * This class moves the kicker so that it will kick the ring onto the RampLifter.
+ */
 public class RampLoader extends CoreImplement {
 
     private Servo ringKicker = null;
 
     private ElapsedTime kickerTimer = new ElapsedTime();
-    private final double KICKER_OPENED = 1; //TODO:  actual values
-    private final double KICKER_CLOSED = 0; //TODO:  actual values
+    private final double KICKER_EXTENDED_POS = 1; //TODO:  actual values
+    private final double KICKER_RETRACTED_POS = 0; //TODO:  actual values
 
     private final int KICKER_KICK_MS = 200; //TODO: actual values
 
-    private enum kickerStates {
+    private enum KickerStates {
         KICKER_RETRACTED,
         KICKER_EXTENDED;
     }
 
-    private kickerStates kickerState = kickerStates.KICKER_RETRACTED;
+    private KickerStates kickerState = KickerStates.KICKER_RETRACTED;
 
     @Override
     public void update() {
@@ -30,8 +34,8 @@ public class RampLoader extends CoreImplement {
                 break;
             case KICKER_EXTENDED:
                 if (kickerTimer.milliseconds() > KICKER_KICK_MS) {
-                    kickerState = kickerStates.KICKER_RETRACTED;
-                    ringKicker.setPosition(KICKER_OPENED);
+                    kickerState = KickerStates.KICKER_RETRACTED;
+                    ringKicker.setPosition(KICKER_RETRACTED_POS);
                 }
         }
 
@@ -39,14 +43,20 @@ public class RampLoader extends CoreImplement {
 
     @Override
     public void init(HardwareMap ahwMap) {
-        //TODO: add configuration
+
+        ringKicker   = ahwMap.get(Servo.class, "ring_kicker");
+        ringKicker.setPosition(KICKER_RETRACTED_POS);
     }
 
     public void swingRingKicker() {
         kickerTimer.reset();
-        kickerState = kickerStates.KICKER_EXTENDED;
-        ringKicker.setPosition(KICKER_OPENED);
+        kickerState = KickerStates.KICKER_EXTENDED;
+        ringKicker.setPosition(KICKER_EXTENDED_POS);
 
 
+    }
+
+    public boolean finished() {
+        return kickerState == KickerStates.KICKER_RETRACTED;
     }
 }
