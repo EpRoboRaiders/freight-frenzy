@@ -177,14 +177,14 @@ public class Controller extends OpMode {
             }
         }
 
-        // Set the position of the wobbleGrabber based on whetherr it is "supposed" to be clamped
+        // Set the position of the wobbleGrabber based on whether it is "supposed" to be clamped
         // or unclamped.
 
         // raises and lowers grabberArm using A button.
         robot.wobbleGrabber.raiseAndLower(wobbleLowered.checkState(gamepad2.left_stick_y > .7 || gamepad2.left_stick_y < -.7));
 
-        // opens and closes wobbleGrabber using B button
-        robot.wobbleGrabber.openAndClose(wobbleUnclamped.checkState(gamepad2.left_stick_x > .7 || gamepad2.left_stick_x < -.7));
+        // opens and closes wobbleGrabber using
+        robot.wobbleGrabber.openAndClose(wobbleUnclamped.checkState(gamepad2.b));
 
         // Delegates the x and y buttons on Gamepad 1 to shooting rings.
         if(/*gamepad2.y ||*/ gamepad1.x) {
