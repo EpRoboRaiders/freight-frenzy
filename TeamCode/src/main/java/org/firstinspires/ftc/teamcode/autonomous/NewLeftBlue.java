@@ -395,9 +395,9 @@ public class NewLeftBlue extends AutonomousBase {
 
     public void shooterPosition() {
 
-        robot.ringIntake.extendIntake();
+        //robot.ringIntake.extendIntake();
         robot.ringShooter.autonomousTowerShot();
-        robot.ringIntake.retractIntake();
+        //robot.ringIntake.retractIntake();
 
     }
 }

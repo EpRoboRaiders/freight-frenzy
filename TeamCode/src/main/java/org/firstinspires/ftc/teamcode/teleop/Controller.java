@@ -23,14 +23,15 @@ public class Controller extends OpMode {
     private ElapsedTime looptime = new ElapsedTime();
 
 
-    Button              wobbleLowered = new Button();
+    Button              wobbleLowered   = new Button();
     Button              wobbleUnclamped = new Button();
 
     OneShot             intakeRollerToggle = new OneShot();
-    boolean             intakeRollerState = false;
+    boolean             intakeRollerState  = false;
 
     OneShot             intakeChainStarter = new OneShot();
-
+    OneShot             testRampLoader     = new OneShot();
+    OneShot             testRingSlider     = new OneShot();
 
     int                 hopperDepth   = 0;
 
@@ -171,6 +172,8 @@ public class Controller extends OpMode {
             }
         }
 
+        robot.ringIntake.update();
+
         // Set the position of the wobbleGrabber based on whetherr it is "supposed" to be clamped
         // or unclamped.
 
@@ -204,6 +207,14 @@ public class Controller extends OpMode {
 
         if (intakeChainStarter.checkState(gamepad2.left_trigger >= .5)) {
             robot.ringIntake.ringToBox();
+        }
+
+        if (testRampLoader.checkState(gamepad2.x)) {
+            robot.ringIntake.testRampLoader();
+        }
+
+        if (testRingSlider.checkState(gamepad2.b)) {
+            robot.ringIntake.testRingSlider();
         }
 
 

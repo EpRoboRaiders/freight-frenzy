@@ -88,4 +88,12 @@ public class Intake extends CoreImplement {
     public void intakeRollerUpDown(boolean state) {
         intakeRoller.lowerRollerArm(state);
     }
+
+    public void testRampLoader() {
+        rampLoader.swingRingKicker();
+    }
+
+    public void testRingSlider() {
+        ringSlider.slideRingSlider();
+    }
 }
