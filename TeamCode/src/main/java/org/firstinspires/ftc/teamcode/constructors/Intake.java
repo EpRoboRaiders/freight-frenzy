@@ -96,4 +96,8 @@ public class Intake extends CoreImplement {
     public void testRingSlider() {
         ringSlider.slideRingSlider();
     }
+
+    public int armLockerPosition() {
+        return intakeRoller.getArmLockerEncoderCount();
+    }
 }

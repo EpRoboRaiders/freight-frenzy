@@ -30,6 +30,7 @@ public class Controller extends OpMode {
     boolean             intakeRollerState  = false;
 
     OneShot             intakeChainStarter = new OneShot();
+    boolean             intakeChainStarterState = false;
     OneShot             testRampLoader     = new OneShot();
     OneShot             testRingSlider     = new OneShot();
 
@@ -206,7 +207,9 @@ public class Controller extends OpMode {
         }
 
         if (intakeChainStarter.checkState(gamepad2.left_trigger >= .5)) {
-            robot.ringIntake.ringToBox();
+            //false raises the intake roller
+            intakeChainStarterState = !intakeChainStarterState;
+            robot.ringIntake.intakeRollerUpDown(intakeChainStarterState);
         }
 
         if (testRampLoader.checkState(gamepad2.x)) {
@@ -224,6 +227,8 @@ public class Controller extends OpMode {
         telemetry.addData("HopperDepth ", hopperDepth);
 
         telemetry.addData("looptime: ", looptime.milliseconds());
+
+        telemetry.addData("armLockerPosition", robot.ringIntake.armLockerPosition());
 
         telemetry.update();
     }
