@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.constructors;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,6 +13,7 @@ public class IntakeRoller extends CoreImplement {
 
     private DcMotor rollerArm = null;
     private DcMotor armLocker = null;
+    private CRServo supplementalRoller = null;
 
     private static final double ROLLER_ARM_SPEED   = 1; //TODO: actual values
 
@@ -33,6 +35,9 @@ public class IntakeRoller extends CoreImplement {
 
         rollerArm   = ahwMap.get(DcMotor.class, "roller_arm");
         armLocker   = ahwMap.get(DcMotor.class, "arm_locker");
+        supplementalRoller   = ahwMap.get(CRServo.class, "supplemental_roller");
+        armLocker.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armLocker.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     @Override
@@ -40,13 +45,13 @@ public class IntakeRoller extends CoreImplement {
         switch(rollerArmState) {
             case ARM_LOWERED: //no action needed when in this state
                 if (armLocker.getCurrentPosition() > ARM_LOCKER_LOWERED_COUNTS) {
-                    rollerArmStates rollerArmState = rollerArmStates.IDLE;
+                    rollerArmState = rollerArmStates.IDLE;
                     rollerArm.setPower(MOTOR_STOP);
                 }
                 break;
             case ARM_RAISED:
                 if (armLocker.getCurrentPosition() < ARM_LOCKER_RAISED_COUNTS) {
-                    rollerArmStates rollerArmState = rollerArmStates.IDLE;
+                    rollerArmState = rollerArmStates.IDLE;
                     rollerArm.setPower(MOTOR_STOP);
                 }
                 break;
@@ -62,11 +67,11 @@ public class IntakeRoller extends CoreImplement {
 
         if (state = true) {
             armLocker.setPower(ARM_LOCKER_LOWER_SPEED);
-            rollerArmStates rollerArmState = rollerArmStates.ARM_LOWERED;
+            rollerArmState = rollerArmStates.ARM_LOWERED;
         }
         else {
             armLocker.setPower(ARM_LOCKER_RAISE_SPEED);
-            rollerArmStates rollerArmState = rollerArmStates.ARM_RAISED;
+            rollerArmState = rollerArmStates.ARM_RAISED;
         }
 
     }
@@ -75,10 +80,12 @@ public class IntakeRoller extends CoreImplement {
 
         if (state) {
             rollerArm.setPower(ROLLER_ARM_SPEED);
+            supplementalRoller.setPower(ROLLER_ARM_SPEED);
         }
 
         else{
             rollerArm.setPower(MOTOR_STOP);
+            supplementalRoller.setPower(MOTOR_STOP);
         }
     }
 }
