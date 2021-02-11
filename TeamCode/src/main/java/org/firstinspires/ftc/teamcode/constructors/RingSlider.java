@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.constructors;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Controls the slider for bringing rings into the box.
@@ -10,14 +12,14 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 public class RingSlider extends CoreImplement {
 
-    private DcMotor ringSlider = null;
+    private CRServo ringSlider = null;
 
     private static final double RING_SLIDER_GOING_TO_BOX_POWER = 1; //TODO:  actual values
     private static final int RING_SLIDER_GOING_TO_RAMP_POWER = -1; //TODO:  actual values
 
-    private static final int RING_SLIDER_TO_BOX_COUNTS = 100; //TODO: actual values
+    private static final int RING_SLIDER_TO_BOX_MS = 100; //TODO: actual values
 
-    private static final int RING_SLIDER_TO_RAMP_COUNTS = 0; //TODO: actual values
+    private static final int RING_SLIDER_TO_RAMP_MS = 0; //TODO: actual values
     
     private boolean sliderStopped = false;
 
@@ -27,25 +29,28 @@ public class RingSlider extends CoreImplement {
         IDLE;
     }
 
+    private ElapsedTime sliderTimer = new ElapsedTime();
+
     private sliderStates sliderState = sliderStates.SLIDER_TO_RAMP;
 
     @Override
     public void init(HardwareMap ahwMap) {
 
-        ringSlider   = ahwMap.get(DcMotor.class, "ring_slider");
+        ringSlider   = ahwMap.get(CRServo.class, "ring_slider");
     }
 
     @Override
     public void update() {
         switch(sliderState){
             case SLIDER_TO_RAMP:
-                if(ringSlider.getCurrentPosition() < RING_SLIDER_TO_RAMP_COUNTS) {
+                if(sliderTimer.milliseconds() > RING_SLIDER_TO_RAMP_MS) {
                     ringSlider.setPower(MOTOR_STOP);
                     sliderState = sliderStates.IDLE;
+                    sliderTimer.reset();
                 }
                 break;
             case SLIDER_TO_BOX:
-                if (ringSlider.getCurrentPosition() > RING_SLIDER_TO_BOX_COUNTS) {
+                if (sliderTimer.milliseconds() > RING_SLIDER_TO_BOX_MS) {
                     ringSlider.setPower(RING_SLIDER_GOING_TO_RAMP_POWER);
                     sliderState = sliderStates.SLIDER_TO_RAMP;
 
@@ -59,6 +64,7 @@ public class RingSlider extends CoreImplement {
 
     public void slideRingSlider() {
         sliderState = sliderStates.SLIDER_TO_BOX;
+        sliderTimer.reset();
         ringSlider.setPower(RING_SLIDER_GOING_TO_BOX_POWER);
 
     }
