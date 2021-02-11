@@ -16,11 +16,12 @@ public class IntakeRoller extends CoreImplement {
     private CRServo supplementalRoller = null;
 
     private static final double ROLLER_ARM_SPEED   = 1; //TODO: actual values
+    private static final double SUPPLEMENTAL_ROLLER_SPEED = 1; //TODO: actual values
 
     private static final double ARM_LOCKER_LOWER_SPEED   = 0.5; //TODO: actual values
     private static final double ARM_LOCKER_RAISE_SPEED   = 0.5; //TODO: actual values
-    private static final double ARM_LOCKER_LOWERED_COUNTS = 100; //TODO: actual values
-    private static final double ARM_LOCKER_RAISED_COUNTS = 0; //TODO: actual values
+    private static final int ARM_LOCKER_LOWERED_COUNTS = 100; //TODO: actual values
+    private static final int ARM_LOCKER_RAISED_COUNTS = 0; //TODO: actual values
 
     private enum rollerArmStates {
         ARM_LOWERED,
@@ -80,7 +81,7 @@ public class IntakeRoller extends CoreImplement {
 
         if (state) {
             rollerArm.setPower(ROLLER_ARM_SPEED);
-            supplementalRoller.setPower(ROLLER_ARM_SPEED);
+            supplementalRoller.setPower(SUPPLEMENTAL_ROLLER_SPEED);
         }
 
         else{
