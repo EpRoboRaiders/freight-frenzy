@@ -20,7 +20,7 @@ public class IntakeRoller extends CoreImplement {
 
     private static final double ARM_LOCKER_LOWER_SPEED    = -0.5;
     private static final double ARM_LOCKER_RAISE_SPEED    = 0.5; //TODO: actual values
-    private static final double ARM_LOCKER_LOWERED_COUNTS = -182;
+    private static final double ARM_LOCKER_LOWERED_COUNTS = -212;
     private static final double ARM_LOCKER_RAISED_COUNTS  = 0; //TODO: actual values
 
     private enum armLockerStates {

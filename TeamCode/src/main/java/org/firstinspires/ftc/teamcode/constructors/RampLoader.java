@@ -16,7 +16,7 @@ public class RampLoader extends CoreImplement {
 
     private ElapsedTime kickerTimer = new ElapsedTime();
     private final double KICKER_EXTENDED_POS  = .25; //TODO:  actual values
-    private final double KICKER_RETRACTED_POS = 0;   //TODO:  actual values
+    private final double KICKER_RETRACTED_POS = .5;   //TODO:  actual values
 
     private final int KICKER_KICK_MS = 200; //TODO: actual values
 
