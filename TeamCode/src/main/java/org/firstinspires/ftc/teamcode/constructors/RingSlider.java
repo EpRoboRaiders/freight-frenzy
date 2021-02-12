@@ -17,9 +17,9 @@ public class RingSlider extends CoreImplement {
     private static final double RING_SLIDER_GOING_TO_BOX_POWER = 1; //TODO:  actual values
     private static final int RING_SLIDER_GOING_TO_RAMP_POWER = -1; //TODO:  actual values
 
-    private static final int RING_SLIDER_TO_BOX_MS = 100; //TODO: actual values
+    private static final int RING_SLIDER_TO_BOX_MS = 650;
 
-    private static final int RING_SLIDER_TO_RAMP_MS = 0; //TODO: actual values
+    private static final int RING_SLIDER_TO_RAMP_MS = 585;
     
     private boolean sliderStopped = false;
 
@@ -53,6 +53,7 @@ public class RingSlider extends CoreImplement {
                 if (sliderTimer.milliseconds() > RING_SLIDER_TO_BOX_MS) {
                     ringSlider.setPower(RING_SLIDER_GOING_TO_RAMP_POWER);
                     sliderState = sliderStates.SLIDER_TO_RAMP;
+                    sliderTimer.reset();
 
                 }
                 break;
