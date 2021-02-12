@@ -14,7 +14,7 @@ public class RampLifter extends CoreImplement {
 
     private Servo rampLifter = null;
 
-    private static final double RAMP_LIFTER_LIFTED = 0.6; //TODO:  actual values
+    private static final double RAMP_LIFTER_LIFTED = 0.88; //TODO:  actual values
     private static final double RAMP_LIFTER_DOWN = 1; //TODO:  actual values
 
     private static final int RAMP_LIFT_TIME_MS = 500;
