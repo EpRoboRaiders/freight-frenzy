@@ -36,6 +36,8 @@ public class Controller extends OpMode {
 
     int                 hopperDepth   = 0;
 
+    Button              rampLifted = new Button();
+
     boolean ringClamped = false;
 
 
@@ -219,6 +221,8 @@ public class Controller extends OpMode {
         if (testRingSlider.checkState(gamepad2.b)) {
             robot.ringIntake.testRingSlider();
         }
+
+        robot.ringIntake.raiseRampLifter(rampLifted.checkState(gamepad2.y));
 
 
         // Display other information, including the position, speed, and mode of motors.
