@@ -26,6 +26,8 @@ public class Controller extends OpMode {
     Button              wobbleLowered   = new Button();
     Button              wobbleUnclamped = new Button();
 
+    OneShot             intakeStarter   = new OneShot();
+
     OneShot             intakeRollerToggle = new OneShot();
     boolean             intakeRollerState  = false;
 
@@ -222,7 +224,11 @@ public class Controller extends OpMode {
             robot.ringIntake.testRingSlider();
         }
 
-        robot.ringIntake.raiseRampLifter(rampLifted.checkState(gamepad2.y));
+        if (intakeStarter.checkState(gamepad2.y)) {
+            robot.ringIntake.ringToBox();
+        }
+
+        robot.ringIntake.raiseRampLifter(rampLifted.checkState(gamepad2.a));
 
 
         // Display other information, including the position, speed, and mode of motors.

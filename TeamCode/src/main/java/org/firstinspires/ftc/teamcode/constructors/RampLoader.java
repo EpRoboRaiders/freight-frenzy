@@ -56,7 +56,6 @@ public class RampLoader extends CoreImplement {
 
     }
 
-    public boolean finished() {
-        return kickerState == KickerStates.KICKER_RETRACTED;
+    public boolean finished() {return kickerTimer.milliseconds() > KICKER_KICK_MS;
     }
 }

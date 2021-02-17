@@ -42,7 +42,7 @@ public class Intake extends CoreImplement {
             case RING_TO_RAMP:
                 if (rampLoader.finished()) {
                     rampLifter.setRampLifted(true);
-                    intakeTransition = IntakeTransition.RING_TO_BOX;
+                    intakeTransition = IntakeTransition.RAMP_LIFT;
                 }
                 break;
             case RAMP_LIFT:
@@ -65,8 +65,9 @@ public class Intake extends CoreImplement {
     }
     
     public void ringToBox() {
-        intakeTransition = IntakeTransition.RING_TO_RAMP;
         rampLoader.swingRingKicker();
+        intakeTransition = IntakeTransition.RING_TO_RAMP;
+
     }
 
     /**
