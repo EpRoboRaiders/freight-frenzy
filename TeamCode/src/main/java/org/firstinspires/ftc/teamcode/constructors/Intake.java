@@ -58,6 +58,7 @@ public class Intake extends CoreImplement {
                 }
                 break;
             case IDLE:
+
                 break;
         }
         
