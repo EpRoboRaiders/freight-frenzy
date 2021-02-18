@@ -3,17 +3,30 @@ package org.firstinspires.ftc.teamcode.autonomous.tests.motors;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousBase;
+import org.firstinspires.ftc.teamcode.constructors.AutonomousTemplate;
+import org.firstinspires.ftc.teamcode.constructors.TeleOpTemplate;
 
 @Autonomous(name = "leftBackDrive", group = "Autonomous")
 //@Disabled
-public class leftBackDrive extends AutonomousBase {
 
+public class leftBackDrive extends AutonomousBase {
+    private TeleOpTemplate robot = new TeleOpTemplate();
     @Override
     public void runOpMode(){
 
-        initialize();
+        robot.init(hardwareMap);
 
-        robot.leftBackDrive.setPower(DRIVE_SPEED);
+        telemetry.addData("Status", "Camera initializing; please wait (~5 seconds)");
+        telemetry.update();
+        sleep(5000);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Ready to run");    //
+        telemetry.update();
+
+        waitForStart();
+
+        robot.drivetrain.leftBackDrive.setPower(DRIVE_SPEED);
 
         sleep(30000);
     }

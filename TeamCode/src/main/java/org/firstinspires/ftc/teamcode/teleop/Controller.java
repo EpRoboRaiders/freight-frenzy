@@ -158,10 +158,10 @@ public class Controller extends OpMode {
                     robot.drivetrain.rightBackDrive.setPower(gamepad1.right_trigger * SPEED);
                 }
                 else {
-                    robot.drivetrain.leftFrontDrive.setPower(-gamepad1.right_stick_y * SPEED);
-                    robot.drivetrain.leftBackDrive.setPower(-gamepad1.right_stick_y * SPEED);
-                    robot.drivetrain.rightFrontDrive.setPower(-gamepad1.left_stick_y * SPEED);
-                    robot.drivetrain.rightBackDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                    robot.drivetrain.leftFrontDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                    robot.drivetrain.leftBackDrive.setPower(-gamepad1.left_stick_y * SPEED);
+                    robot.drivetrain.rightFrontDrive.setPower(-gamepad1.right_stick_y * SPEED);
+                    robot.drivetrain.rightBackDrive.setPower(-gamepad1.right_stick_y * SPEED);
                 }
 
                 break;
