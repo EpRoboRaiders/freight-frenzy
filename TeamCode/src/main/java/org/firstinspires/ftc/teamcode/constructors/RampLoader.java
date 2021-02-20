@@ -15,10 +15,11 @@ public class RampLoader extends CoreImplement {
     private Servo ringKicker = null;
 
     private ElapsedTime kickerTimer = new ElapsedTime();
-    private final double KICKER_EXTENDED_POS  = .4; //TODO:  actual values
-    private final double KICKER_RETRACTED_POS = 1.0;   //TODO:  actual values
+    private final double KICKER_EXTENDED_POS  = .4;
+    private final double KICKER_RETRACTED_POS = 1.0;
 
-    private final int KICKER_KICK_MS = 1000; //TODO: actual values
+    private final int KICKER_KICK_MS = 500;
+    private final int KICKER_RETRACT_MS = 1000;
 
     private enum KickerStates {
         KICKER_RETRACTED,
@@ -50,12 +51,10 @@ public class RampLoader extends CoreImplement {
 
     public void swingRingKicker() {
         kickerTimer.reset();
-        kickerState = KickerStates.KICKER_EXTENDED;
         ringKicker.setPosition(KICKER_EXTENDED_POS);
-
+        kickerState = KickerStates.KICKER_EXTENDED;
 
     }
 
-    public boolean finished() {return kickerTimer.milliseconds() > KICKER_KICK_MS;
-    }
+    public boolean finished() {return kickerTimer.milliseconds() > KICKER_RETRACT_MS;}
 }

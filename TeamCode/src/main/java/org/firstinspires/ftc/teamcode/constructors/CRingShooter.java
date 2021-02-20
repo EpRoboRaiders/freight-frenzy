@@ -29,11 +29,11 @@ public class CRingShooter {
     private final double SHOOTER_ARM_ENGAGED = .75; //1
     
     private final double POWERSHOT_SPEED = .63;   //.58;
-    private final double TOWERSHOT_SPEED = .705;  //.69;
+    private final double TOWERSHOT_SPEED = .75;  //.69;
 
     //increasing this value lowers the hopper position
     private final double NO_RING_SHOT_HOPPER_DEPTH = /*0.15*/ 0.22;
-    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.12; //0.09;
+    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.10; //0.09;
     private final double MIDDLE_RING_SHOT_HOPPER_DEPTH =  0.07; //0.04;
     private final double BOTTOM_RING_SHOT_HOPPER_DEPTH =  0.02;
     

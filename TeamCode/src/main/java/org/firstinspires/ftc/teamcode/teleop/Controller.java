@@ -18,6 +18,7 @@ public class Controller extends OpMode {
 
     TeleOpTemplate robot         = new TeleOpTemplate();
     static final double SPEED         = -.5;
+    static final double LIGHT_MOTOR_SPEED_MULTIPLIER = .60;
 
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime looptime = new ElapsedTime();
@@ -31,10 +32,13 @@ public class Controller extends OpMode {
     OneShot             intakeRollerToggle = new OneShot();
     boolean             intakeRollerState  = false;
 
-    OneShot             intakeChainStarter = new OneShot();
+
     boolean             intakeChainStarterState = false;
     OneShot             testRampLoader     = new OneShot();
     OneShot             testRingSlider     = new OneShot();
+
+    OneShot             intakeRollerDown = new OneShot();
+    OneShot             intakeRollerUp = new OneShot();
 
     int                 hopperDepth   = 0;
 
@@ -147,15 +151,15 @@ public class Controller extends OpMode {
 
                 if (gamepad1.left_trigger > 0) {
                     robot.drivetrain.leftFrontDrive.setPower(-gamepad1.left_trigger * SPEED);
-                    robot.drivetrain.rightFrontDrive.setPower(gamepad1.left_trigger * SPEED);
-                    robot.drivetrain.leftBackDrive.setPower(gamepad1.left_trigger * SPEED);
-                    robot.drivetrain.rightBackDrive.setPower(-gamepad1.left_trigger * SPEED);
+                    robot.drivetrain.rightFrontDrive.setPower(gamepad1.left_trigger * SPEED );
+                    robot.drivetrain.leftBackDrive.setPower(gamepad1.left_trigger * SPEED * LIGHT_MOTOR_SPEED_MULTIPLIER);
+                    robot.drivetrain.rightBackDrive.setPower(-gamepad1.left_trigger * SPEED * LIGHT_MOTOR_SPEED_MULTIPLIER);
                 }
                 else if (gamepad1.right_trigger > 0){
                     robot.drivetrain.leftFrontDrive.setPower(gamepad1.right_trigger * SPEED);
                     robot.drivetrain.rightFrontDrive.setPower(-gamepad1.right_trigger * SPEED);
-                    robot.drivetrain.leftBackDrive.setPower(-gamepad1.right_trigger * SPEED);
-                    robot.drivetrain.rightBackDrive.setPower(gamepad1.right_trigger * SPEED);
+                    robot.drivetrain.leftBackDrive.setPower(-gamepad1.right_trigger * SPEED * LIGHT_MOTOR_SPEED_MULTIPLIER);
+                    robot.drivetrain.rightBackDrive.setPower(gamepad1.right_trigger * SPEED * LIGHT_MOTOR_SPEED_MULTIPLIER);
                 }
                 else {
                     robot.drivetrain.leftFrontDrive.setPower(-gamepad1.left_stick_y * SPEED);
@@ -210,25 +214,29 @@ public class Controller extends OpMode {
             robot.ringIntake.intakeRollerToggle(intakeRollerState);
         }
 
-        if (intakeChainStarter.checkState(gamepad2.left_trigger >= .5)) {
+        if (intakeRollerUp.checkState(gamepad2.left_trigger >= .5)) {
+
+            robot.ringIntake.intakeRollerUpDown(true);
+        }
+        if (intakeRollerDown.checkState(gamepad2.right_trigger >= .5)) {
             //false raises the intake roller
-            intakeChainStarterState = !intakeChainStarterState;
-            robot.ringIntake.intakeRollerUpDown(intakeChainStarterState);
+            robot.ringIntake.intakeRollerUpDown(false);
         }
 
+
         if (testRampLoader.checkState(gamepad2.x)) {
-            robot.ringIntake.testRampLoader();
+           // robot.ringIntake.testRampLoader();
         }
 
         if (testRingSlider.checkState(gamepad2.b)) {
-            robot.ringIntake.testRingSlider();
+            // robot.ringIntake.testRingSlider();
         }
 
         if (intakeStarter.checkState(gamepad2.y)) {
             robot.ringIntake.ringToBox();
         }
 
-        robot.ringIntake.raiseRampLifter(rampLifted.checkState(gamepad2.a));
+        // robot.ringIntake.raiseRampLifter(rampLifted.checkState(gamepad2.a));
 
 
         // Display other information, including the position, speed, and mode of motors.

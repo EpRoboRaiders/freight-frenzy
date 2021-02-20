@@ -37,8 +37,6 @@ public class Intake extends CoreImplement {
         ringSlider.update();
         
         switch (intakeTransition) {
-            
-
             case RING_TO_RAMP:
                 if (rampLoader.finished()) {
                     rampLifter.setRampLifted(true);

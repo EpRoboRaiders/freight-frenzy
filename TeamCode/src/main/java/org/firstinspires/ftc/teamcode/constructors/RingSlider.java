@@ -17,7 +17,7 @@ public class RingSlider extends CoreImplement {
     private static final double RING_SLIDER_GOING_TO_BOX_POWER = 1; //TODO:  actual values
     private static final int RING_SLIDER_GOING_TO_RAMP_POWER = -1; //TODO:  actual values
 
-    private static final int RING_SLIDER_TO_BOX_MS = 600; //TODO: actual values
+    private static final int RING_SLIDER_TO_BOX_MS = 750; //TODO: actual values
 
     private static final int RING_SLIDER_TO_RAMP_MS = 600; //TODO: actual values
     
