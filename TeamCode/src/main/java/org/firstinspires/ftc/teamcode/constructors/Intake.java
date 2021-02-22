@@ -101,5 +101,11 @@ public class Intake extends CoreImplement {
         return intakeRoller.getArmLockerEncoderCount();
     }
 
-    public void raiseRampLifter(boolean state) {rampLifter.setRampLifted(state); }
+    public void raiseRampLifter(boolean state) {
+        rampLifter.setRampLifted(state);
+    }
+
+    public void resetArmLocker() {
+        intakeRoller.resetArmLockerEncoder();
+    }
 }

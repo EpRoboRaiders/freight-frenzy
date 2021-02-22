@@ -20,7 +20,7 @@ public class IntakeRoller extends CoreImplement {
 
     private static final double ARM_LOCKER_LOWER_SPEED    = -0.5;
     private static final double ARM_LOCKER_RAISE_SPEED    = 0.5; //TODO: actual values
-    private static final double ARM_LOCKER_LOWERED_COUNTS = -255;
+    private static final double ARM_LOCKER_LOWERED_COUNTS = -238;
     private static final double ARM_LOCKER_RAISED_COUNTS  = 0;
     private static final double ARM_LOCKER_COUNTERACT_GRAVITY_SPEED = 0.1;
     private static final double ARM_LOWER_SPEED_SLOPE = (ARM_LOCKER_COUNTERACT_GRAVITY_SPEED - ARM_LOCKER_LOWER_SPEED) / (ARM_LOCKER_LOWERED_COUNTS - ARM_LOCKER_RAISED_COUNTS);
@@ -29,7 +29,7 @@ public class IntakeRoller extends CoreImplement {
     private enum armLockerStates {
         ARM_LOWERED,
         ARM_RAISED,
-
+        DOWN_LOCK,
         IDLE;
     }
 
@@ -53,7 +53,7 @@ public class IntakeRoller extends CoreImplement {
                 // y = mx + b
                 armLocker.setPower(ARM_LOWER_SPEED_SLOPE * armLocker.getCurrentPosition() + ARM_LOWER_SPEED_Y_INTERCEPT);
                 if (armLocker.getCurrentPosition() <= ARM_LOCKER_LOWERED_COUNTS) {
-                    armLockerState = armLockerStates.IDLE;
+                    armLockerState = armLockerStates.DOWN_LOCK;
                     armLocker.setPower(ARM_LOCKER_COUNTERACT_GRAVITY_SPEED);
                 }
                 break;
@@ -63,7 +63,17 @@ public class IntakeRoller extends CoreImplement {
                     armLocker.setPower(MOTOR_STOP);
                 }
                 break;
-
+            case DOWN_LOCK:
+                if (armLocker.getCurrentPosition() > ARM_LOCKER_LOWERED_COUNTS) {
+                    armLocker.setPower(MOTOR_STOP); //ARM_LOWER_SPEED_SLOPE * armLocker.getCurrentPosition() + ARM_LOWER_SPEED_Y_INTERCEPT
+                }
+                else if (armLocker.getCurrentPosition() < ARM_LOCKER_LOWERED_COUNTS) {
+                    armLocker.setPower(ARM_LOCKER_RAISE_SPEED);
+                }
+                else {
+                    armLocker.setPower(ARM_LOCKER_COUNTERACT_GRAVITY_SPEED);
+                }
+                break;
             case IDLE:
                 break;
         }
@@ -99,5 +109,10 @@ public class IntakeRoller extends CoreImplement {
 
     public int getArmLockerEncoderCount () {
         return armLocker.getCurrentPosition();
+    }
+
+    public void resetArmLockerEncoder() {
+        armLocker.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armLocker.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }

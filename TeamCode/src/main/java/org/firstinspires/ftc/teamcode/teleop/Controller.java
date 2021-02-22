@@ -40,6 +40,8 @@ public class Controller extends OpMode {
     OneShot             intakeRollerDown = new OneShot();
     OneShot             intakeRollerUp = new OneShot();
 
+    OneShot             encoderReset = new OneShot();
+
     int                 hopperDepth   = 0;
 
     Button              rampLifted = new Button();
@@ -235,6 +237,15 @@ public class Controller extends OpMode {
         if (intakeStarter.checkState(gamepad2.y)) {
             robot.ringIntake.ringToBox();
         }
+
+        /*
+        if (encoderReset.checkState(gamepad2.button)) {
+
+            robot.ringIntake.resetArmLocker();
+
+        }
+
+         */
 
         // robot.ringIntake.raiseRampLifter(rampLifted.checkState(gamepad2.a));
 
