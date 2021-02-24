@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous.tests.motors;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousBase;
 import org.firstinspires.ftc.teamcode.constructors.AutonomousTemplate;
@@ -25,8 +26,15 @@ public class rightBackDrive extends AutonomousBase {
 
         waitForStart();
 
-        robot.drivetrain.rightBackDrive.setPower(DRIVE_SPEED);
+        //robot.drivetrain.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.drivetrain.rightBackDrive.setPower(0.3);
 
-        sleep(30000);
+        while (true) {
+            telemetry.addData("encoder count", robot.drivetrain.rightBackDrive.getCurrentPosition());
+            telemetry.update();
+            sleep(1000);
+        }
+
+        //sleep(30000);
     }
 }

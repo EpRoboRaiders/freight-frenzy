@@ -27,6 +27,12 @@ public class rightFrontDrive extends AutonomousBase {
 
         robot.drivetrain.rightFrontDrive.setPower(DRIVE_SPEED);
 
-        sleep(30000);
+        while (true) {
+            telemetry.addData("encoder count", robot.drivetrain.rightFrontDrive.getCurrentPosition());
+            telemetry.update();
+            sleep(1000);
+        }
+
+        //sleep(30000);
     }
 }

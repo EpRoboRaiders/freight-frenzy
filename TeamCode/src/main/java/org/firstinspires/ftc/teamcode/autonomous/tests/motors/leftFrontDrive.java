@@ -27,6 +27,12 @@ public class leftFrontDrive extends AutonomousBase {
 
         robot.drivetrain.leftFrontDrive.setPower(DRIVE_SPEED);
 
-        sleep(30000);
+        while (true) {
+            telemetry.addData("encoder count", robot.drivetrain.leftFrontDrive.getCurrentPosition());
+            telemetry.update();
+            sleep(1000);
+        }
+
+        //sleep(30000);
     }
 }
