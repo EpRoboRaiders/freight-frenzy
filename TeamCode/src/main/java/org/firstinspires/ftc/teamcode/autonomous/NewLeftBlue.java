@@ -36,7 +36,6 @@ public class NewLeftBlue extends AutonomousBase {
         telemetry.addData("Position", robot.webcam.pipeline.getRingAmount());
         telemetry.update();
 
-        sleep(500);
 
         if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.NONE) {
             // Placement A
@@ -61,40 +60,45 @@ public class NewLeftBlue extends AutonomousBase {
         trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box A
                 //every time the robot stops, a new trajectory must be made
-                .lineToConstantHeading(new Vector2d(75, 9))
+                .lineToConstantHeading(new Vector2d(-75, -15))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(16, -46, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-8, 50, Math.toRadians(90))) //0
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the second wobble goal
                 //.forward(14)
-                .lineToConstantHeading(new Vector2d(-16, 32))
+                .lineToConstantHeading(new Vector2d(-16, 22))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the second wobble goal into box A
-                .lineToLinearHeading(new Pose2d(-65, -9, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-65, -15, Math.toRadians(0)))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //pulls away from the wobble goal and out of the box
-                .lineToConstantHeading(new Vector2d(-49, -9))
+                .lineToConstantHeading(new Vector2d(-50, -15))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves to line up with the tower shot
-                .lineToConstantHeading(new Vector2d(-61, 8))
+                .lineToLinearHeading(new Pose2d(-60, 8, Math.toRadians(180)))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
-                //parks on white line
-                .lineToConstantHeading(new Vector2d(-69, 10))
+                //spines to line up correctly
+                .lineToLinearHeading(new Pose2d(-60, 8, Math.toRadians(45)))
                 .build());
-
+/*
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //parks on white line
+                .lineToConstantHeading(new Vector2d(69, -10))
+                .build());
+*/
 
 
 
