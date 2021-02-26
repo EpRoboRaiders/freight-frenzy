@@ -33,7 +33,7 @@ public class CRingShooter {
 
     //increasing this value lowers the hopper position
     private final double NO_RING_SHOT_HOPPER_DEPTH = /*0.15*/ 0.22;
-    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.10; //0.09;
+    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.12; //0.09;
     private final double MIDDLE_RING_SHOT_HOPPER_DEPTH =  0.07; //0.04;
     private final double BOTTOM_RING_SHOT_HOPPER_DEPTH =  0.02;
     
