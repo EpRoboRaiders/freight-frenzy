@@ -34,10 +34,10 @@ public class CPipeline extends OpenCvPipeline
     static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(190,60);
 
     static final int REGION_WIDTH = 49; //65; // 35
-    static final int REGION_HEIGHT = 58; // 25
+    static final int REGION_HEIGHT = 50; // 25
 
-    final int FOUR_RING_THRESHOLD = 145;
-    final int ONE_RING_THRESHOLD = 130;
+    final int FOUR_RING_THRESHOLD = 150;
+    final int ONE_RING_THRESHOLD = 135;
 
     Point region1_pointA = new Point(
             REGION1_TOPLEFT_ANCHOR_POINT.x,

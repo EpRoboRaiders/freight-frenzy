@@ -14,17 +14,21 @@ public class IntakeRoller extends CoreImplement {
     private DcMotor rollerArm = null;
     private DcMotor armLocker = null;
     private CRServo supplementalRoller = null;
+    private CRServo speedBooster = null;
 
     private static final double ROLLER_ARM_SPEED   = 1; //TODO: actual values
     private static final double SUPPLEMENTAL_ROLLER_SPEED = 1; //TODO: actual values
+    private static final double SPEED_BOOSTER_SPEED = 1;
 
     private static final double ARM_LOCKER_LOWER_SPEED    = -0.5;
     private static final double ARM_LOCKER_RAISE_SPEED    = 0.5; //TODO: actual values
-    private static final double ARM_LOCKER_LOWERED_COUNTS = -238;
+    private static final double ARM_LOCKER_LOWERED_COUNTS = -470; //-247;
     private static final double ARM_LOCKER_RAISED_COUNTS  = 0;
-    private static final double ARM_LOCKER_COUNTERACT_GRAVITY_SPEED = 0.1;
+    private static final double ARM_LOCKER_COUNTERACT_GRAVITY_SPEED = MOTOR_STOP;
     private static final double ARM_LOWER_SPEED_SLOPE = (ARM_LOCKER_COUNTERACT_GRAVITY_SPEED - ARM_LOCKER_LOWER_SPEED) / (ARM_LOCKER_LOWERED_COUNTS - ARM_LOCKER_RAISED_COUNTS);
     private static final double ARM_LOWER_SPEED_Y_INTERCEPT = ARM_LOCKER_LOWER_SPEED;
+
+    private static final double ARM_LOCKER_FALL_SPEED = -.1;
 
     private enum armLockerStates {
         ARM_LOWERED,
@@ -41,6 +45,7 @@ public class IntakeRoller extends CoreImplement {
         rollerArm   = ahwMap.get(DcMotor.class, "roller_arm");
         armLocker   = ahwMap.get(DcMotor.class, "arm_locker");
         supplementalRoller   = ahwMap.get(CRServo.class, "supplemental_roller");
+        speedBooster = ahwMap.get(CRServo.class, "speed_boost");
         armLocker.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armLocker.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armLocker.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -65,7 +70,8 @@ public class IntakeRoller extends CoreImplement {
                 break;
             case DOWN_LOCK:
                 if (armLocker.getCurrentPosition() > ARM_LOCKER_LOWERED_COUNTS) {
-                    armLocker.setPower(MOTOR_STOP); //ARM_LOWER_SPEED_SLOPE * armLocker.getCurrentPosition() + ARM_LOWER_SPEED_Y_INTERCEPT
+                    armLocker.setPower(ARM_LOCKER_FALL_SPEED); //ARM_LOWER_SPEED_SLOPE * armLocker.getCurrentPosition() + ARM_LOWER_SPEED_Y_INTERCEPT
+
                 }
                 else if (armLocker.getCurrentPosition() < ARM_LOCKER_LOWERED_COUNTS) {
                     armLocker.setPower(ARM_LOCKER_RAISE_SPEED);
@@ -99,17 +105,47 @@ public class IntakeRoller extends CoreImplement {
         if (state) {
             rollerArm.setPower(ROLLER_ARM_SPEED);
             supplementalRoller.setPower(SUPPLEMENTAL_ROLLER_SPEED);
+            speedBooster.setPower(SPEED_BOOSTER_SPEED);
         }
 
         else{
             rollerArm.setPower(MOTOR_STOP);
             supplementalRoller.setPower(MOTOR_STOP);
+            speedBooster.setPower(MOTOR_STOP);
         }
     }
 
     public int getArmLockerEncoderCount () {
         return armLocker.getCurrentPosition();
     }
+
+    public String getArmLockerState() {
+        switch (armLockerState) {
+            case ARM_LOWERED: //no action needed when in this state
+                return "Arm Lowered";
+            case ARM_RAISED:
+                return "Arm Raised";
+            case DOWN_LOCK:
+                return "Down Lock";
+            case IDLE:
+                return "Idle";
+
+        }
+        return "Pickle";
+    }
+
+    public void reverseSpeedBooster(boolean state) {
+        if (state) {
+            if (state) {
+                speedBooster.setPower(-SPEED_BOOSTER_SPEED);
+            }
+
+            else{
+                speedBooster.setPower(MOTOR_STOP);
+            }
+        }
+    }
+
 
     public void resetArmLockerEncoder() {
         armLocker.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

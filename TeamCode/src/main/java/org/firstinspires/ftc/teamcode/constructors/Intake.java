@@ -51,6 +51,7 @@ public class Intake extends CoreImplement {
                 break;
             case RING_TO_BOX:
                 if (ringSlider.finished()) {
+                    intakeRollerUpDown(true);
                     rampLifter.setRampLifted(false);
                     intakeTransition = IntakeTransition.IDLE;
                 }
@@ -108,4 +109,8 @@ public class Intake extends CoreImplement {
     public void resetArmLocker() {
         intakeRoller.resetArmLockerEncoder();
     }
+
+    public String getLockerPosition() {return intakeRoller.getArmLockerState();}
+
+    public void intakeBoosterReverse(boolean state) {intakeRoller.reverseSpeedBooster(state);}
 }
