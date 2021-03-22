@@ -59,7 +59,7 @@ public class NewLeftBlue extends AutonomousBase {
         trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box A
                 //every time the robot stops, a new trajectory must be made
-                .lineToConstantHeading(new Vector2d(73, 12))
+                .lineToConstantHeading(new Vector2d(71, 12))
                 .build());
 
        // trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -74,7 +74,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(18, -50, Math.toRadians(-95))) //0
+                .lineToLinearHeading(new Pose2d(18, -50, Math.toRadians(-90))) //0
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -85,17 +85,17 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the second wobble goal into box A
-                .lineToLinearHeading(new Pose2d(65, 24, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(64, 16, Math.toRadians(180)))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //pulls away from the wobble goal and out of the box
-                .lineToConstantHeading(new Vector2d(40, 15))
+                .lineToConstantHeading(new Vector2d(40, 12))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves to line up with the tower shot
-                .lineToConstantHeading(new Vector2d(85, -5))
+                .lineToConstantHeading(new Vector2d(80, -12))
                 .build());
 /*
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -167,6 +167,7 @@ public class NewLeftBlue extends AutonomousBase {
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 2) {
                  shooterPosition();
+                 robot.ringShooter.compactShooter();
             }
             robot.drive.followTrajectory(trajectories.get(i));
         }
@@ -184,12 +185,12 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot into the box
-                .lineToConstantHeading(new Vector2d(95, -16))
+                .lineToConstantHeading(new Vector2d(93, -16))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //pulls back to shoot
-                .lineToConstantHeading(new Vector2d(45, -16))
+                .lineToConstantHeading(new Vector2d(50, -16))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -199,7 +200,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(1, -42, Math.toRadians(-95)))
+                .lineToLinearHeading(new Pose2d(12, -42, Math.toRadians(-90)))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -215,7 +216,7 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves into box B
-                .lineToConstantHeading(new Vector2d(90, -5))
+                .lineToConstantHeading(new Vector2d(84, -13))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -284,7 +285,8 @@ public class NewLeftBlue extends AutonomousBase {
         for (int i = 0; i < trajectories.size(); i++) {
 
             if (i == 3) {
-                 shooterPosition(); //robot.ringShooter.autonomousTowerShot();
+                shooterPosition();
+                robot.ringShooter.compactShooter(); //robot.ringShooter.autonomousTowerShot();
             }
             robot.drive.followTrajectory(trajectories.get(i));
         }
@@ -297,7 +299,7 @@ public class NewLeftBlue extends AutonomousBase {
         trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the first wobble goal into box C
                 //every time the robot stops, a new trajectory must be made
-                .lineToConstantHeading(new Vector2d(120, 9))
+                .lineToConstantHeading(new Vector2d(117, 9))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -312,28 +314,28 @@ public class NewLeftBlue extends AutonomousBase {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(11, -40, Math.toRadians(-95))) //0
+                .lineToLinearHeading(new Pose2d(11, -40, Math.toRadians(-90))) //0
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the second wobble goal
                 //.forward(14)
-                .lineToConstantHeading(new Vector2d(11, 0))
+                .lineToConstantHeading(new Vector2d(7, -12))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the second wobble goal into box A
-                .lineToLinearHeading(new Pose2d(75, 24, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(25, 11, Math.toRadians(180)))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves to box C
-                .lineToConstantHeading(new Vector2d(127, 20))
+                .lineToConstantHeading(new Vector2d(104, 11))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //pulls away from the wobble goal and out of the box
-                .lineToConstantHeading(new Vector2d(80, 20))
+                .lineToConstantHeading(new Vector2d(70, 11))
                 .build());
 
 
@@ -344,7 +346,8 @@ public class NewLeftBlue extends AutonomousBase {
 
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 2) {
-                 shooterPosition();
+                shooterPosition();
+                robot.ringShooter.compactShooter();
             }
             robot.drive.followTrajectory(trajectories.get(i));
         }

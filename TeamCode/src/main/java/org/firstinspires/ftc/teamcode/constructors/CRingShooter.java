@@ -172,6 +172,7 @@ public class CRingShooter {
     public void ringSequence(double shotSpeed) {
 
         setShooterPower(shotSpeed);
+        shooterArm.setPosition(SHOOTER_ARM_DISENGAGED);
 
         for (int i = 0; i < 3; i++) {
 
@@ -217,6 +218,11 @@ public class CRingShooter {
 
         setShooterPower(MOTORS_OFF);
 
+
+    }
+
+    public void compactShooter() {
+        shooterArm.setPosition(SHOOTER_ARM_ENGAGED);
     }
 
 }
