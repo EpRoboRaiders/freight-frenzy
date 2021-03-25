@@ -20,6 +20,7 @@ public class IntakeRoller extends CoreImplement {
     private static final double SUPPLEMENTAL_ROLLER_SPEED = 1; //TODO: actual values
     private static final double SPEED_BOOSTER_SPEED = 1;
 
+    private static final double WEAK_CORRECTION_SPEED = .15;
     private static final double ARM_LOCKER_LOWER_SPEED    = -0.5;
     private static final double ARM_LOCKER_RAISE_SPEED    = 0.5; //TODO: actual values
     private static final double ARM_LOCKER_LOWERED_COUNTS = -470; //-247;
@@ -69,12 +70,12 @@ public class IntakeRoller extends CoreImplement {
                 }
                 break;
             case DOWN_LOCK:
-                if (armLocker.getCurrentPosition() > ARM_LOCKER_LOWERED_COUNTS) {
-                    armLocker.setPower(ARM_LOCKER_FALL_SPEED); //ARM_LOWER_SPEED_SLOPE * armLocker.getCurrentPosition() + ARM_LOWER_SPEED_Y_INTERCEPT
+                if (armLocker.getCurrentPosition() > ARM_LOCKER_LOWERED_COUNTS + 1) {
+                    armLocker.setPower(-WEAK_CORRECTION_SPEED); //ARM_LOWER_SPEED_SLOPE * armLocker.getCurrentPosition() + ARM_LOWER_SPEED_Y_INTERCEPT
 
                 }
-                else if (armLocker.getCurrentPosition() < ARM_LOCKER_LOWERED_COUNTS) {
-                    armLocker.setPower(ARM_LOCKER_RAISE_SPEED);
+                else if (armLocker.getCurrentPosition() < ARM_LOCKER_LOWERED_COUNTS - 1) {
+                    armLocker.setPower(WEAK_CORRECTION_SPEED);
                 }
                 else {
                     armLocker.setPower(ARM_LOCKER_COUNTERACT_GRAVITY_SPEED);

@@ -17,7 +17,7 @@ import static com.qualcomm.robotcore.util.Range.clip;
 public class Controller extends OpMode {
 
     TeleOpTemplate robot         = new TeleOpTemplate();
-    static double chassisSpeed         = -.5;
+    static double chassisSpeed         = -1;
     static final double LIGHT_MOTOR_SPEED_MULTIPLIER = .60;
 
     private ElapsedTime runtime = new ElapsedTime();
