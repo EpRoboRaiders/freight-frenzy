@@ -37,6 +37,8 @@ public class AutonomousTemplate
 
     public CWebcam            webcam        = new CWebcam();
 
+    public TensorFlowCamera   tensorCamera = new TensorFlowCamera();
+
     public SampleMecanumDrive drive     = null;
 
     HardwareMap               hwMap         = null;
@@ -56,6 +58,7 @@ public class AutonomousTemplate
         ringShooter.init(hwMap);
         ringIntake.init(hwMap);
         webcam.init(hwMap);
+        tensorCamera.init(hwMap);
 
     }
     public void teleOpInit(HardwareMap ahwMap) {

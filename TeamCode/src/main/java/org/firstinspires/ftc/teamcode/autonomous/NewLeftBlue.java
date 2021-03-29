@@ -17,6 +17,7 @@ public class NewLeftBlue extends AutonomousBase {
     //private final double POWER_SHOT_TURN_TO_POSITION_B =  -5 ; // -16.35 + 10.57;
     //private final double POWER_SHOT_TURN_TO_POSITION_C =  -10; //-21.80 + 5;
 
+    private int ringAmount = 0;
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
@@ -32,20 +33,21 @@ public class NewLeftBlue extends AutonomousBase {
         waitForStart();
         robot.ringShooter.teleOpInit();
 
-        telemetry.addData("Analysis", robot.webcam.pipeline.getAnalysis());
-        telemetry.addData("Position", robot.webcam.pipeline.getRingAmount());
+        ringAmount = robot.tensorCamera.getRingAmount();
+
+        telemetry.addData("Analysis", ringAmount);
         telemetry.update();
 
 
-        if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.NONE) {
+        if (ringAmount == 0) {
             // Placement A
             positionA();
             // shooterPosition();
-        } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.ONE) {
+        } else if (ringAmount == 1) {
             // Placement B
             positionB();
             // shooterPosition();
-        } else if (robot.webcam.pipeline.getRingAmount() == CPipeline.RingPosition.FOUR) {
+        } else { /*if (ringAmount == 2)*/
             // Placement C (Default)
             positionC();
             //shooterPosition();

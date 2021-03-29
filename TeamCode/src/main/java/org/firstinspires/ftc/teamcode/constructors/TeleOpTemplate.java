@@ -63,6 +63,8 @@ public class TeleOpTemplate {
 
     public CWebcam        webcam        = new CWebcam();
 
+    public TensorFlowCamera   tensorCamera = new TensorFlowCamera();
+
 
     /* local OpMode members. */
     HardwareMap    hwMap           = null;
@@ -83,6 +85,7 @@ public class TeleOpTemplate {
         ringShooter.init(hwMap);
         ringIntake.init(hwMap);
         webcam.init(hwMap);
+        tensorCamera.init(hwMap);
 
 
     }
