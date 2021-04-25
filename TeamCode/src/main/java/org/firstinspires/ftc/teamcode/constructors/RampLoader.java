@@ -46,6 +46,7 @@ public class RampLoader extends CoreImplement {
     public void init(HardwareMap ahwMap) {
 
         ringKicker   = ahwMap.get(Servo.class, "ring_kicker");
+
         ringKicker.setPosition(KICKER_RETRACTED_POS);
     }
 
