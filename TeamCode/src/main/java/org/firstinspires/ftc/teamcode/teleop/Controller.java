@@ -209,7 +209,7 @@ public class Controller extends OpMode {
         // opens and closes wobbleGrabber using B button
         robot.wobbleGrabber.openAndClose(wobbleUnclamped.checkState(gamepad2.b));
 
-        // Delegates the x and y buttons on Gamepad 1 to shooting rings.
+        // Delegates the x and y buttons on Gamepad 1 to shooting rings!
         if(/*gamepad2.y ||*/ gamepad1.x) {
             // robot.ringShooter.towerShot();
             robot.ringShooter.towerShot();
