@@ -59,9 +59,11 @@ public class TeleOpTemplate {
 
     public CRingShooter   ringShooter   = new CRingShooter();
 
-    public CRingIntake    ringIntake        = new CRingIntake();
+    public Intake         ringIntake    = new Intake();
 
     public CWebcam        webcam        = new CWebcam();
+
+    public TensorFlowCamera   tensorCamera = new TensorFlowCamera();
 
 
     /* local OpMode members. */
@@ -83,6 +85,7 @@ public class TeleOpTemplate {
         ringShooter.init(hwMap);
         ringIntake.init(hwMap);
         webcam.init(hwMap);
+        tensorCamera.init(hwMap);
 
 
     }
@@ -92,4 +95,6 @@ public class TeleOpTemplate {
         ringShooter.teleOpInit();
 
     }
+
+
 }

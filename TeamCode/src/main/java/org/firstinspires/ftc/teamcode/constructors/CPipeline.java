@@ -31,10 +31,10 @@ public class CPipeline extends OpenCvPipeline
     /*
      * The core values which define the location and size of the sample regions
      */
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(200,90);
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(235,65);
 
-    static final int REGION_WIDTH = 65; // 35
-    static final int REGION_HEIGHT = 58; // 25
+    static final int REGION_WIDTH = 49; //65; // 35
+    static final int REGION_HEIGHT = 43; // 25
 
     final int FOUR_RING_THRESHOLD = 150;
     final int ONE_RING_THRESHOLD = 135;

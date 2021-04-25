@@ -26,8 +26,8 @@ public class CWobbleGrabber {
 
     public void init(HardwareMap ahwMap) {
 
-        wobbleGrabber   = ahwMap.get(Servo.class, "wobble_grabber");
-        grabberArm      = ahwMap.get(Servo.class, "grabber_arm");
+        wobbleGrabber   = ahwMap.get(Servo.class, "wobble_grabber"); //TODO: actual port
+        grabberArm      = ahwMap.get(Servo.class, "grabber_arm");    //TODO: actual port
     }
 
     public void teleOpInit() {

@@ -25,17 +25,26 @@ public class CRingShooter {
     private final int RING_SHOOT_TIME_MS   = 500;
     private final int SHOT_DELAY_TIME_MS   = 500;
 
-    private final double SHOOTER_ARM_DISENGAGED = .75;
-    private final double SHOOTER_ARM_ENGAGED = 1;
+    private final double SHOOTER_ARM_DISENGAGED = .5;  //.75;
+    private final double SHOOTER_ARM_ENGAGED = .75; //1
     
-    private final double POWERSHOT_SPEED = .68;
+    private final double POWERSHOT_SPEED = .63;   //.58;
     private final double TOWERSHOT_SPEED = .75;  //.69;
 
     //increasing this value lowers the hopper position
-    private final double NO_RING_SHOT_HOPPER_DEPTH = /*0.15*/ .2;
-    private final double TOP_RING_SHOT_HOPPER_DEPTH = 0.108; //0.09;
-    private final double MIDDLE_RING_SHOT_HOPPER_DEPTH = 0.06; //0.04;
-    private final double BOTTOM_RING_SHOT_HOPPER_DEPTH = 0.015; //0;
+    private final double NO_RING_SHOT_HOPPER_DEPTH = /*0.15*/ 0.22;
+    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.12; //0.09;
+    private final double MIDDLE_RING_SHOT_HOPPER_DEPTH =  0.07; //0.04;
+    private final double BOTTOM_RING_SHOT_HOPPER_DEPTH =  0.025;
+
+    private final double SEQUENCE_SHOT_SPEED = .55; //.60;
+
+    private final int SEQUENCE_SHOT_TIME_MS = 100;
+    private final int SEQUENCE_SHOT_DELAY_MS = 250;
+
+    private final double SEQUENCE_KICKER_EXTENDED = .75;
+
+
     
     private int hopperDepth = 0;
     
@@ -149,10 +158,71 @@ public class CRingShooter {
 
     public void autonomousTowerShot() {
 
+        ringSequence(SEQUENCE_SHOT_SPEED);
+
+        /*
         for (int i = 0; i < 3; i++) {
             towerShot();
         }
 
+         */
+
+    }
+
+    public void ringSequence(double shotSpeed) {
+
+        setShooterPower(shotSpeed);
+        shooterArm.setPosition(SHOOTER_ARM_DISENGAGED);
+
+        for (int i = 0; i < 3; i++) {
+
+            hopperIncrement();
+
+            shooterTimer.reset();
+
+            while (shooterTimer.milliseconds() < HOPPER_RAISE_TIME_MS) {}
+
+            // If the hopper box has raised to a point where a ring is available to shoot,
+            // do so.
+            if (hopperDepth != 0) {
+
+
+
+                if(hopperDepth == 2) {
+                    shooterArm.setPosition(SHOOTER_ARM_ENGAGED - .02);
+                }
+                else {
+                    shooterArm.setPosition(SEQUENCE_KICKER_EXTENDED);
+
+                }
+
+
+                shooterTimer.reset();
+
+                while (shooterTimer.milliseconds() < SEQUENCE_SHOT_TIME_MS) {}
+
+
+
+                shooterArm.setPosition(SHOOTER_ARM_DISENGAGED);
+            }
+
+            // Automatically reset the hopper down to the lowest position.
+            if (hopperDepth == 3) {
+                hopperIncrement();
+            }
+            shooterTimer.reset();
+
+            while (shooterTimer.milliseconds() < SEQUENCE_SHOT_DELAY_MS) {}
+
+        }
+
+        setShooterPower(MOTORS_OFF);
+
+
+    }
+
+    public void compactShooter() {
+        shooterArm.setPosition(SHOOTER_ARM_ENGAGED);
     }
 
 }
