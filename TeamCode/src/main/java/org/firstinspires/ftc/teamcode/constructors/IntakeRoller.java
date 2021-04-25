@@ -16,7 +16,7 @@ public class IntakeRoller extends CoreImplement {
     private CRServo supplementalRoller = null;
     private CRServo speedBooster = null;
 
-    private static final double ROLLER_ARM_SPEED   = 1; //TODO: actual values
+    private static final double ROLLER_ARM_SPEED   = .55; //TODO: actual values
     private static final double SUPPLEMENTAL_ROLLER_SPEED = 1; //TODO: actual values
     private static final double SPEED_BOOSTER_SPEED = 1;
 
@@ -138,6 +138,8 @@ public class IntakeRoller extends CoreImplement {
     public void reverseSpeedBooster(boolean state) {
         if (state) {
             if (state) {
+                rollerArm.setPower(-ROLLER_ARM_SPEED);
+                supplementalRoller.setPower(-SUPPLEMENTAL_ROLLER_SPEED);
                 speedBooster.setPower(-SPEED_BOOSTER_SPEED);
             }
 
