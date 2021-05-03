@@ -28,13 +28,13 @@ public class CRingShooter {
     private final double SHOOTER_ARM_DISENGAGED = .5;  //.75;
     private final double SHOOTER_ARM_ENGAGED = .75; //1
     
-    private final double POWERSHOT_SPEED = .63;   //.58;
+    private final double POWERSHOT_SPEED = .58;   //.58;
     private final double TOWERSHOT_SPEED = 1;  //.75;
 
     //increasing this value lowers the hopper position
     private final double NO_RING_SHOT_HOPPER_DEPTH = /*0.15*/ 0.22;
-    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.12; //0.09;
-    private final double MIDDLE_RING_SHOT_HOPPER_DEPTH =  0.07; //0.04;
+    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.13; //0.09;
+    private final double MIDDLE_RING_SHOT_HOPPER_DEPTH =  0.08; //0.04;
     private final double BOTTOM_RING_SHOT_HOPPER_DEPTH =  0.025;
 
     private final double SEQUENCE_SHOT_SPEED = .55; //.60;
@@ -107,6 +107,7 @@ public class CRingShooter {
         if (hopperDepth != 0) {
 
             setShooterPower(shotSpeed);
+
 
             if(hopperDepth == 2) {
                 shooterArm.setPosition(SHOOTER_ARM_ENGAGED - .02);

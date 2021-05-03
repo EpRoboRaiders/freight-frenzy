@@ -4,13 +4,15 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.teamcode.constructors.AutonomousTemplate;
 import org.firstinspires.ftc.teamcode.constructors.CPipeline;
 import java.util.ArrayList;
 
 
 @Autonomous(name = "NewLeftBlue", group = "Autonomous")
-public class NewLeftBlue extends AutonomousBase {
+public class NewLeftBlue extends LinearOpMode {
     private AutonomousTemplate robot = new AutonomousTemplate();
 
     //private final double POWER_SHOT_TURN_TO_POSITION_A =   0 ; //-10.57;

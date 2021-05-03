@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.constructors;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 public class CommentDump {
 
 
@@ -325,5 +330,335 @@ public class CommentDump {
         robot.ringIntake.intakeArmPositionUpdater();
 
          */
+
+    /*
+     public void rotate(double power, double degrees, double slowDegrees) {
+
+        double leftPower, rightPower, differenceAngle, fastDegrees;
+
+        // restart imu movement tracking.
+        resetAngle();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        fastDegrees = degrees - slowDegrees;
+
+        if (degrees < 0) {   // turn right.
+            leftPower = power;
+            rightPower = -power;
+        } else if (degrees > 0) {   // turn left.
+            leftPower = -power;
+            rightPower = power;
+        } else return;
+
+        // set power to rotate.
+        robot.leftFrontDrive.setPower(leftPower);
+        robot.leftBackDrive.setPower(leftPower);
+        robot.rightFrontDrive.setPower(rightPower);
+        robot.rightBackDrive.setPower(rightPower);
+
+        // rotate until turn is completed.
+        if (degrees < 0) {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
+
+            while (opModeIsActive() && getAngle() > fastDegrees) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
+
+            // Set the power super low, and continue.
+            leftPower = 0.01;
+            rightPower = -0.01;
+            robot.leftFrontDrive.setPower(leftPower);
+            robot.leftBackDrive.setPower(leftPower);
+            robot.rightFrontDrive.setPower(rightPower);
+            robot.rightBackDrive.setPower(rightPower);
+
+            while (opModeIsActive() && getAngle() > degrees) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
+        }
+        else    // left turn.
+            while (opModeIsActive() && getAngle() < fastDegrees) {
+
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", currentTime);
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/ms)", currentSpeed);
+                telemetry.addData("Acceleration (deg/ms^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
+
+        // Set the power super low, and continue.
+        leftPower = -0.01;
+        rightPower = 0.01;
+        robot.leftFrontDrive.setPower(leftPower);
+        robot.leftBackDrive.setPower(leftPower);
+        robot.rightFrontDrive.setPower(rightPower);
+        robot.rightBackDrive.setPower(rightPower);
+
+        while (opModeIsActive() && getAngle() < degrees) {
+
+            currentTime = runtime.seconds();
+            currentDegrees = getAngle();
+            degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+            currentSpeed = degreeChange / currentTime;
+            speedChange = (currentSpeed - previousSpeed);
+            currentAcceleration = speedChange / currentTime;
+
+            telemetry.addData("Current angle", getAngle());
+            telemetry.addData("Loop time", currentTime);
+            telemetry.addData("Change in Position (deg)", degreeChange);
+            telemetry.addData("Velocity (deg/ms)", currentSpeed);
+            telemetry.addData("Acceleration (deg/ms^2)", currentAcceleration);
+            telemetry.update();
+
+            runtime.reset();
+            previousDegrees = currentDegrees;
+            previousSpeed = currentSpeed;
+        }
+
+        // turn the motors off.
+        robot.leftFrontDrive.setPower(0);
+        robot.leftBackDrive.setPower(0);
+        robot.rightFrontDrive.setPower(0);
+        robot.rightBackDrive.setPower(0);
+
+        sleep(100);
+        differenceAngle = degrees - getAngle();
+
+        telemetry.addData("Waiting for the correction", "");
+        telemetry.addData("Current angle", getAngle());
+        telemetry.addData("Target", degrees);
+        telemetry.addData("Difference", differenceAngle);
+        telemetry.update();
+
+        // wait for rotation to stop.
+        sleep(100);
+        // reset angle tracking on new heading.
+        resetAngle();
+    }
+     */
+
+    /*
+     /**
+     * Resets the cumulative angle tracking to zero.
+
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right.
+
+    private double getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle += degreeDifference(angles.firstAngle, lastAngles.firstAngle);
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    /*
+
+    public void rotate(double power, double degrees) {
+
+        double leftPower, rightPower, differenceAngle;
+
+        // restart imu movement tracking.
+        resetAngle();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        if (degrees < 0) {   // turn right.
+            leftPower = power;
+            rightPower = -power;
+        } else if (degrees > 0) {   // turn left.
+            leftPower = -power;
+            rightPower = power;
+        } else return;
+
+        // set power to rotate.
+        robot.leftFrontDrive.setPower(leftPower);
+        robot.leftBackDrive.setPower(leftPower);
+        robot.rightFrontDrive.setPower(rightPower);
+        robot.rightBackDrive.setPower(rightPower);
+
+        // rotate until turn is completed.
+        if (degrees < 0) {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
+
+            while (opModeIsActive() && getAngle() > degrees) {
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", runtime.seconds());
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/s)", currentSpeed);
+                telemetry.addData("Acceleration (deg/s^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+            }
+        }
+        else    // left turn.
+            while (opModeIsActive() && getAngle() < degrees) {
+
+                currentTime = runtime.seconds();
+                currentDegrees = getAngle();
+                degreeChange = java.lang.Math.abs(degreeDifference(currentDegrees, previousDegrees));
+                currentSpeed = degreeChange / currentTime;
+                speedChange = (currentSpeed - previousSpeed);
+                currentAcceleration = speedChange / currentTime;
+
+                telemetry.addData("Current angle", getAngle());
+                telemetry.addData("Loop time", currentTime);
+                telemetry.addData("Change in Position (deg)", degreeChange);
+                telemetry.addData("Velocity (deg/ms)", currentSpeed);
+                telemetry.addData("Acceleration (deg/ms^2)", currentAcceleration);
+                telemetry.update();
+
+                runtime.reset();
+                previousDegrees = currentDegrees;
+                previousSpeed = currentSpeed;
+
+            }
+
+        // turn the motors off.
+        robot.leftFrontDrive.setPower(0);
+        robot.leftBackDrive.setPower(0);
+        robot.rightFrontDrive.setPower(0);
+        robot.rightBackDrive.setPower(0);
+
+        sleep(100);
+        differenceAngle = degrees - getAngle();
+
+        telemetry.addData("Waiting for the correction", "");
+        telemetry.addData("Current angle", getAngle());
+        telemetry.addData("Target", degrees);
+        telemetry.addData("Difference", differenceAngle);
+        telemetry.update();
+
+        // wait for rotation to stop.
+        sleep(1000);
+        // reset angle tracking on new heading.
+        resetAngle();
+    }
+     */
+
+    /*
+    private double degreeDifference(double currentAngle, double previousAngle) {
+
+        double deltaAngle = currentAngle - previousAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        return deltaAngle;
+    }
+     */
 
 }

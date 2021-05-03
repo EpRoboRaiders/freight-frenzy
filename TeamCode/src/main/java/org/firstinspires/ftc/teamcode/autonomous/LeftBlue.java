@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.constructors.CPipeline;
 
 public class LeftBlue extends AutonomousBase {
 
+
     public void runOpMode() {
 
         initialize();
