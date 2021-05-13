@@ -40,7 +40,6 @@ public class NewerLeftBlue extends LinearOpMode {
         telemetry.addData("Analysis", ringAmount);
         telemetry.update();
 
-
         if (ringAmount == 0) {
             // Placement A
             positionA();
@@ -55,6 +54,9 @@ public class NewerLeftBlue extends LinearOpMode {
             //shooterPosition();
         }
 
+
+
+
     }
 
     public void positionA() {
@@ -66,6 +68,7 @@ public class NewerLeftBlue extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(71, 12))
                 .build());
 
+        /*
         // trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
         //pulls away from the wobble goal and out of the box
         //.lineToConstantHeading(new Vector2d(50, 10))
@@ -102,13 +105,18 @@ public class NewerLeftBlue extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(80, -12))
                 .build());
 
+         */
 
+        shooterPosition();
         for (int i = 0; i < trajectories.size(); i++) {
+            /*
             if (i == 2) {
                 shooterPosition();
                 robot.ringShooter.compactShooter();
             }
-            robot.drive.followTrajectory(trajectories.get(i));
+
+             */
+            // robot.drive.followTrajectory(trajectories.get(i));
         }
 
     }
@@ -277,12 +285,6 @@ public class NewerLeftBlue extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(70, 11))
                 .build());
 
-
-
-
-
-
-
         for (int i = 0; i < trajectories.size(); i++) {
             if (i == 2) {
                 shooterPosition();
@@ -296,9 +298,12 @@ public class NewerLeftBlue extends LinearOpMode {
 
     public void shooterPosition() {
 
-        //robot.ringIntake.extendIntake();
-        robot.ringShooter.autonomousTowerShot();
-        //robot.ringIntake.retractIntake();
+        robot.ringShooter.powerShot();
+        robot.drive.turn(Math.toRadians(-7));
+        robot.ringShooter.powerShot();
+        robot.drive.turn(Math.toRadians(-7));
+        robot.ringShooter.powerShot();
+
 
     }
 }

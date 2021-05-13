@@ -8,7 +8,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.io.File;
 import java.util.List;
+import java.util.Scanner;
 
 public class TensorFlowCamera extends CoreImplement{
 
@@ -33,8 +35,7 @@ public class TensorFlowCamera extends CoreImplement{
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY =
-            "AYYknDz/////AAABmZQkGhimrULNjspGE2e8mF1m9OCCTsFomWuoUbocgbi0c9q1lDX2CKM/+lRigCqihTfprxW9Ky+zDiXHGZgEvdZqJLUYaKh70oPar3ClwSZH59V/d4cPIYXykkkp4r8YgBXHIxDO+9lvPzqI2pkLFmAD7ysoxfMGJFKSR7HOsz+uB2ChmcRleE5p8rkqkEqTCmZQKensMuT0C4tCcqMFHrJyAHYqxyANLASTqB2vWr5CDQaZP0EX2QyUaeB2NA/41yol6bgzhMApJwlieXYXRT5295LmRHNpkQXOVas/lbfQQaCMZRFwQW6IXQkebzek/bvsMeFTq9hI568MoSc4jJ0igGJpUVQTz/hPZ17MABMi";
+    private static final String VUFORIA_KEY = "AYYknDz/////AAABmZQkGhimrULNjspGE2e8mF1m9OCCTsFomWuoUbocgbi0c9q1lDX2CKM/+lRigCqihTfprxW9Ky+zDiXHGZgEvdZqJLUYaKh70oPar3ClwSZH59V/d4cPIYXykkkp4r8YgBXHIxDO+9lvPzqI2pkLFmAD7ysoxfMGJFKSR7HOsz+uB2ChmcRleE5p8rkqkEqTCmZQKensMuT0C4tCcqMFHrJyAHYqxyANLASTqB2vWr5CDQaZP0EX2QyUaeB2NA/41yol6bgzhMApJwlieXYXRT5295LmRHNpkQXOVas/lbfQQaCMZRFwQW6IXQkebzek/bvsMeFTq9hI568MoSc4jJ0igGJpUVQTz/hPZ17MABMi";
 
 
     /**
@@ -53,6 +54,7 @@ public class TensorFlowCamera extends CoreImplement{
     public void init(HardwareMap ahwMap) {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
+
         initVuforia(ahwMap);
         initTfod(ahwMap);
 

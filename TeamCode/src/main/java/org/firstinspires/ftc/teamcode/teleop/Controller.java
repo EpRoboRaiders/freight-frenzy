@@ -34,6 +34,10 @@ public class Controller extends OpMode {
     
     OneShot             chassisReverser = new OneShot();
 
+    OneShot             powerShooter = new OneShot();
+    OneShot             towerShooter = new OneShot();
+    OneShot             autonomousTowerShooter = new OneShot();
+
 
     boolean             intakeChainStarterState = false;
     OneShot             testRampLoader     = new OneShot();
@@ -210,14 +214,13 @@ public class Controller extends OpMode {
         robot.wobbleGrabber.openAndClose(wobbleUnclamped.checkState(gamepad2.b));
 
         // Delegates the x and y buttons on Gamepad 1 to shooting rings!
-        if(/*gamepad2.y ||*/ gamepad1.x) {
-            // robot.ringShooter.towerShot();
+        if(/*gamepad2.y ||*/towerShooter.checkState(gamepad1.x) ) {
             robot.ringShooter.towerShot();
         }
-        else if (/*gamepad2.x ||*/ gamepad1.y) {
+        else if (/*gamepad2.x ||*/ powerShooter.checkState(gamepad1.y)) {
             robot.ringShooter.powerShot();
         }
-        else if (gamepad1.b) {
+        else if (autonomousTowerShooter.checkState(gamepad1.b)) {
             robot.ringShooter.autonomousTowerShot();
         }
 

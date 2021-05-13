@@ -28,6 +28,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name="AutonomousBase", group="Autonomous")
 @Disabled
+
+// BAD, DO NOT USE! Now that we've encapsulated everything this should be considered depreciated
 public abstract class AutonomousBase extends LinearOpMode {
 
     //test push from home.eeeeeeeeee

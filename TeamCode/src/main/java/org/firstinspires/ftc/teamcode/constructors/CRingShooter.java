@@ -28,19 +28,19 @@ public class CRingShooter {
     private final double SHOOTER_ARM_DISENGAGED = .5;  //.75;
     private final double SHOOTER_ARM_ENGAGED = .75; //1
     
-    private final double POWERSHOT_SPEED = .58;   //.58;
-    private final double TOWERSHOT_SPEED = 1;  //.75;
+    private final double POWERSHOT_SPEED = .60;   //.58;
+    private final double TOWERSHOT_SPEED = .75;  //.75;
 
     //increasing this value lowers the hopper position
     private final double NO_RING_SHOT_HOPPER_DEPTH = /*0.15*/ 0.22;
-    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.13; //0.09;
-    private final double MIDDLE_RING_SHOT_HOPPER_DEPTH =  0.08; //0.04;
-    private final double BOTTOM_RING_SHOT_HOPPER_DEPTH =  0.025;
+    private final double TOP_RING_SHOT_HOPPER_DEPTH =  0.125; //0.09;
+    private final double MIDDLE_RING_SHOT_HOPPER_DEPTH =  0.075; //0.04;
+    private final double BOTTOM_RING_SHOT_HOPPER_DEPTH =  0.020;
 
     private final double SEQUENCE_SHOT_SPEED = .55; //.60;
 
-    private final int SEQUENCE_SHOT_TIME_MS = 100;
-    private final int SEQUENCE_SHOT_DELAY_MS = 250;
+    private final int SEQUENCE_SHOT_TIME_MS = 75; // 75
+    private final int SEQUENCE_SHOT_DELAY_MS = 175; // 200
 
     private final double SEQUENCE_KICKER_EXTENDED = .75;
 
@@ -92,15 +92,16 @@ public class CRingShooter {
             hopperLifter.setPosition(BOTTOM_RING_SHOT_HOPPER_DEPTH);
 
         }
+
+        shooterTimer.reset();
+
+        while (shooterTimer.milliseconds() < HOPPER_RAISE_TIME_MS) {}
         
     }
     public void ringShoot(double shotSpeed) {
 
         hopperIncrement();
 
-        shooterTimer.reset();
-
-        while (shooterTimer.milliseconds() < HOPPER_RAISE_TIME_MS) {}
 
         // If the hopper box has raised to a point where a ring is available to shoot,
         // do so.
@@ -125,19 +126,25 @@ public class CRingShooter {
             setShooterPower(MOTORS_OFF);
 
             shooterArm.setPosition(SHOOTER_ARM_DISENGAGED);
+
+            if (hopperDepth == 3) {
+                hopperIncrement();
+            }
         }
 
-        // Automatically reset the hopper down to the lowest position.
-        if (hopperDepth == 3) {
-            hopperIncrement();
-        }
         shooterTimer.reset();
 
         while (shooterTimer.milliseconds() < SHOT_DELAY_TIME_MS) {}
 
     }
 
+    public void hopperRaise() {
 
+        hopperIncrement();
+
+
+        shooterTimer.reset();
+    }
     
     public void towerShot() {
 
