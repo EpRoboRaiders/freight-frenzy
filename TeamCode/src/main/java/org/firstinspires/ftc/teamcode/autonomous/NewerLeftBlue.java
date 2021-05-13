@@ -68,7 +68,7 @@ public class NewerLeftBlue extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(71, 12))
                 .build());
 
-        /*
+
         // trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
         //pulls away from the wobble goal and out of the box
         //.lineToConstantHeading(new Vector2d(50, 10))
@@ -81,13 +81,13 @@ public class NewerLeftBlue extends LinearOpMode {
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(18, -50, Math.toRadians(-90))) //0
+                .lineToLinearHeading(new Pose2d(15, -50, Math.toRadians(-90))) //0
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves forward to grab the second wobble goal
                 //.forward(14)
-                .lineToConstantHeading(new Vector2d(18, -22))
+                .lineToConstantHeading(new Vector2d(15, -22))
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
@@ -101,22 +101,25 @@ public class NewerLeftBlue extends LinearOpMode {
                 .build());
 
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
-                //moves to line up with the tower shot
-                .lineToConstantHeading(new Vector2d(80, -12))
+                //moves to line up with the power shot targets
+                .lineToLinearHeading(new Pose2d(60.5, -27, Math.toRadians(0)))
                 .build());
 
-         */
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                // moves onto the white line
+                .lineToConstantHeading(new Vector2d(80, -25))
+                .build());
 
-        shooterPosition();
+
+
+        // shooterPosition();
         for (int i = 0; i < trajectories.size(); i++) {
-            /*
-            if (i == 2) {
-                shooterPosition();
-                robot.ringShooter.compactShooter();
-            }
 
-             */
-            // robot.drive.followTrajectory(trajectories.get(i));
+            robot.drive.followTrajectory(trajectories.get(i));
+
+            if (i == 6) {
+                shooterPosition();
+            }
         }
 
     }
