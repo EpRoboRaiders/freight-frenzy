@@ -661,4 +661,115 @@ public class CommentDump {
     }
      */
 
+
+        /*
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //moves to line up with the tower shot
+                .lineToConstantHeading(new Vector2d(53, -12))
+                .build());
+
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //second trajectory moves the robot to line up with the second wobble goal
+                .lineToLinearHeading(new Pose2d(15, -50, Math.toRadians(-90))) //0
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //moves forward to grab the second wobble goal
+                //.forward(14)
+                .lineToConstantHeading(new Vector2d(15, -22))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //moves the second wobble goal into box A
+                .lineToLinearHeading(new Pose2d(64, 16, Math.toRadians(180)))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //pulls away from the wobble goal and out of the box
+                .lineToConstantHeading(new Vector2d(40, 12))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //moves to line up with the power shot targets
+                .lineToLinearHeading(new Pose2d(60.5, -27, Math.toRadians(0)))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                // moves onto the white line
+                .lineToConstantHeading(new Vector2d(80, -25))
+                .build());
+
+         */
+
+    // shooterPosition();
+      /*
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(60, -33))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(60, -40))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //lines up with the ring goal so it can score and park
+                .lineToConstantHeading(new Vector2d(60, -46))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                // .forward(8)
+                .lineToConstantHeading(new Vector2d(68, -46))
+                .build());
+
+         */
+
+
+        /*
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //second trajectory moves the robot into the box
+                .lineToConstantHeading(new Vector2d(93, -16))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //pulls back to shoot
+                .lineToConstantHeading(new Vector2d(50, -16))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //moves the robot away from the rings
+                .lineToConstantHeading(new Vector2d(60, -42))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //second trajectory moves the robot to line up with the second wobble goal
+                .lineToLinearHeading(new Pose2d(12, -42, Math.toRadians(-90)))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //moves forward to grab the second wobble goal
+                //.forward(14)
+                .lineToConstantHeading(new Vector2d(5, 0))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //moves the second wobble goal into box A
+                .lineToLinearHeading(new Pose2d(50, 10, Math.toRadians(180)))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //moves into box B
+                .lineToConstantHeading(new Vector2d(84, -13))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                //parks on white line
+                .lineToConstantHeading(new Vector2d(70, -5))
+                .build());
+
+         */
+
 }

@@ -15,7 +15,8 @@ public class CWobbleGrabber extends CoreImplement {
     private ElapsedTime clampTimer   = new ElapsedTime();
 
     private final double GRABBER_ARM_LOWERED = 0;
-    private final double GRABBER_ARM_RAISED = 0.6;
+    private final double GRABBER_ARM_RAISED = 0.4;
+    private final double GRABBER_ARM_HOVERED = 0.1;
 
     private final double WOBBLE_GRABBER_UNCLAMPED = 1;
     private final double WOBBLE_GRABBER_CLAMPED = 0.5;
@@ -137,12 +138,34 @@ public class CWobbleGrabber extends CoreImplement {
         clampTimer.reset();
         while (clampTimer.milliseconds() < SERVO_ACTIVATION_PAUSE_MS) {}
 
-        grabberArm.setPosition(WOBBLE_GRABBER_UNCLAMPED);
+        wobbleGrabber.setPosition(WOBBLE_GRABBER_UNCLAMPED);
 
         clampTimer.reset();
         while (clampTimer.milliseconds() < SERVO_ACTIVATION_PAUSE_MS) {}
     }
 
+    public void closeAndHover() {
+        wobbleGrabber.setPosition(WOBBLE_GRABBER_CLAMPED);
+
+        clampTimer.reset();
+        while (clampTimer.milliseconds() < SERVO_ACTIVATION_PAUSE_MS) {}
+
+        grabberArm.setPosition(GRABBER_ARM_HOVERED);
+
+        clampTimer.reset();
+        while (clampTimer.milliseconds() < SERVO_ACTIVATION_PAUSE_MS) {}
+    }
+
+    public void instantLowerAndOpen() {
+        grabberArm.setPosition(GRABBER_ARM_LOWERED);
+        wobbleGrabber.setPosition(WOBBLE_GRABBER_UNCLAMPED);
+
+    }
+    public void instantCloseAndRaise() {
+        grabberArm.setPosition(GRABBER_ARM_RAISED);
+        wobbleGrabber.setPosition(WOBBLE_GRABBER_CLAMPED);
+
+    }
 
 
 
