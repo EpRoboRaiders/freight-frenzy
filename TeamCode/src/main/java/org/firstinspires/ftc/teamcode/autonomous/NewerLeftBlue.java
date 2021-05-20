@@ -121,23 +121,29 @@ public class NewerLeftBlue extends LinearOpMode {
         trajectories.add(robot.drive.trajectoryBuilder(new Pose2d())
                 //first trajectory moves the robot towards box B
                 // .forward(60)
-                .lineToConstantHeading(new Vector2d(93, -14))
+                .splineToConstantHeading(new Vector2d(50, 0), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(93, -14), Math.toRadians(0))
                 .build());
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //second trajectory moves the robot to line up with the second wobble goal
-                .lineToLinearHeading(new Pose2d(29, -24, Math.toRadians(30)))
+                //.lineToLinearHeading(new Pose2d(29, -24, Math.toRadians(30)))
+                .lineToConstantHeading(new Vector2d(50, -34))
                 .addDisplacementMarker(10, () -> {
                     robot.wobbleGrabber.instantLowerAndOpen();
                 })
                 .build());
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
+                .lineToConstantHeading(new Vector2d(23, -40))
+                .build());
+
+        trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves the second wobble goal into box B
                 //every time the robot stops, a new trajectory must be made
-                .lineToLinearHeading(new Pose2d(86, -27, Math.toRadians(-90))) //0
+                .lineToLinearHeading(new Pose2d(77, -28, Math.toRadians(-90))) //0
                 .build());
         trajectories.add(robot.drive.trajectoryBuilder(trajectories.get(trajectories.size()-1).end())
                 //moves to line up with the power shot targets
-                .lineToLinearHeading(new Pose2d(58, -23, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(53, -28, Math.toRadians(0)))
                 .addDisplacementMarker(3, () -> {
                     robot.wobbleGrabber.instantCloseAndRaise();
                 })
@@ -149,13 +155,13 @@ public class NewerLeftBlue extends LinearOpMode {
 
         for (int i = 0; i < trajectories.size(); i++) {
 
-            if (i == 3) {
+            if (i == 4) {
                 robot.wobbleGrabber.lowerAndOpen();
             }
-            else if (i == 2) {
+            else if (i == 3) {
                 robot.wobbleGrabber.closeAndHover();
             }
-            else if (i == 4) {
+            else if (i == 5) {
                 shooterPosition();
             }
             robot.drive.followTrajectory(trajectories.get(i));
