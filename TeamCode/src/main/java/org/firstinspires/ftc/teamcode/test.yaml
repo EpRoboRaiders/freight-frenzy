@@ -1,9 +1,0 @@
----
-startPose:
-  x: 0.0
-  y: 0.0
-  heading: 0.17453292519943295
-startTangent: 0.17453292519943295
-waypoints: []
-resolution: 1.0
-version: 1
