@@ -4,8 +4,10 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constructers.BaseRobot;
+import org.firstinspires.ftc.teamcode.Constructers.OneShot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous(name = "B2 Encoder Autonomous", group = "Autonomous")
@@ -13,6 +15,10 @@ public class B2EncoderAutonomous extends LinearOpMode {
     private BaseRobot robot = new BaseRobot();
 
 
+    //todo: work on the scope of these objects and the delay stuf below
+    private OneShot incrementDelayCheck = new OneShot();
+    private OneShot decrementDelayCheck = new OneShot();
+    private ElapsedTime delayTimer = new ElapsedTime();
     /**
      * Override this method and place your code here.
      * <p>
@@ -26,7 +32,31 @@ public class B2EncoderAutonomous extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot.init(hardwareMap);
 
+        // Create a delay in seconds that the robot should wait in autonomous
+        int delay = 0;
+
+        while (!gamepad1.a) {
+            // If the up arrow is pressed, increase the delay by 1.
+            if (incrementDelayCheck.checkState(gamepad1.dpad_up)) {
+                delay += 1;
+            }
+            // If the down arrow is pressed, decrease the delay by 1.
+            else if (decrementDelayCheck.checkState(gamepad1.dpad_down)) {
+                delay -= 1;
+            }
+            /*
+             * Clip delay to be between 0 and 30 seconds; a negative delay is impossible while
+             * a delay greater than 30 seconds is longer than the autonomous period!
+             */
+            delay = Math.min(Math.max(delay, 0), 30);
+            // Display delay in autonomous.
+            telemetry.addData("Start Of Autonomous Delay (press A to confirm)", delay);
+            telemetry.update();
+        }
+
         waitForStart();
+
+
 
         robot.secureCargo();
 
