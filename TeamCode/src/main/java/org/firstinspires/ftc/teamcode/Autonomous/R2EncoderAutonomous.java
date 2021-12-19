@@ -31,37 +31,50 @@ public class R2EncoderAutonomous extends LinearOpMode {
 
         robot.secureCargo();
 
+        //moves forward around the ducks.
         Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
                 .back(42)
                 .build();
 
+        //moves forward to drop off the pre-loaded box
         Trajectory myTrajectory2 = drive.trajectoryBuilder(myTrajectory.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
                 .back(28)
                 .build();
 
+        //pulls back into the wall
         Trajectory myTrajectory3 = drive.trajectoryBuilder(myTrajectory2.end())
                 .forward(33)
                 .build();
 
-        //Trajectory myTrajectory4 = drive.trajectoryBuilder(myTrajectory3.end())
-
+        //moves forward to use the carousel
+        Trajectory myTrajectory4 = drive.trajectoryBuilder(myTrajectory3.end())
+                .back(15)
+                .build();
 
         waitForStart();
 
         if(isStopRequested()) return;
 
+        //traj 1
         drive.followTrajectory(myTrajectory);
-        drive.turn(Math.toRadians(-90));
+        /*turns*/ drive.turn(Math.toRadians(-90));
         sleep(500);
+        //traj 2
         drive.followTrajectory(myTrajectory2);
+        //drops preloaded box
         robot.raiseCargoLift(26.5);
         robot.dumpCargo();
         sleep(1000);
         robot.resetBox();
         sleep(500);
+        //traj 3
         drive.followTrajectory(myTrajectory3);
-        drive.turn(Math.toRadians(-90));
+        /*turns*/ drive.turn(Math.toRadians(-90));
         sleep(5000);
+        //traj 4
+        drive.followTrajectory(myTrajectory4);
+        //uses carousel
+
 
         /*
         robot.init(hardwareMap);
