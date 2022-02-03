@@ -18,19 +18,23 @@ import org.firstinspires.ftc.teamcode.Constructers.OneShot;
 public class ManualDrive extends OpMode
 {
 
+
+
     BaseRobot robot = new BaseRobot();
 
     Button IntakeRoller = new Button();
     Button IntakeReverseRoller = new Button();
 
-    OneShot IntakeArm = new OneShot();
+    //OneShot IntakeArm = new OneShot();
 
     OneShot dumpCargoCheck = new OneShot();
     OneShot secureCargoCheck = new OneShot();
     OneShot resetBox = new OneShot();
     OneShot shortlift = new OneShot();
+    OneShot spinner = new OneShot();
 
     OneShot directionSwitch = new OneShot();
+
 
 
 
@@ -55,8 +59,9 @@ public class ManualDrive extends OpMode
 
         double leftPower  = -gamepad1.left_stick_y ;
         double rightPower = -gamepad1.right_stick_y ;
-        double rightLiftPower = -gamepad2.right_stick_y;
-        boolean Flicker = gamepad2.right_bumper;
+        double rightLiftPower = -gamepad2.left_stick_y;
+
+        //boolean Flicker = gamepad2.right_bumper;
 
 
         robot.setChassisTankDrivePower(leftPower, rightPower);
@@ -69,9 +74,9 @@ public class ManualDrive extends OpMode
             robot.stopRoller();
         }
 
-        if (IntakeArm.checkState(gamepad2.left_bumper)){
-            robot.flick();
-        }
+        //if (IntakeArm.checkState(gamepad2.left_bumper)){
+            //robot.flick();
+        //}
 
         if (gamepad2.left_trigger > 0){
             robot.reverseRoller();
@@ -92,7 +97,6 @@ public class ManualDrive extends OpMode
         if (resetBox.checkState(gamepad2.x)){
             robot.resetBox();
         }
-
         if (shortlift.checkState(gamepad2.dpad_down)){
             robot.raiseCargoLift(4);
         }
@@ -101,18 +105,18 @@ public class ManualDrive extends OpMode
         //telemetry.addData("Duck Position", robot.getDuckPosition());
         //telemetry.update();
 
-        if (gamepad2.y) {
+        if (gamepad2.left_bumper) {
             robot.startCarouselSpinner();
         }
         else if (gamepad2.right_bumper){
             robot.startReverseSpinnerSpinner();
-        }
-        else {
+        }else {
             robot.stopCarouselSpinnerSpinner();
         }
 
         robot.update();
 
+        telemetry.update();
 
     }
 }

@@ -13,13 +13,15 @@ public class CargoLift extends CoreImplement {
     // Initializes the Carousel Spinner.
     @Override
     public void init(HardwareMap ahwMap) {
+
         boxRotator.init(ahwMap);
         lift.init(ahwMap);
     }
 
     @Override
     public void update() {
-
+        boxRotator.update();
+        lift.update();
     }
     public void boxMove(double power){
         lift.boxMove(power);
@@ -43,6 +45,10 @@ public class CargoLift extends CoreImplement {
 
     public void resetBox(){
         boxRotator.resetBox();
+    }
+
+    public boolean isLiftFinished() {
+        return lift.isLiftFinished();
     }
 }
 

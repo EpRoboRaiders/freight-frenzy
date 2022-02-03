@@ -46,10 +46,10 @@ public class BaseDriveTrain extends CoreImplement {
         leftBackDrive  = hwMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
 
         powerSwitch = 1;
 

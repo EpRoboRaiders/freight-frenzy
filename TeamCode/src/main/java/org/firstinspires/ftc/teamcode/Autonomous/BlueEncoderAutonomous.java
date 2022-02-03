@@ -26,54 +26,83 @@ public class BlueEncoderAutonomous extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-            robot.init(hardwareMap);
+        robot.init(hardwareMap);
 
+        Trajectory myTrajectory1 = drive.trajectoryBuilder(new Pose2d())
+                .back(0.1)
+                .build();
 
-        robot.secureCargo();
+        double turn1 = Math.toRadians(-45);
+        Trajectory myTrajectory2 = drive.trajectoryBuilder(myTrajectory1.end().plus(new Pose2d(0, 0, turn1)), false)
+                .back(25)
+                .build();
 
-        robot.raiseCargoLift(4);
+        Trajectory myTrajectory3 = drive.trajectoryBuilder(myTrajectory2.end())
+                .back(2)
+                .build();
 
-        Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
+        Trajectory myTrajectory4 = drive.trajectoryBuilder(myTrajectory3.end())
                 .forward(5)
                 .build();
 
-        //Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
+        double turn3 = Math.toRadians(-10);
+        Trajectory myTrajectory5 = drive.trajectoryBuilder(myTrajectory4.end().plus(new Pose2d(0, 0, turn3)), false)
+                .forward(5)
+                .build();
 
+        double turn4 = Math.toRadians(-60);
+        Trajectory myTrajectory6 = drive.trajectoryBuilder(myTrajectory5.end().plus(new Pose2d(0, 0, turn4)), false)
+                .forward(75)
+                .build();
 
 
         waitForStart();
 
-        if(isStopRequested()) return;
+        robot.secureCargo();
 
-        drive.followTrajectory(myTrajectory);
-        sleep(5000);
+        double liftheight = robot.getDuckPositionblue();
 
+        telemetry.addData("TSE position", robot.duckpostionname());
+        telemetry.update();
 
-        /*
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,-10,-10,5);
+        drive.followTrajectory(myTrajectory1);
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,11,-11,5);
+        drive.turn(turn1);
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,-16,-16,5);
+        drive.followTrajectory(myTrajectory2);
 
-        robot.raiseCargoLift(24);
+        drive.followTrajectory(myTrajectory3);
+
+        robot.raiseCargoLift(liftheight);
+
+        while (opModeIsActive() && !robot.isLiftFinished()) {
+            robot.update();
+        }
 
         robot.dumpCargo();
 
         sleep(1000);
 
-        robot.resetBox();
+        drive.followTrajectory(myTrajectory4);
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,4,4,5);
+        drive.turn(turn3);
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,10,-10,5);
+        drive.followTrajectory(myTrajectory5);
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,57,57,5);
+        drive.turn(turn4);
 
-        robot.lowerCargoLift(24);
-         */
+        drive.followTrajectory(myTrajectory6);
+
+        robot.secureCargo();
+        sleep(1000);
+
+        robot.lowerCargoLift(liftheight);
+
+        while (opModeIsActive() && !robot.isLiftFinished()) {
+            robot.update();
+        }
+
+
 
     }
-
 }
-

@@ -32,6 +32,160 @@ public class B2EncoderAutonomous extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot.init(hardwareMap);
 
+        Trajectory myTrajectory1 = drive.trajectoryBuilder(new Pose2d())
+                .back(5)
+                .build();
+
+        double turn1 = Math.toRadians(20);
+        Trajectory myTrajectory2 = drive.trajectoryBuilder(myTrajectory1.end().plus(new Pose2d(0, 0, turn1)), false)
+                .back(18.5)
+                .build();
+
+        Trajectory myTrajectory3 = drive.trajectoryBuilder(myTrajectory2.end())
+                .forward(18)
+                .build();
+
+        double turn2 = Math.toRadians(70.5);
+        Trajectory myTrajectory4 = drive.trajectoryBuilder(myTrajectory3.end().plus(new Pose2d(0, 0, turn2)), false)
+                .forward(44)
+                .build();
+
+        double turn3 = Math.toRadians(85);
+        Trajectory myTrajectory5 = drive.trajectoryBuilder(myTrajectory4.end().plus(new Pose2d(0, 0, turn3)), false)
+                .forward(20)
+                .build();
+
+
+        waitForStart();
+
+        robot.secureCargo();
+
+        double liftheight = robot.getDuckPosition();
+
+        telemetry.addData("TSE position", robot.duckpostionname());
+        telemetry.update();
+
+        drive.followTrajectory(myTrajectory1);
+
+        drive.turn(turn1);
+
+        drive.followTrajectory(myTrajectory2);
+
+        robot.raiseCargoLift(liftheight);
+
+        while (opModeIsActive() && !robot.isLiftFinished()) {
+            robot.update();
+        }
+
+        robot.dumpCargo();
+        sleep(1000);
+
+        drive.followTrajectory((myTrajectory3));
+
+        drive.turn(turn2);
+
+        drive.followTrajectory((myTrajectory4));
+
+        robot.startCarouselSpinner();
+        sleep(3700);
+
+        robot.stopCarouselSpinnerSpinner();
+
+        drive.turn(turn3);
+
+        drive.followTrajectory((myTrajectory5));
+
+        robot.secureCargo();
+
+        robot.lowerCargoLift(liftheight - 2);
+
+        while (opModeIsActive() && !robot.isLiftFinished()) {
+            robot.update();
+        }
+
+        /*robot.startCarouselSpinner();
+        sleep(3700);
+        robot.stopCarouselSpinnerSpinner();
+
+        drive.turn(turn2);
+
+        drive.followTrajectory((myTrajectory3));
+
+         */
+
+       /* Trajectory myTrajectory1 = drive.trajectoryBuilder(new Pose2d())
+                .back(5)
+                .build();
+        double turn1 = Math.toRadians(-10);
+        Trajectory myTrajectory2 = drive.trajectoryBuilder(myTrajectory1.end().plus(new Pose2d(0, 0, turn1)), false)
+                .back(40)
+                .build();
+
+        double turn2 = Math.toRadians(100);
+        Trajectory myTrajectory3 = drive.trajectoryBuilder(myTrajectory2.end().plus(new Pose2d(0, 0, turn2)), false)
+                .back(29)
+                .build();
+
+        Trajectory myTrajectory4 = drive.trajectoryBuilder(myTrajectory3.end())
+                .forward(34)
+                .build();
+
+        double turn3 = Math.toRadians(-90);
+        Trajectory myTrajectory5 = drive.trajectoryBuilder(myTrajectory4.end().plus(new Pose2d(0, 0, turn3)), false)
+                .forward(35.30)
+                .build();
+
+        double turn4 = Math.toRadians(-10);
+        Trajectory myTrajectory6 = drive.trajectoryBuilder(myTrajectory5.end().plus(new Pose2d(0, 0, turn4)), false)
+                .back(21)
+                .build();
+
+        double turn5 = Math.toRadians(15);
+        Trajectory myTrajectory7 = drive.trajectoryBuilder(myTrajectory6.end().plus(new Pose2d(0, 0, turn5)), false)
+                .back(21)
+                .build();
+
+        waitForStart();
+
+        robot.secureCargo();
+
+        drive.followTrajectory(myTrajectory1);
+
+        drive.turn(turn1);
+
+        drive.followTrajectory(myTrajectory2);
+
+        drive.turn(turn2);
+
+        drive.followTrajectory(myTrajectory3);
+
+        robot.raiseCargoLift(21.6);
+        sleep(1500);
+
+        robot.dumpCargo();
+        sleep(1000);
+
+        drive.followTrajectory(myTrajectory4);
+
+        drive.turn(turn3);
+
+        drive.followTrajectory(myTrajectory5);
+
+        robot.startCarouselSpinner();
+        sleep(3700);
+
+        robot.stopCarouselSpinnerSpinner();
+
+        drive.turn(turn4);
+
+        drive.followTrajectory(myTrajectory6);
+
+        drive.turn(turn5);
+*/
+
+       /* SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        robot.init(hardwareMap);
+
         // Create a delay in seconds that the robot should wait in autonomous
         int delay = 0;
 
@@ -48,7 +202,7 @@ public class B2EncoderAutonomous extends LinearOpMode {
              * Clip delay to be between 0 and 30 seconds; a negative delay is impossible while
              * a delay greater than 30 seconds is longer than the autonomous period!
              */
-            delay = Math.min(Math.max(delay, 0), 30);
+        /*    delay = Math.min(Math.max(delay, 0), 30);
             // Display delay in autonomous.
             telemetry.addData("Start Of Autonomous Delay (press A to confirm)", delay);
             telemetry.update();
@@ -75,7 +229,7 @@ public class B2EncoderAutonomous extends LinearOpMode {
         drive.followTrajectory(myTrajectory);
         drive.turn(Math.toRadians(90));
         drive.followTrajectory(myTrajectory2);
-        sleep(5000);
+        sleep(5000);*/
 
         /*
         //Starts under the Carousel

@@ -12,16 +12,16 @@ public class CargoBoxRotator extends CoreImplement {
     // todo:find actualvalue
     private static final int DUMP_TIME = 1000;
 
-    private static final double INTAKE_POSITION = 0.95;
+    private static final double INTAKE_POSITION = 0.75;
 
-    private static final double SECURE_POSITION = 0.7;
+    private static final double SECURE_POSITION = 0.42;
 
-    private static final double DUMP_POSTION = 0.2;
+    private static final double DUMP_POSTION = 0;
 
     private Servo Rotator;
     @Override
     public void init(HardwareMap ahwMap) {
-         Rotator = ahwMap.get(Servo.class, "rotator");//controll hub port 1
+         Rotator = ahwMap.get(Servo.class, "rotator");//controll hub port 5
     }
 
     @Override
@@ -39,5 +39,9 @@ public class CargoBoxRotator extends CoreImplement {
 
     public void resetBox(){
         Rotator.setPosition(INTAKE_POSITION);
+    }
+
+    public void positionset(double position) {
+        Rotator.setPosition(position);
     }
 }

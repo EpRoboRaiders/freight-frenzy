@@ -2,10 +2,11 @@ package org.firstinspires.ftc.teamcode.Constructers;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Cargo.CargoBoxLift;
 import org.firstinspires.ftc.teamcode.Cargo.CargoLift;
 import org.firstinspires.ftc.teamcode.Constructers.CarouselSpinner.CarouselSpinner;
 import org.firstinspires.ftc.teamcode.Constructers.Intake.Intake;
-import org.firstinspires.ftc.teamcode.Constructers.Intake.IntakeArm;
+//import org.firstinspires.ftc.teamcode.Constructers.Intake.IntakeArm;
 
 public class BaseRobot extends CoreImplement {
 
@@ -36,6 +37,7 @@ public class BaseRobot extends CoreImplement {
     @Override
     public void update() {
         roller.update();
+        lift.update();
     }
     public void setLeftBackMotorPower(double power){
         drivetrain.setLeftBackMotorPower(power);
@@ -122,10 +124,13 @@ public class BaseRobot extends CoreImplement {
     public void stopRoller(){
         roller.stopRoller();
     }
-
+    /*
     public void flick(){
         roller.flick();
     }
+
+
+     */
 
     public void reverseRoller(){
         roller.reverseRoller();
@@ -159,11 +164,23 @@ public class BaseRobot extends CoreImplement {
         return drivetrain.debug();
     }
 
-    public String getDuckPosition() {
+    public double getDuckPosition() {
         return camera.getDuckPosition();
+    }
+
+    public double getDuckPositionblue() {
+        return  camera.getDuckPositionblue();
     }
 
     public void startReverseSpinnerSpinner(){
         spinner.startReverseSpinnerSpinner();
+    }
+
+    public String duckpostionname() {
+        return camera.getDuckpositionname();
+    }
+
+    public boolean isLiftFinished() {
+        return lift.isLiftFinished();
     }
 }

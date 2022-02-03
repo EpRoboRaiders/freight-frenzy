@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -27,113 +28,92 @@ public class R2EncoderAutonomous extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot.init(hardwareMap);
 
-        waitForStart();
-
-        robot.secureCargo();
-
-        //moves forward around the ducks.
-        Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .back(42)
+        Trajectory myTrajectory1 = drive.trajectoryBuilder(new Pose2d())
+                .back(5)
                 .build();
 
-        //moves forward to drop off the pre-loaded box
-        Trajectory myTrajectory2 = drive.trajectoryBuilder(myTrajectory.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
-                .back(28)
+        double turn1 = Math.toRadians(18);
+        Trajectory myTrajectory2 = drive.trajectoryBuilder(myTrajectory1.end().plus(new Pose2d(0, 0, turn1)), false)
+                .back(40)
                 .build();
 
-        //pulls back into the wall
-        Trajectory myTrajectory3 = drive.trajectoryBuilder(myTrajectory2.end())
-                .forward(33)
+        double turn2 = Math.toRadians(-108);
+        Trajectory myTrajectory3 = drive.trajectoryBuilder(myTrajectory2.end().plus(new Pose2d(0, 0, turn2)), false)
+                .back(30)
                 .build();
 
-        //moves forward to use the carousel
         Trajectory myTrajectory4 = drive.trajectoryBuilder(myTrajectory3.end())
-                .back(15)
+                .forward(34)
                 .build();
 
-        waitForStart();
+        double turn3 = Math.toRadians(90);
+        Trajectory myTrajectory5 = drive.trajectoryBuilder(myTrajectory4.end().plus(new Pose2d(0, 0, turn3)), false)
+                .forward(37.30)
+                .build();
 
-        if(isStopRequested()) return;
+        double turn4 = Math.toRadians(10);
+        Trajectory myTrajectory6 = drive.trajectoryBuilder(myTrajectory5.end().plus(new Pose2d(0, 0, turn4)), false)
+                .back(25)
+                .build();
 
-        //traj 1
-        drive.followTrajectory(myTrajectory);
-        /*turns*/ drive.turn(Math.toRadians(-90));
-        sleep(500);
-        //traj 2
-        drive.followTrajectory(myTrajectory2);
-        //drops preloaded box
-        robot.raiseCargoLift(26.5);
-        robot.dumpCargo();
-        sleep(1000);
-        robot.resetBox();
-        sleep(500);
-        //traj 3
-        drive.followTrajectory(myTrajectory3);
-        /*turns*/ drive.turn(Math.toRadians(-90));
-        sleep(5000);
-        //traj 4
-        drive.followTrajectory(myTrajectory4);
-        //uses carousel
+        double turn5 = Math.toRadians(-15);
+        Trajectory myTrajectory7 = drive.trajectoryBuilder(myTrajectory6.end().plus(new Pose2d(0, 0, turn5)), false)
+                .back(30)
+                .build();
 
-
-        /*
-        robot.init(hardwareMap);
 
 
         waitForStart();
 
         robot.secureCargo();
 
-        //Starts under the Carousel
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED, -35, -35, 5);
+        double liftheight = robot.getDuckPosition();
 
-        //Turns to line up with the Shipping Hub
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED, 22, -22, 5); //19 inches is about a 90 degree turn
+        telemetry.addData("TSE position", robot.duckpostionname());
+        telemetry.update();
 
-        //Drives forward to drop off the pre-loaded box
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED, -26, -26, 5);
+        drive.followTrajectory(myTrajectory1);
 
-        //Drops off the pre-loaded box
-        robot.raiseCargoLift(28);
+        drive.turn(turn1);
+
+        drive.followTrajectory(myTrajectory2);
+
+        drive.turn(turn2);
+
+        drive.followTrajectory(myTrajectory3);
+
+        robot.raiseCargoLift(liftheight);
+
+        while (opModeIsActive() && !robot.isLiftFinished()) {
+            robot.update();
+        }
+
         robot.dumpCargo();
         sleep(1000);
-        robot.resetBox();
 
-        //Pulls back to line up with the carousel
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED, 20, 20, 5);
+        drive.followTrajectory(myTrajectory4);
 
-        //Slows down before hitting wall
-        robot.chassisDrive(BaseRobot.SLOW_SPEED, 13, 13, 5);
+        drive.turn(turn3);
 
-        //Turns to line up with the carousel
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED, 19, -19, 5);
-
-        //Moves forward to go to the carousel
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED, -36.5, -36.5, 5);
-
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,25,-25,5);
-
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,-4.5,-4.5,5);
+        drive.followTrajectory(myTrajectory5);
 
         robot.startReverseSpinnerSpinner();
-        sleep(3500);
+        sleep(3700);
+
         robot.stopCarouselSpinnerSpinner();
 
-        //Lowers the lift back to the ground
-        robot.lowerCargoLift(26);
+        drive.turn(turn4);
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,19,-19,5);
+        drive.followTrajectory(myTrajectory6);
 
-        //Pulls back into Storage Unit
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED, -16, -16, 5);
+        drive.turn(turn5);
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,-3,3,5);
+        robot.secureCargo();
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,-7,-7,5);
+        robot.lowerCargoLift(liftheight - 2);
 
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,20,-20,5);
-
-        robot.chassisDrive(BaseRobot.DRIVE_SPEED,8,8,5);
-         */
+        while (opModeIsActive() && !robot.isLiftFinished()) {
+            robot.update();
+        }
     }
 }

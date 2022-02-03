@@ -62,7 +62,7 @@ public class CarouselSpinner extends CoreImplement {
         spinner.startCarouselSpinnerSpinner();
     }
 
-    // Turns off the Carousel Spinner Spinner.
+    // Turns off the Carousel Spinner Spin  ner.
     public void stopCarouselSpinnerSpinner() {
         spinner.stopCarouselSpinnerSpinner();
     }

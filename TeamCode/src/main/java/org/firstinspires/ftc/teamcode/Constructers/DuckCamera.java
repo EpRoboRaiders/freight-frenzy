@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Constructers;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -13,6 +14,7 @@ import org.slf4j.Marker;
 import java.util.List;
 
 public class DuckCamera  extends CoreImplement{
+
     /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
      * the following 4 detectable objects
      *  0: Ball,
@@ -24,6 +26,9 @@ public class DuckCamera  extends CoreImplement{
      *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
      *  FreightFrenzy_DM.tflite  0: Duck,  1: MarkerR
      */
+
+    private String duckpositionname = "none" ;
+
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {
             "Ball",
@@ -65,6 +70,7 @@ public class DuckCamera  extends CoreImplement{
         initVuforia(ahwMap);
         initTfod(ahwMap);
 
+
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
@@ -87,11 +93,11 @@ public class DuckCamera  extends CoreImplement{
 
     }
 
-    public String getDuckPosition() {
+    public double getDuckPosition() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
 
-        String duckPosition = "right";
+        double duckPosition = 21.6;
 
         double Duck = 0;
 
@@ -106,41 +112,61 @@ public class DuckCamera  extends CoreImplement{
                         if (updatedRecognitions.size() > 0) {
                             Duck = updatedRecognitions.get(0).getLeft();
                             if (Duck <= DUCK_Y_THRESHOLD) {
-                                duckPosition = "left";
+                                duckPosition = 9.4;
+                                duckpositionname = "left";
                             } else {
-                                duckPosition = "middle";
+                                duckPosition = 13;
+                                duckpositionname = "middle";
+
                             }
-                            // step through the list of recognitions and display boundary info.
-                            /*int i = 0;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel() == "Marker" && Mark1 == 0) {
-                                    Mark1 = recognition.getLeft();
-                                }
-                                else if (recognition.getLabel() == "Marker" && Mark2 == 0) {
-                                    Mark2 = recognition.getLeft();
-                                }
-                                else if (recognition.getLabel() == "Duck" && Duck == 0) {
-                                    Duck = recognition.getLeft();
-                                }
-                                if ((Duck < Mark1) && (Duck > Mark2)) {
-                                    duckPosition = "left";
-                                }
-                                else if (((Duck < Mark1) && (Duck > Mark2)) || ((Duck < Mark2) && (Duck > Mark1))) {
-                                    duckPosition = "middle";
-                                }
-                                else {
-                                    duckPosition = "right";
-                                }
-                            }*/
                         }
                     }
                     else {
-                        duckPosition = "right";
+                        duckPosition = 21.6;
+                        duckpositionname = "right";
+
                     }
                 }
                 return duckPosition;
     }
 
+
+    public double getDuckPositionblue() {
+        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
+        // first.
+
+        double duckPosition = 21.6;
+
+        double Duck = 0;
+
+        /** Wait for the game to begin */
+
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            sleep(1000);
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                if (updatedRecognitions.size() > 0) {
+                    Duck = updatedRecognitions.get(0).getLeft();
+                    if (Duck <= DUCK_Y_THRESHOLD) {
+                        duckPosition = 13;
+                        duckpositionname = "middle";
+                    } else {
+                        duckPosition = 21.6;
+                        duckpositionname = "right";
+
+                    }
+                }
+            }
+            else {
+                duckPosition = 9.4;
+                duckpositionname = "left";
+
+            }
+        }
+        return duckPosition;
+    }
     /**
      * Initialize the Vuforia localization engine.
      */
@@ -172,5 +198,10 @@ public class DuckCamera  extends CoreImplement{
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
+
+    public String getDuckpositionname() {
+        return duckpositionname;
+    }
+
 }
 
