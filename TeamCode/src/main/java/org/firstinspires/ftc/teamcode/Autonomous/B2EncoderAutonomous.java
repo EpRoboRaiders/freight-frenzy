@@ -36,9 +36,9 @@ public class B2EncoderAutonomous extends LinearOpMode {
                 .back(5)
                 .build();
 
-        double turn1 = Math.toRadians(20);
+        double turn1 = Math.toRadians(17);
         Trajectory myTrajectory2 = drive.trajectoryBuilder(myTrajectory1.end().plus(new Pose2d(0, 0, turn1)), false)
-                .back(18.5)
+                .back(19.5)
                 .build();
 
         Trajectory myTrajectory3 = drive.trajectoryBuilder(myTrajectory2.end())
@@ -52,7 +52,7 @@ public class B2EncoderAutonomous extends LinearOpMode {
 
         double turn3 = Math.toRadians(85);
         Trajectory myTrajectory5 = drive.trajectoryBuilder(myTrajectory4.end().plus(new Pose2d(0, 0, turn3)), false)
-                .forward(20)
+                .forward(27)
                 .build();
 
 
@@ -76,6 +76,8 @@ public class B2EncoderAutonomous extends LinearOpMode {
         while (opModeIsActive() && !robot.isLiftFinished()) {
             robot.update();
         }
+
+        sleep(100);
 
         robot.dumpCargo();
         sleep(1000);

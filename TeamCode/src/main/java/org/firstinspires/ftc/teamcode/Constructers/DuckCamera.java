@@ -29,7 +29,7 @@ public class DuckCamera  extends CoreImplement{
 
     private String duckpositionname = "none" ;
 
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BC.tflite";
     private static final String[] LABELS = {
             "Ball",
             "Cube",
@@ -110,12 +110,13 @@ public class DuckCamera  extends CoreImplement{
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
                         if (updatedRecognitions.size() > 0) {
+                            updatedRecognitions.get(0).getLabel();
                             Duck = updatedRecognitions.get(0).getLeft();
                             if (Duck <= DUCK_Y_THRESHOLD) {
                                 duckPosition = 9.4;
                                 duckpositionname = "left";
                             } else {
-                                duckPosition = 13;
+                                duckPosition = 14;
                                 duckpositionname = "middle";
 
                             }
@@ -135,7 +136,7 @@ public class DuckCamera  extends CoreImplement{
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
 
-        double duckPosition = 21.6;
+        double duckPosition = 9.4;
 
         double Duck = 0;
 
@@ -150,7 +151,7 @@ public class DuckCamera  extends CoreImplement{
                 if (updatedRecognitions.size() > 0) {
                     Duck = updatedRecognitions.get(0).getLeft();
                     if (Duck <= DUCK_Y_THRESHOLD) {
-                        duckPosition = 13;
+                        duckPosition = 14;
                         duckpositionname = "middle";
                     } else {
                         duckPosition = 21.6;

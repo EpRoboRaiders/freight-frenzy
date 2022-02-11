@@ -7,24 +7,22 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.Constructers.CoreImplement;
 
-//public class IntakeSensor extends CoreImplement {
-/*
-    DigitalChannel TouchSensor;  // Hardware Device Object
+public class IntakeSensor extends CoreImplement {
+
+    TouchSensor TouchSensor;  // Hardware Device Object
 
     @Override
     public void init(HardwareMap ahwMap) {
-        TouchSensor = hardwareMap.get(DigitalChannel.class, "touch_sensor");
-
-        TouchSensor.setMode(DigitalChannel.Mode.INPUT);
+        TouchSensor = ahwMap.get(TouchSensor.class, "touch_sensor");
     }
 
     @Override
     public void update() {
 
     }
-}
 
     public boolean ispressed() {
-         if (TouchSensor.getMode() == true) {
+        return TouchSensor.isPressed();
+    }
+}
 
-         }*/

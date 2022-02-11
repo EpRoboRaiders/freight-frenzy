@@ -97,9 +97,13 @@ public class ManualDrive extends OpMode
         if (resetBox.checkState(gamepad2.x)){
             robot.resetBox();
         }
+
+        /*
         if (shortlift.checkState(gamepad2.dpad_down)){
             robot.raiseCargoLift(4);
         }
+
+         */
 
         //telemetry.addData("Direction", robot.debug());
         //telemetry.addData("Duck Position", robot.getDuckPosition());

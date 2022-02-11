@@ -30,11 +30,10 @@ public class CargoBoxLift extends CoreImplement {
             liftFinished = true;
             boxLift  = ahwMap.get(DcMotor.class, "box_lift");//exspantion hub port 3
             boxLift.setPower(0);
-            boxLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        boxLift.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        boxLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            boxLift.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+            boxLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             boxLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+            boxLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
